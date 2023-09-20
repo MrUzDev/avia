@@ -67,6 +67,10 @@
   font-size: 12px;
   font-family: "Poppins", sans-serif;
 }
+.main .flights label input:-ms-input-placeholder {
+  font-size: 12px;
+  font-family: "Poppins", sans-serif;
+}
 .main .flights label input::placeholder {
   font-size: 12px;
   font-family: "Poppins", sans-serif;

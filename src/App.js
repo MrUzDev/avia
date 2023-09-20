@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/Footer/Footer";
-import Main from "./components/Main/Main";
 import Text from "./components/Text/Text";
 import { Contexts } from "./contexts/Contexts";
 import BasicModal from "./components/Modal/Modal";
 import Ticket from "./components/Tickets/Ticket";
-
+import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/Footer/Footer";
+import Main from "./components/Main/Main"
+import ShopTicket from "./components/ShopTicket/ShopTicket";
 function App() {
   const [open, setOpen] = useState(false);
   const [show, setShow] = React.useState(false);
@@ -34,6 +34,7 @@ function App() {
         </div>
 
         <Ticket />
+        <ShopTicket />
       </Contexts.Provider>
 
       <Footer />
