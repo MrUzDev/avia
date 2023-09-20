@@ -207,6 +207,7 @@
   border-radius: 1rem;
   margin-left: 12px;
   margin-top: 12%;
+  width: 100%;
 }
 .ShopTicket .posajir h2 {
   font-size: 1rem;
@@ -217,4 +218,19 @@
 .ShopTicket .posajir ul li {
   margin-left: 10px;
   font-size: 0.9rem;
+}
+
+@media (max-width: 1000px) {
+  .for1 {
+    flex-direction: column;
+  }
+  .for2 .threeInp {
+    flex-direction: column;
+  }
+  .for2 .fourInp {
+    flex-direction: column;
+  }
+  .posajir {
+    margin: 0;
+  }
 }/*# sourceMappingURL=ShopTicket.css.map */
