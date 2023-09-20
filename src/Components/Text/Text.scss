@@ -1,0 +1,19 @@
+h1 {
+  font-size: 60px;
+  color: #05203c;
+
+  .fly {
+    color: #605dec;
+  }
+
+  span {
+    margin-left: 15px;
+    color: #605dec;
+  }
+}
+
+@media (max-width: 576px) {
+  h1 {
+    text-align: center;
+  }
+}

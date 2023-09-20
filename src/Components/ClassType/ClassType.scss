@@ -1,0 +1,51 @@
+.classTypeAll {
+  background-color: white;
+  border-radius: 25px;
+
+  .classType {
+    display: flex;
+    justify-content: space-between;
+
+    &:nth-child(2) {
+      margin-top: 50px;
+      margin-bottom: 50px;
+    }
+
+    p {
+      font-size: 14px;
+    }
+
+    span {
+      font-size: 12px;
+      color: gray;
+      white-space: nowrap;
+    }
+  }
+}
+
+.regime {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+  align-items: center;
+  border-top: 1px solid gray;
+  padding-top: 15px;
+
+  .box {
+    display: flex;
+    input {
+      margin-right: 5px;
+    }
+  }
+}
+
+// .css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop {
+//   background: none !important;
+// }
+
+@media (max-width: 576px) {
+  .css-jly24a {
+    width: 350px !important;
+    // height: 300px !important  ;
+  }
+}

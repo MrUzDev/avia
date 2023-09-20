@@ -1,0 +1,31 @@
+.signGoogle {
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background-color: #05203c;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+@media (max-width: 576px) {
+  .css-qrclir {
+    width: 300px !important;
+
+    .css-1nhc8nz-MuiTypography-root {
+        font-size: 20px;
+    }
+
+    .css-g2zyk1-MuiTypography-root {
+        font-size: 14px;
+    }
+
+    .signGoogle {
+        height: 50px;
+    }
+  }
+}

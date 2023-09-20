@@ -1,0 +1,136 @@
+.main {
+  width: 100%;
+  margin-top: 50px;
+  margin-bottom: 80px;
+
+  .flights {
+    width: 100%;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    padding: 20px 25px;
+    border-radius: 25px;
+
+    h2 {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      margin-bottom: 40px;
+      color: #605dec;
+      font-size: 30px;
+    }
+
+    label {
+      font-size: 12px;
+
+      p {
+        display: flex;
+        align-items: center;
+
+        svg {
+          margin-left: 5px;
+          font-size: 18px;
+          fill: #3392ff;
+        }
+      }
+
+      .passengers {
+        width: 100%;
+        border: 1px solid black;
+        height: 44px;
+        border-radius: 25px;
+        margin-top: 5px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.2s;
+
+        &:hover {
+          background-color: #605dec;
+          border: 1px solid #605dec;
+          transition: 0.2s;
+
+          h3 {
+            color: white;
+          }
+        }
+
+        h3 {
+          font-size: 14px;
+          font-family: "Poppins", sans-serif;
+          font-weight: 400;
+        }
+      }
+
+      input {
+        width: 100%;
+        padding: 10px 15px;
+        border-radius: 25px;
+        border: 1px solid black;
+        margin-top: 5px;
+        font-family: "Poppins", sans-serif;
+
+        &::placeholder {
+          font-size: 12px;
+          font-family: "Poppins", sans-serif;
+        }
+      }
+    }
+
+    button.find {
+      width: 100%;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Poppins", sans-serif;
+      padding: 10px 0px;
+      cursor: pointer;
+      background-color: #605dec;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      border: 1px solid #605dec;
+      transition: 0.2s;
+      font-weight: 500;
+
+      &:hover {
+        background-color: white;
+        color: #605dec;
+        border: 1px solid #605dec;
+        transition: 0.2s;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.searchDataList2,
+.searchDataList {
+  position: absolute;
+  bottom: -100px;
+  left: 0px;
+  width: 100%;
+  background-color: #fff;
+  border: 2px solid #3392ff;
+  border-radius: 10px;
+  padding: 10px 10px;
+}
+
+.searchDataList2 div,
+.searchDataList div {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  border-bottom: 2px solid #000;
+}
+
+.searchDataList div:last-child {
+  border: none !important;
+}
+
+@media (max-width: 576px) {
+  .css-gz20x9-MuiSvgIcon-root {
+    display: none !important;
+  }
+}

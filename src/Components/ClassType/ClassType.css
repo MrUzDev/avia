@@ -1,0 +1,41 @@
+.classTypeAll {
+  background-color: white;
+  border-radius: 25px;
+}
+.classTypeAll .classType {
+  display: flex;
+  justify-content: space-between;
+}
+.classTypeAll .classType:nth-child(2) {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+.classTypeAll .classType p {
+  font-size: 14px;
+}
+.classTypeAll .classType span {
+  font-size: 12px;
+  color: gray;
+  white-space: nowrap;
+}
+
+.regime {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+  align-items: center;
+  border-top: 1px solid gray;
+  padding-top: 15px;
+}
+.regime .box {
+  display: flex;
+}
+.regime .box input {
+  margin-right: 5px;
+}
+
+@media (max-width: 576px) {
+  .css-jly24a {
+    width: 350px !important;
+  }
+}/*# sourceMappingURL=ClassType.css.map */

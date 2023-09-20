@@ -1,0 +1,76 @@
+footer {
+  width: 100%;
+  background-color: #05203c;
+  padding: 50px 0px;
+  margin-top: auto;
+}
+footer .downloads {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+footer .downloads a:first-child img {
+  margin-bottom: 15px;
+}
+footer ul.info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+footer ul.info li {
+  margin-bottom: 15px;
+}
+footer ul.info li:last-child {
+  margin: 0;
+}
+footer ul.info li a {
+  color: white;
+  transition: 0.2s;
+}
+footer ul.info li a:hover {
+  color: #3392ff;
+  transition: 0.2s;
+}
+footer ul.contactInfo {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+footer ul.contactInfo li a {
+  color: white;
+  transition: 0.2s;
+}
+footer ul.contactInfo li a:hover {
+  color: #3392ff;
+  transition: 0.2s;
+}
+footer ul.contactInfo li a svg {
+  font-size: 30px;
+}
+footer .phoneNumber h2 {
+  font-size: 16px;
+  color: #3392ff;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 10px;
+}
+footer .phoneNumber a {
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  transition: 0.2s;
+}
+footer .phoneNumber a:hover {
+  color: #3392ff;
+  text-decoration: underline;
+  transition: 0.2s;
+}
+
+@media (max-width: 576px) {
+  ul.contactInfo {
+    margin-top: 60px;
+  }
+}/*# sourceMappingURL=Footer.css.map */

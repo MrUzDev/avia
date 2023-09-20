@@ -1,0 +1,181 @@
+.Ticket {
+  width: 100%;
+}
+.Ticket .checklist {
+  width: 100%;
+  height: auto;
+  border: 1px solid white;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 20px;
+  padding: 30px 20px;
+}
+.Ticket .checklist .transfer {
+  border-bottom: 1px solid gray;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+}
+.Ticket .checklist .transfer h3 {
+  margin-bottom: 8px;
+  font-size: 17px;
+  font-weight: 700;
+}
+.Ticket .checklist .transfer .checkbox {
+  font-weight: 400;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+.Ticket .checklist .transfer .checkbox input {
+  padding: 6px;
+}
+.Ticket .checklist .transfer .checkbox label {
+  padding: 6px;
+}
+.Ticket .checklist .company {
+  margin-top: 4px;
+  padding-top: 4px;
+}
+.Ticket .checklist .company h3 {
+  margin-bottom: 8px;
+  font-size: 17px;
+  font-weight: 700;
+}
+.Ticket .checklist .company .checkbox {
+  font-weight: 400;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+.Ticket .checklist .company .checkbox input {
+  padding: 6px;
+}
+.Ticket .checklist .company .checkbox label {
+  padding: 6px;
+}
+.Ticket .box {
+  width: 100%;
+  height: auto;
+  border: 1px solid white;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 20px;
+  padding: 20px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.Ticket .box .left {
+  width: 80%;
+}
+.Ticket .box .left .top {
+  display: flex;
+}
+.Ticket .box .left .top h2 span.type {
+  font-size: 15px;
+}
+.Ticket .box .left .top h2 span.class {
+  font-size: 15px;
+  margin: 0px 10px;
+}
+.Ticket .box .left .top h2 .css-i4bv87-MuiSvgIcon-root {
+  font-size: 15px;
+}
+.Ticket .box .left .bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.Ticket .box .left .bottom p.data {
+  display: flex;
+  font-size: 15px;
+}
+.Ticket .box .left .bottom p.data svg {
+  font-size: 15px;
+  color: gray;
+}
+.Ticket .box .left .bottom h2 {
+  font-weight: 500;
+  font-size: 20px;
+}
+.Ticket .box .left .bottom h2.time {
+  font-style: 14px;
+  font-weight: 700;
+}
+.Ticket .box .left .bottom .map {
+  display: flex;
+}
+.Ticket .box .left .bottom .map .from {
+  font-weight: 500;
+  font-size: 10px;
+  text-align: center;
+}
+.Ticket .box .left .bottom .map .middle {
+  font-weight: 500;
+  font-size: 10px;
+  text-align: center;
+}
+.Ticket .box .left .bottom .map .middle .af::after {
+  content: "";
+  border-radius: 50%;
+  border: 3px solid gray;
+  background-color: gray;
+}
+.Ticket .box .left .bottom .map .to {
+  font-weight: 500;
+  font-size: 10px;
+  text-align: center;
+}
+.Ticket .box .left .bottom .map svg {
+  color: #605dec;
+}
+.Ticket .box .left .bottom .map div.line {
+  text-align: center;
+  margin-top: 30px;
+}
+.Ticket .box .left .bottom .map div.line div {
+  width: 150px;
+  height: 1px;
+  background-color: gray;
+}
+.Ticket .box .left .bottom .map div.middle {
+  color: gray;
+}
+.Ticket .box .left .bottom .map div.middle svg {
+  color: gray;
+}
+.Ticket .box .right {
+  border-left: 2px solid gray;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.Ticket .box .right p.rate {
+  font-weight: 700;
+}
+.Ticket .box .right p.luggage {
+  margin: 30px 0;
+}
+.Ticket .box .right button.bgBlue {
+  background-color: #605dec;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  padding: 12px 10px;
+}
+.Ticket .box .right button.bgWhite {
+  margin-top: 10px;
+  background-color: white;
+  border: 2px solid #605dec;
+  color: #605dec;
+  border-radius: 8px;
+  padding: 10px 20px;
+}
+
+.af::after {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  border: 3px solid #605dec;
+  background-color: #605dec;
+}/*# sourceMappingURL=Ticket.css.map */
