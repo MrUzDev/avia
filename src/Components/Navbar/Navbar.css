@@ -2,42 +2,60 @@ nav {
   width: 100% !important;
   background-color: #05203c !important;
   padding: 20px 0px;
-  box-shadow: 2px 2px 5px rgb(100, 100, 111);
+  -webkit-box-shadow: 2px 2px 5px #64646f;
+          box-shadow: 2px 2px 5px #64646f;
   position: fixed;
   top: 0;
   z-index: 1111;
 }
+
 nav .logo {
   width: 100%;
 }
+
 nav .logo a {
   width: 100%;
   color: #605dec;
   font-size: 50px;
   font-weight: 700;
 }
+
 nav .logo a span {
   color: white;
 }
+
 nav .css-b62m3t-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   border: none;
   margin-right: 10px;
 }
+
 nav .css-3r4f5f-MuiGrid-root > .MuiGrid-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: end;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: end;
 }
+
 nav .css-13cymwt-control {
   background-color: #fff;
 }
+
 nav .css-1dimb5e-singleValue {
   color: #fff;
 }
+
 nav .css-qbdosj-Input {
   color: #05203c;
 }
+
 nav button {
   width: 50%;
   font-weight: 500;
@@ -50,41 +68,56 @@ nav button {
   border-radius: 12px;
   font-family: "Poppins", sans-serif;
   border: 1px solid #605dec;
+  -webkit-transition: 0.2s;
   transition: 0.2s;
   cursor: pointer;
   font-weight: 700;
 }
+
 nav button:hover {
   background-color: white;
   color: #605dec;
+  -webkit-transition: 0.2s;
   transition: 0.2s;
 }
+
 nav .css-13cymwt-control {
   background-color: transparent;
   color: white;
 }
+
 nav .css-t3ipsp-control {
   background: transparent !important;
   border: none;
 }
+
 nav .css-t3ipsp-control:hover {
   border-color: transparent;
 }
+
 nav .userLogin {
   position: relative;
 }
+
 nav .userLogin .userInformation {
   position: absolute;
   bottom: -25px;
   right: 0;
   width: 150px;
   background-color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   border-radius: 15px;
   text-align: center;
 }
+
 nav .userLogin .userInformation a {
   color: black;
 }
@@ -93,4 +126,5 @@ nav .userLogin .userInformation a {
   .logo a {
     font-size: 30px !important;
   }
-}/*# sourceMappingURL=Navbar.css.map */
+}
+/*# sourceMappingURL=Navbar.css.map */

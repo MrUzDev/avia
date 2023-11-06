@@ -1,94 +1,85 @@
-import React from "react";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import PlayMarket from "../../assets/images/googlePlayBtn.png";
-import AppStore from "../../assets/images/AppStoreBtn.png";
-import { Link } from "react-router-dom";
-import Pays from "../../assets/images/payLogos.svg";
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import TelegramIcon from "@mui/icons-material/Telegram";
-import YouTubeIcon from "@mui/icons-material/YouTube";
-import "./Footer.css";
+import React from 'react'
+import logo from "../../assets/icons/footerLogo.svg"
+import appStore from "../../assets/icons/app store.svg"
+import googlePlay from "../../assets/icons/google play.svg"
+import twitter from "../../assets/icons/twitter.svg"
+import instagram from "../../assets/icons/instagram.svg"
+import facebook from "../../assets/icons/facebook.svg"
 
 function Footer() {
-  const footerMenu = ["Biz haqimizda", "Foydalanish shartlari", "FAQ"];
-
-  const contactMedia = [
-    <FacebookIcon />,
-    <InstagramIcon />,
-    <TelegramIcon />,
-    <YouTubeIcon />,
-  ];
-  return (
-    <footer>
-      <Container maxWidth={"lg"}>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-tart",
-          }}
-        >
-          <Grid item lg={2}>
-            <div className="downloads">
-              <Link>
-                <img src={PlayMarket} alt="" />
-              </Link>
-              <Link>
-                <img src={AppStore} alt="" />
-              </Link>
+    const ulData = [
+        {
+            title: "О нас",
+            body: [
+                { title: "Об Авия" },
+                { title: "Акции и скидки" },
+                { title: "Избранные" },
+                { title: "Мои поездки" },
+                { title: "Журнал" }
+            ]
+        },
+        {
+            title: "Сотрудничайте с нами",
+            body: [
+                { title: "Партнёрские программы" },
+                { title: "Акции и мероприятия" },
+                { title: "Интеграции" },
+                { title: "Коммьюнити" },
+            ]
+        },
+        {
+            title: "Поддержка",
+            body: [
+                { title: "Центр помощи" },
+                { title: "Связаться с нами" },
+                { title: "Политика конфиденциальности" },
+                { title: "Доверие и безопасность" },
+            ]
+        },
+        {
+            title: "Скачать приложение",
+            body: [
+                { title: "Авиа для Android" },
+                { title: "Авиа для iOS" },
+                { title: "Мобильный сайт" },
+                { img: appStore },
+                { img: googlePlay }
+            ]
+        },
+    ]
+    return (
+        <div className=''>
+            <div className="container mx-auto mt-[100px]">
+                <div className='flex justify-between items-start'>
+                    <img src={logo} alt="" />
+                    {
+                        ulData.map((item, index) => (
+                            <ul key={index}>
+                                <li className='font-bold mb-[12px]'>{item.title}</li>
+                                {item.body.map((body, index) => (
+                                    <>
+                                        <li className='mb-[10px] cursor-pointer'>{body.title}</li>
+                                        <li className='mb-[8px] cursor-pointer'><img src={body.img && body.img} alt="" /></li>
+                                    </>
+                                ))}
+                            </ul>
+                        ))
+                    }
+                </div>
             </div>
-          </Grid>
-
-          <Grid item lg={2}>
-            <ul className="info">
-              {footerMenu.map((element) => {
-                return (
-                  <li>
-                    <Link>{element}</Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </Grid>
-
-          <Grid
-            sx={{
-              textAlign: "center",
-            }}
-            item
-            lg={2}
-          >
-            <ul className="contactInfo">
-              {contactMedia.map((element, value) => {
-                return (
-                  <li>
-                    <Link>{element}</Link>
-                  </li>
-                );
-              })}
-            </ul>
-
-            <div
-              className="phoneNumber"
-              style={{
-                textAlign: "center",
-              }}
-            >
-              <Link>
-                <LocalPhoneIcon />
-                +998711002021
-              </Link>
+            <div className='border border-[#CBD4E6] mt-[40px]'>
             </div>
-          </Grid>
-        </Grid>
-      </Container>
-    </footer>
-  );
+            <div className="container mx-auto flex items-center justify-between my-[32px]">
+                <div className="flex gap-[12px]">
+                    <img className='cursor-pointer' src={twitter} alt="" />
+                    <img className='cursor-pointer' src={instagram} alt="" />
+                    <img className='cursor-pointer' src={facebook} alt="" />
+                </div>
+                <p>© 2023 IT unisoft</p>
+            </div>
+
+        </div>
+    )
 }
 
-export default Footer;
+export default Footer

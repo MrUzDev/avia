@@ -1,0 +1,124 @@
+
+.rowGrid {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0px -15px;
+  }
+  
+  .col-auto {
+    width: auto;
+    padding: 0px 15px;
+  }
+  
+  .col-1 {
+    width: calc(100% / 24 * 1);
+    padding: 0px 15px;
+  }
+  
+  .col-2 {
+    width: calc(100% / 24 * 2);
+    padding: 0px 15px;
+  }
+  
+  .col-3 {
+    width: calc(100% / 24 * 3);
+    padding: 0px 15px;
+  }
+  
+  .col-4 {
+    width: calc(100% / 24 * 4);
+    padding: 0px 15px;
+  }
+  
+  .col-5 {
+    width: calc(100% / 24 * 5);
+    padding: 0px 15px;
+  }
+  
+  .col-6 {
+    width: calc(100% / 24 * 6);
+    padding: 0px 15px;
+  }
+  
+  .col-7 {
+    width: calc(100% / 24 * 7);
+    padding: 0px 15px;
+  }
+  
+  .col-8 {
+    width: calc(100% / 24 * 8);
+    padding: 0px 15px;
+  }
+  
+  .col-9 {
+    width: calc(100% / 24 * 9);
+    padding: 0px 15px;
+  }
+  
+  .col-10 {
+    width: calc(100% / 24 * 10);
+    padding: 0px 15px;
+  }
+  
+  .col-11 {
+    width: calc(100% / 124 * 11);
+    padding: 0px 15px;
+  }
+  .col-12 {
+    width: calc(100% / 24 * 12);
+    padding: 0px 15px;
+  }
+  
+  .col-13 {
+    width: calc(100% / 24 * 13);
+    padding: 0px 15px;
+  }
+  .col-14 {
+    width: calc(100% / 24 * 14);
+    padding: 0px 15px;
+  }
+  .col-15 {
+    width: calc(100% / 24 * 15);
+    padding: 0px 15px;
+  }
+  .col-16 {
+    width: calc(100% / 24 * 16);
+    padding: 0px 15px;
+  }
+  .col-17 {
+    width: calc(100% / 24 * 17);
+    padding: 0px 15px;
+  }
+  .col-18 {
+    width: calc(100% / 24 * 18);
+    padding: 0px 15px;
+  }
+  .col-19 {
+    width: calc(100% / 24 * 19);
+    padding: 0px 15px;
+  }
+  .col-20 {
+    width: calc(100% / 24 * 20);
+    padding: 0px 15px;
+  }
+  .col-21 {
+    width: calc(100% / 24 * 21);
+    padding: 0px 15px;
+  }
+  .col-22 {
+    width: calc(100% / 24 * 22);
+    padding: 0px 15px;
+  }
+  .col-23 {
+    width: calc(100% / 24 * 23);
+    padding: 0px 15px;
+  }
+  .col-24 {
+    width: calc(100% / 24 * 24);
+    padding: 0px 15px;
+  }
+
+
+.bggg {
+  background-color: red;
+}

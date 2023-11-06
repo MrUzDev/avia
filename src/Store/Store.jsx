@@ -1,13 +1,15 @@
 // src/store.js
 import { configureStore } from "@reduxjs/toolkit";
-import { LoginApi } from "../RTKQueryApi/LoginApi";
-import slice  from '../Slice/LoginSlice'
+import { AllApi } from "../RTKQueryApi/AllApi";
+import { getMyCityApi } from "../RTKQueryApi/MyCityApi";
+import slice  from '../Slice/AllSlice'
 
 export const Store = configureStore({
   reducer: {
     loginSlice: slice,
-    [LoginApi.reducerPath]: LoginApi.reducer,
+    [AllApi.reducerPath]: AllApi.reducer,
+    [getMyCityApi.reducerPath]: getMyCityApi.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(LoginApi.middleware),
+    middleware: (getDefaultMiddleware) =>
+  getDefaultMiddleware().concat(AllApi.middleware).concat(getMyCityApi.middleware),
 });

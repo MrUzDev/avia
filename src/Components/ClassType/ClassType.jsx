@@ -1,10 +1,12 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { Contexts } from "../../contexts/Contexts";
 import { Button, ButtonGroup } from "@mui/material";
 import "./ClassType.css";
+import { useDispatch, useSelector } from "react-redux";
+import { setTicketAdult, setTicketChild, setTicketBabies, setTicketTarif } from "../../Slice/AllSlice";
 
 const style = {
   position: "absolute",
@@ -22,9 +24,12 @@ export default function TypeModal() {
   const handleClose = () => setShow(false);
   const { show, setShow } = React.useContext(Contexts);
 
-  const people = ["Kattalar", "Bolalar", "Chaqaloq"];
+  const ticketAdults = useSelector((state) => state.loginSlice.ticketAdults);
+  const ticketChild = useSelector((state) => state.loginSlice.ticketChild);
+  const ticketBabies = useSelector((state) => state.loginSlice.ticketBabies);
+  const ticketTarif = useSelector((state) => state.loginSlice.ticketTarif);
 
-  const age = ["12 yoshdan katta", "2dan 12 yoshgacha", "2yoshgacha"];
+  const dispatch = useDispatch()
 
   return (
     <div>
@@ -57,6 +62,7 @@ export default function TypeModal() {
                   sx={{
                     border: "none",
                   }}
+                  onClick={() => ticketAdults > 0 && dispatch(setTicketAdult(ticketAdults - 1))}
                 >
                   -
                 </Button>
@@ -66,9 +72,9 @@ export default function TypeModal() {
                     marginRight: "15px",
                   }}
                 >
-                  0
+                  {ticketAdults}
                 </span>
-                <Button>+</Button>
+                <Button onClick={() => dispatch(setTicketAdult(ticketAdults + 1))} >+</Button>
               </ButtonGroup>
             </div>
 
@@ -87,16 +93,16 @@ export default function TypeModal() {
                   boxShadow: "none",
                 }}
               >
-                <Button>-</Button>
+                <Button onClick={() => ticketChild > 0 && dispatch(setTicketChild(ticketChild - 1))}>-</Button>
                 <span
                   style={{
                     marginLeft: "15px",
                     marginRight: "15px",
                   }}
                 >
-                  0
+                  {ticketChild}
                 </span>
-                <Button>+</Button>
+                <Button onClick={() => dispatch(setTicketChild(ticketChild + 1))}>+</Button>
               </ButtonGroup>
             </div>
 
@@ -115,31 +121,31 @@ export default function TypeModal() {
                   boxShadow: "none",
                 }}
               >
-                <Button>-</Button>
+                <Button onClick={() => ticketBabies > 0 && dispatch(setTicketBabies(ticketBabies - 1))}>-</Button>
                 <span
                   style={{
                     marginLeft: "15px",
                     marginRight: "15px",
                   }}
                 >
-                  0
+                  {ticketBabies}
                 </span>
-                <Button>+</Button>
+                <Button onClick={() => dispatch(setTicketBabies(ticketBabies + 1))}>+</Button>
               </ButtonGroup>
             </div>
           </div>
 
           <div className="regime">
             <div className="box">
-              <input type="radio" id="anyType" name="regime" />
+              <input defaultChecked type="radio" id="anyType" checked={ticketTarif && ticketTarif === 'a'} name="regime" value="Istalgan" onChange={e => {console.log(e.target.value); dispatch(setTicketTarif('a'))}}/>
               <label htmlFor="anyType">Istalgan</label>
             </div>
             <div className="box">
-              <input type="radio" id="ekon" name="regime" />
+              <input type="radio" id="ekon" name="regime" checked={ticketTarif && ticketTarif === 'e'} onChange={e => dispatch(setTicketTarif('e'))}/>
               <label htmlFor="ekon">Ekonom</label>
             </div>
             <div className="box">
-              <input type="radio" id="biz" name="regime" />
+              <input type="radio" id="biz" name="regime" checked={ticketTarif && ticketTarif === 'b'} onChange={e => dispatch(setTicketTarif('b'))}/>
               <label htmlFor="biz">Biznes</label>
             </div>
           </div>

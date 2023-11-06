@@ -1,44 +1,35 @@
 import React, { useState } from "react";
-import Text from "./components/Text/Text";
-import { Contexts } from "./contexts/Contexts";
-import BasicModal from "./components/Modal/Modal";
-import Ticket from "./components/Tickets/Ticket";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
-import Main from "./components/Main/Main"
+import Main from "./components/Main/Main";
+import { Contexts } from "./contexts/Contexts";
+import BasicModal from "./components/Modal/Modal";
 import ShopTicket from "./components/ShopTicket/ShopTicket";
+import { Routes, Route } from "react-router-dom";
+import { Modal } from "@mui/material";
+import Home from "./pages/Home/Home";
+import './Grid/Grid.css'
+
 function App() {
   const [open, setOpen] = useState(false);
   const [show, setShow] = React.useState(false);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        height: "100vh",
-      }}
-    >
+    <>
       <Contexts.Provider value={{ open, setOpen, show, setShow }}>
         <Navbar />
-        {open && (
-          <BasicModal
-            title={"Tizimga kirish"}
-            desc={"Shaxsiy kabinetinggizga google orqali kiring!"}
-          />
-        )}
-        <div>
-          <Text />
-          <Main />
-        </div>
 
-        <Ticket />
-        <ShopTicket />
+          <Routes>
+            <Route path='/' element={<Home />}/>
+            <Route path='/order/:id' element={<ShopTicket/>}/>
+          </Routes>
+
+
+          <BasicModal/>
       </Contexts.Provider>
 
       <Footer />
-    </div>
+    </>
   );
 }
 

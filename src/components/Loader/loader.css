@@ -1,0 +1,124 @@
+  .loader-container {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
+    z-index: 1112;
+  }
+  
+  .loader {
+    text-align: center;
+    width: 100%;
+    position: relative;
+    max-width: 35rem;
+    height: 30rem;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .wait {
+    margin: 5rem 0;
+  }
+  .iata_code {
+      font-size: 6rem;
+    /* color: #0099cc; */
+    color: #005B8E;
+    }
+
+  .plane-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .plane {
+    margin: 0 auto;
+    width: 100%;
+  }
+  
+  .plane-img {
+    -webkit-animation: spin 2.5s linear infinite;
+    -moz-animation: spin 2.5s linear infinite;
+    animation: spin 2.5s linear infinite;
+    margin-top: 3rem;
+  }
+  
+  @-moz-keyframes spin {
+    100% {
+      -moz-transform: rotate(360deg);
+    }
+  }
+  
+  @-webkit-keyframes spin {
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes spin {
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+  
+  
+  .earth-wrapper {
+    position: absolute;
+    margin: 0 auto;
+    width: 100%;
+    padding-top: 2.7rem;
+  }
+  
+  .earth {
+    width: 160px;
+    height: 160px;
+    background: url("https://zupimages.net/up/19/34/6vlb.gif");
+    border-radius: 100%;
+    background-size: 340px;
+    animation: earthAnim 12s infinite linear;
+    margin: 0 auto;
+    border: 1px solid #CDD1D3;
+  }
+  
+  @keyframes earthAnim {
+    0% {background-position-x: 0;}
+    100% {background-position-x: -340px;}
+  }
+  
+  @media screen and (max-width: 520px) {
+    .departure_city {
+      display: flex;
+      justify-content: end;
+      width: 100%;
+    }
+
+    .arrival_city {
+        display: flex;
+        width: 100%;
+    }
+
+    .plane-img {
+        width: 72%;
+    } 
+
+    .earth-wrapper .earth{
+        width: 100px;
+        height: 100px;
+    }
+
+    .plane-container {
+        margin: 0 20px;
+    }
+    
+    .iata_code {
+        font-size: 3rem;
+        margin-top: 2rem;
+    }
+  }

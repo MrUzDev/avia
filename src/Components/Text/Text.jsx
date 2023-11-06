@@ -4,11 +4,6 @@ import { TypeAnimation } from "react-type-animation";
 import "./Text.css";
 
 function Text() {
-  useEffect(() => {
-    const typerText = document.querySelector(".typer");
-
-    console.log(typerText);
-  }, []);
 
   return (
     <div className="text">

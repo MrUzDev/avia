@@ -1,83 +1,49 @@
-import React, { useContext, useEffect, useState } from "react";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import { Link, useNavigate } from "react-router-dom";
-import "./Navbar.css";
-import Select from "react-select";
+import React, { useContext, useState } from 'react'
+import logo from "../../assets/logo/logo.png"
+import discount from "../../assets/icons/percentage-square.svg"
+import message from "../../assets/icons/message-2.svg"
+import heart from "../../assets/icons/heart.svg"
+import bag from "../../assets/icons/bag-2.svg"
+import book from "../../assets/icons/book.svg"
+import globus from "../../assets/icons/global.svg"
+import user from "../../assets/icons/user.svg"
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { Contexts } from "../../contexts/Contexts";
-import { useDispatch, useSelector } from "react-redux";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+
 
 function Navbar() {
-  const options = [
-    { value: "chocolate", label: "UZ" },
-    { value: "strawberry", label: "EN" },
-    { value: "vanilla", label: "RU " },
-  ];
+
+  const loggedIn = useSelector((state) => state.loginSlice.loggedIn);
 
   const navigate = useNavigate();
 
-  const loggedIn = useSelector((state) => state.loginSlice.loggedIn);
-  const dispatch = useDispatch();
-
   const { setOpen } = useContext(Contexts);
-
+  
   const [logOut, setLogOut] = useState(false);
-
+  
   const handleLogOutClick = () => {
     setLogOut(true);
   };
 
-  useEffect(() => {
-    console.log(loggedIn);
-  }, [loggedIn]);
-  return (
-    <nav>
-      <Container>
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Grid item xs={2}>
-            <div className="logo">
-              <Link onClick={() => navigate("/")}>
-                fly<span>sales</span>
-              </Link>
+    return (
+        <div className='h-[92px] bg-[#0057BE]'>
+            <div className="container flex justify-between items-center mx-auto h-full">
+                <img className='w-[200px] cursor-pointer' src={logo} alt="" />
+                <ul className='flex text-white'>
+                    <li className='flex items-center mr-5 cursor-pointer'><img className='mr-2' src={discount} alt="" /> Акции и скидки</li>
+                    <li className='flex items-center mr-5 cursor-pointer'><img className='mr-2' src={message} alt="" /> Поддержка</li>
+                    <li className='flex items-center mr-5 cursor-pointer'><img className='mr-2' src={heart} alt="" /> Избранное</li>
+                    <li className='flex items-center mr-5 cursor-pointer'><img className='mr-2' src={bag} alt="" /> Мои поездки</li>
+                    <li className='flex items-center mr-5 cursor-pointer'><img className='mr-2' src={book} alt="" /> Журнал</li>
+                    <li className='flex items-center mr-5 cursor-pointer'><img className='mr-2' src={globus} alt="" /></li>
+                    {!loggedIn && (
+                      <li className='flex items-center mr-5 cursor-pointer' onClick={() => setOpen(true)}><img className='mr-2' src={user} alt=""/> Войти</li>
+                    )}
+                </ul>
             </div>
-          </Grid>
-
-          <Grid sx={{ display: "flex" }} item xs={8} sm={5} md={4} lg={4}>
-            <Select options={options} defaultValue={options[0]} />
-            {!loggedIn ? (
-              <button onClick={() => setOpen(true)}>Kirish</button>
-            ) : (
-              <div style={{ alignSelf: "center" }} className="userLogin">
-                <AccountCircleIcon
-                  onClick={handleLogOutClick}
-                  sx={{
-                    fontSize: "30px",
-                    color: "white",
-                    alignSelf: "center",
-                    cursor: "pointer",
-                  }}
-                />
-
-                {logOut && (
-                  <div className="userInformation">
-                    <Link>Profildan chiqish</Link>
-                  </div>
-                )}
-              </div>
-            )}
-          </Grid>
-        </Grid>
-      </Container>
-    </nav>
-  );
+        </div>
+    )
 }
 
-export default Navbar;
+export default Navbar

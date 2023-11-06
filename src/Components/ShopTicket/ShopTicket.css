@@ -1,56 +1,81 @@
 .ShopTicket {
-  margin-top: 5%;
+  margin-top: 10%;
+  margin-bottom: 50px;
 }
+
 .ShopTicket h2 {
   font-size: 1.25rem;
   font-weight: 500;
 }
+
 .ShopTicket .contact {
   border: 1px solid #dde3ed;
   border-radius: 1rem;
   margin-top: 12px;
 }
+
 .ShopTicket .contact .polya {
   margin-left: 1rem;
   margin-bottom: 1rem;
   font-size: 0.9rem;
 }
+
 .ShopTicket .contact .polya span {
   color: red;
 }
+
 .ShopTicket .contact .conTitle {
   padding: 1rem;
 }
+
 .ShopTicket .contact .conTitle h2 {
   font-size: 1.25rem;
   font-weight: 500;
 }
+
 .ShopTicket .contact .conTitle p {
   font-size: 0.9rem;
 }
+
 .ShopTicket .contact .line {
   width: 100%;
   border: 0.5px solid silver;
 }
+
 .ShopTicket .contact .for1 {
   margin-top: 20px;
   padding: 1rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
+
 .ShopTicket .contact .for1 label {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   width: 100%;
 }
+
 .ShopTicket .contact .for1 label p {
   font-size: 0.9rem;
   margin-bottom: 5px;
 }
+
 .ShopTicket .contact .for1 label p span {
   color: red;
 }
+
 .ShopTicket .contact .for1 label input {
   border: 1px solid #3392ff;
   border-radius: 1rem;
@@ -60,38 +85,53 @@
   margin-right: 10px;
   padding: 0 10px;
 }
+
 .ShopTicket .info {
   border: 1px solid #dde3ed;
   border-radius: 1rem;
   margin-top: 12px;
 }
+
 .ShopTicket .info .inTitle {
   padding: 1rem;
 }
+
 .ShopTicket .info .inTitle h2 {
   font-size: 1.25rem;
   font-weight: 500;
 }
+
 .ShopTicket .info .inTitle p {
   font-size: 0.9rem;
 }
+
 .ShopTicket .info .line {
   width: 100%;
   border: 0.5px solid silver;
 }
+
 .ShopTicket .info .for2 {
   padding: 1rem;
 }
+
 .ShopTicket .info .for2 .young {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   margin: 12px 0;
 }
+
 .ShopTicket .info .for2 .young h3 {
   font-size: 1.25rem;
   font-weight: 500;
 }
+
 .ShopTicket .info .for2 .young button {
   padding: 7px;
   border-radius: 1rem;
@@ -101,20 +141,33 @@
   cursor: pointer;
   font-size: 15px;
 }
+
 .ShopTicket .info .for2 .young button:hover {
   background-color: #3392ff;
   color: white;
 }
+
 .ShopTicket .info .for2 .threeInp {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
+
 .ShopTicket .info .for2 .threeInp label {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   width: 100%;
   font-size: 0.9rem;
 }
+
 .ShopTicket .info .for2 .threeInp label input {
   border: 1px solid #3392ff;
   border-radius: 1rem;
@@ -125,17 +178,29 @@
   padding: 0 10px;
   margin-top: 5px;
 }
+
 .ShopTicket .info .for2 .fourInp {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   margin-top: 10px;
 }
+
 .ShopTicket .info .for2 .fourInp label {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
   width: 100%;
   font-size: 0.9rem;
 }
+
 .ShopTicket .info .for2 .fourInp label input {
   border: 1px solid #3392ff;
   border-radius: 1rem;
@@ -146,53 +211,75 @@
   padding: 0 10px;
   margin-top: 5px;
 }
+
 .ShopTicket .weight {
   border: 1px solid #dde3ed;
   padding: 1rem;
   border-radius: 1rem;
   margin-top: 12px;
 }
+
 .ShopTicket .weight h2 {
   font-size: 1.25rem;
   font-weight: 500;
 }
+
 .ShopTicket .comment {
   border: 1px solid #dde3ed;
   padding: 1rem;
   border-radius: 1rem;
   margin-top: 12px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
+
 .ShopTicket .comment p {
   font-size: 0.8rem;
   font-weight: 500;
   margin-bottom: 8px;
 }
+
 .ShopTicket .comment textarea {
   border: 1px solid #3392ff;
   border-radius: 1rem;
   padding: 10px;
+  resize: vertical;
 }
+
 .ShopTicket .bron {
   border: 1px solid #dde3ed;
   padding: 1rem;
   border-radius: 1rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   margin: 12px 0;
 }
+
 .ShopTicket .bron .time {
   font-size: 0.9rem;
 }
+
 .ShopTicket .bron .money {
   font-size: 0.9rem;
 }
+
 .ShopTicket .bron .money span {
   color: #3392ff;
   font-size: 1.25rem;
 }
+
 .ShopTicket .bron button {
   background-color: #3392ff;
   padding: 8px;
@@ -200,7 +287,9 @@
   font-size: 0.9rem;
   border: none;
   color: white;
+  cursor: pointer;
 }
+
 .ShopTicket .posajir {
   border: 1px solid #dde3ed;
   padding: 1rem;
@@ -209,28 +298,74 @@
   margin-top: 12%;
   width: 100%;
 }
+
 .ShopTicket .posajir h2 {
   font-size: 1rem;
 }
+
 .ShopTicket .posajir ul {
   margin-bottom: 12px;
 }
+
 .ShopTicket .posajir ul li {
   margin-left: 10px;
   font-size: 0.9rem;
 }
 
+.confirmModalContainer {
+  width: 1000px;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 0 20px;
+}
+
+.confirmModalContainer.active {
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+}
+
+.otpContainer input {
+  border: none;
+  border-bottom: 2px solid #000;
+}
+
+.btn {
+  background-color: #605dec;
+  width: 100%;
+  color: #fff;
+  border-radius: 10px;
+  margin-top: 20px;
+  padding: 10px 0;
+}
+
 @media (max-width: 1000px) {
   .for1 {
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
   .for2 .threeInp {
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
   .for2 .fourInp {
-    flex-direction: column;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
   }
   .posajir {
     margin: 0;
   }
-}/*# sourceMappingURL=ShopTicket.css.map */
+}
+/*# sourceMappingURL=ShopTicket.css.map */

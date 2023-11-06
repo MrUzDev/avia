@@ -1,5 +1,6 @@
 .ShopTicket {
-  margin-top: 5%;
+  margin-top: 10%;
+  margin-bottom: 50px;
   h2 {
     font-size: 1.25rem;
     font-weight: 500;
@@ -173,6 +174,7 @@
       border: 1px solid #3392ff;
       border-radius: 1rem;
       padding: 10px;
+      resize: vertical;
     }
   }
   .bron {
@@ -200,6 +202,7 @@
       font-size: 0.9rem;
       border: none;
       color: white;
+      cursor: pointer;
     }
   }
   .posajir {
@@ -222,6 +225,33 @@
     }
     
   }
+}
+
+.confirmModalContainer {
+  width: 1000px;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.confirmModalContainer.active {
+  transition: 0.5s;
+  transform: translateX(-50%);
+}
+
+.otpContainer input{
+  border: none;
+  border-bottom: 2px solid #000;
+}
+
+.btn {
+  background-color: #605dec;
+  width: 100%;
+  color: #fff;
+  border-radius: 10px;
+  margin-top: 20px;
+  padding: 10px 0;
 }
 
 @media  (max-width: 1000px) {

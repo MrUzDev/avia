@@ -1,19 +1,66 @@
-import React, { useContext, useEffect, useState } from "react";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import AirplaneTicketIcon from "@mui/icons-material/AirplaneTicket";
-import ConnectingAirportsIcon from "@mui/icons-material/ConnectingAirports";
-
-import FlightTakeoffIcon from "@mui/icons-material/FlightTakeoff";
-import FlightLandIcon from "@mui/icons-material/FlightLand";
-
-import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./Main.css";
 import { Contexts } from "../../contexts/Contexts";
-import { Button } from "@mui/material";
-import TypeModal from "../ClassType/ClassType";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { useSearchAirportsMutation, useSearchAirportsToMutation, useGetRecommendationMutation } from "../../RTKQueryApi/LoginApi";
+import { useSearchAirportsMutation, useSearchAirportsToMutation, useGetRecommendationMutation, useRegisterApiMutation } from "../../RTKQueryApi/AllApi";
+import { useGetMyCityQuery } from "../../RTKQueryApi/MyCityApi";
+import { changeTicketData, addFilterAirlinesName, clearFilterAirlinesName, clearFilterAirlines } from "../../Slice/AllSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer, toast } from 'react-toastify';
+ import 'react-toastify/dist/ReactToastify.css';
+import Ticket from "../Tickets/Ticket";
+import moment  from 'moment';
+import jwt_decode from "jwt-decode";
+import {GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import Loader from "../Loader/Loader";
+import DatePicker from "react-multi-date-picker";
+import transition from "react-element-popper/animations/transition"
+import PropTypes from 'prop-types';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
+import CorporateFareIcon from '@mui/icons-material/CorporateFare';
+import TrainOutlinedIcon from '@mui/icons-material/TrainOutlined';
+import arrowSwap from "../../assets/icons/arrow-swap-horizontal.svg"
+import kalendar from "../../assets/icons/calendar.svg";
+import arrowDown from "../../assets/icons/arrow-down.svg"
+import girlImg from "../../assets/images/girl.png"
+import Switch from '@mui/material/Switch';
+import { setTicketAdult, setTicketChild, setTicketBabies, setTicketTarif } from "../../Slice/AllSlice";
+
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+      <div
+          role="tabpanel"
+          hidden={value !== index}
+          id={`simple-tabpanel-${index}`}
+          aria-labelledby={`simple-tab-${index}`}
+          {...other}
+      >
+          {value === index && (
+              <Box sx={{ p: 3 }}>
+                  <Typography>{children}</Typography>
+              </Box>
+          )}
+      </div>
+  );
+}
+
+CustomTabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
 
 function Main() {
   const { show, setShow } = useContext(Contexts);
@@ -25,21 +72,54 @@ function Main() {
   const [myAirlinesTo, setMyAirlinesTo] = useState()
   const [myAirlinesCodeTo, setMyAirlinesCodeTo] = useState()
 
-  const [myAirlinesDate, setMyAirlinesDate] = useState()
+  const [myAirlinesDate, setMyAirlinesDate] = useState([])
+  const [myAirlinesDateTo, setMyAirlinesDateTo] = useState()
+  const [loader, setLoader] = useState(true);
+  const [tokenAirlines, setTokenAirlines] = useState()
+  const [value, setValue] = React.useState(0);
+  const [classModalShow, setClassModalShow] = useState(false)
+  const [checkedBiznes, setCheckedBiznes] = useState(false);
+  const [ticketLoad, setTicketLoad] = useState(false)
 
+  const ticketAdults = useSelector((state) => state.loginSlice.ticketAdults);
+  const ticketChild = useSelector((state) => state.loginSlice.ticketChild);
+  const ticketBabies = useSelector((state) => state.loginSlice.ticketBabies);
+  const ticketTarif = useSelector((state) => state.loginSlice.ticketTarif);
+  const filterAirlines = useSelector((state) => state.loginSlice.filterAirlines);
+  const changeFilterAir = useSelector((state) => state.loginSlice.changeFilterAir);
+  const loggedIn = useSelector((state) => state.loginSlice.loggedIn);
+
+
+
+  const clientId = "428493911231-e8ipsql0crd7loti8t96cun9u397valg.apps.googleusercontent.com";
+
+  const datePickerRef = useRef()
+
+
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+    };
+
+  const dispatch = useDispatch()
   const handleShow = () => {
     setShow(true);
   };
 
+
   const [searchAirports, {data : searchAirportsFrom, isSuccess: searchAirportsFromSuc}] = useSearchAirportsMutation()
   const [searchAirportsto, {data: searchAirportsTo, isSuccess: searchAirportsToSuc}] = useSearchAirportsToMutation()
-  const [getRecommendation, {data: getRecommendationData, isSuccess: getRecommendationSuc}] = useGetRecommendationMutation()
+  const [getRecommendation, {data: getRecommendationData, isLoading: loadingGetRecommendation, isSuccess: getRecommendationSuc}] = useGetRecommendationMutation()
+  const {data: getMyCityData, isLoading: getMyCityLoading, isSuccess: getMyCitySuc, isError: getMyCiryErr} = useGetMyCityQuery()
+  const [registerApi, {data: registerApiData, isSuccess: registerApiSuc}] = useRegisterApiMutation()
 
+  
+
+  const dataError = () => toast.error("Ma'lumotlar to'liq kiritilmadi!");
 
   // search airports from start
   const searchAirportsFnc = (e) => {
-    console.log(e.length);
-    if(e.length >= 3) {
+    setAirlinesDataFrom()
+    if(e.length >= 2) {
       const searchData = {
         lang: 'ru',
         part: e
@@ -50,11 +130,14 @@ function Main() {
   }
 
   useEffect(() => {
-    if(searchAirportsFromSuc) {
-      const keys = Object.values(searchAirportsFrom.data.cities);
-      console.log(keys);
+    if(searchAirportsFromSuc && searchAirportsFrom) {
+      let cities = searchAirportsFrom.data.cities
+      cities && setMyAirlinesCode(Object.values(cities)[0].cityIataCode);
+      cities && setAirlinesDataFrom(Object.values(cities))
+      getMyCityData && myAirlines === getMyCityData.city && setAirlinesDataFrom()
+      cities == undefined && setMyAirlines()
 
-      setAirlinesDataFrom(Object.values(searchAirportsFrom.data.cities))
+      setLoader(false)
     }
   }, [searchAirportsFrom])
 
@@ -65,25 +148,29 @@ function Main() {
 
 
   const searchAirportsToFnc = (e) => {
-    console.log(e.length);
-    if(e.length >= 3) {
+    setAirlinesDataTo()
+    if(e.length >= 2) {
       const searchData = {
         lang: 'ru',
         part: e
       }
-      
       searchAirportsto(searchData)
     }
   }
 
   useEffect(() => {
-    if(searchAirportsToSuc) {
-      const keys = Object.values(searchAirportsTo.data.cities);
-      console.log(keys);
-
-      setAirlinesDataTo(Object.values(searchAirportsTo.data.cities))
+    if(searchAirportsToSuc && searchAirportsTo) {
+      let cities = searchAirportsTo.data.cities
+      cities && setAirlinesDataTo(Object.values(cities))
     }
   }, [searchAirportsTo])
+
+
+  useEffect(() => {
+    if(changeFilterAir) {
+      changeFilterAir && getRecommendationFnc()
+    }
+  }, [changeFilterAir, filterAirlines])
 
 
   // search airports to end
@@ -92,163 +179,541 @@ function Main() {
   // get recommendation start
 
   const getRecommendationFnc = (e) => {
+    setTicketLoad(true)
+    dispatch(changeTicketData(undefined))
+    if(e == 'for_btn') {
+      dispatch(clearFilterAirlinesName())
+      dispatch(clearFilterAirlines())
+    }
+    if(myAirlinesCode && myAirlinesCodeTo && myAirlinesDate.length > 0 && ticketAdults) {
+
       const recomData = {
-          adt: 1,
-          chd: 0,
-          inf: 0,
+          adt: ticketAdults,
+          chd: ticketChild,
+          inf: ticketBabies,
           ins: 0,
           src: 0,
           yth: 0,
-          lang: "ru",
-          segments: [
+          lang: "en",
+          segments: myAirlinesDate[1] ? [
             {
               from: myAirlinesCode,
               to: myAirlinesCodeTo,
-              date: myAirlinesDate.split('-').reverse().join('-')
+              date: myAirlinesDate[0].format?.("DD-MM-YYYY")
+            },
+           {
+              from: myAirlinesCodeTo,
+              to: myAirlinesCode,
+              date: myAirlinesDate[1].format?.("DD-MM-YYYY")
             }
-          ],
-          filter_airlines: [],
-          is_direct_only: 0,
+          ] : [{
+            from: myAirlinesCode,
+            to: myAirlinesCodeTo,
+            date: myAirlinesDate[0].format?.("DD-MM-YYYY")
+          }],
+          filter_airlines: filterAirlines,
+          is_direct_only: 1,
           gds_white_list: [],
           gds_black_list: [],
-          class_: "a"
+          class_: ticketTarif,
+          token: filterAirlines.length >= 1 ? tokenAirlines : '',
+          is_baggage: true,
+          price_order: 1,
+          is_charter: false,
       }
       
       getRecommendation(recomData)
+    } else dataError()
   }
 
   useEffect(() => {
     if(getRecommendationSuc) {
-      console.log(getRecommendationData.data.flights);
+      dispatch(changeTicketData(getRecommendationData.data))
       console.log(getRecommendationData.data);
+      getRecommendationData.data && setTokenAirlines(getRecommendationData.data.search.token)
+      getRecommendationData.data && filterAirlines.length == 0 && getRecommendationData.data.flights.forEach((item) => item.provider.supplier.title && dispatch(addFilterAirlinesName({ name: item.provider.supplier.title, code: item.provider.supplier.code})))
     }
   }, [getRecommendationData])
 
   // get recommendation end
 
 
+  // reverse Airport Name start
+  const reverseAirportName = () => {
+      let myAirlinesToDef = myAirlinesTo 
+      let myAirlinesDef = myAirlines
+      let myAirlinesCodeDef = myAirlinesCode
+      let myAirlinesCodeToDef = myAirlinesCodeTo
+
+      setMyAirlinesTo(myAirlinesDef)
+      setMyAirlines(myAirlinesToDef)
+      setMyAirlinesCode(myAirlinesCodeToDef)
+      setMyAirlinesCodeTo(myAirlinesCodeDef)
+  }
+  // reverse Airport Name end
+
+  useEffect(() => {moment().add(1,'days').endOf('day').format('YYYY-MM-DD').toString()
+    if(getMyCitySuc) {
+      setMyAirlines(getMyCityData.city)
+
+      searchAirportsFnc(getMyCityData.city.split(' ')[0])
+    }
+  }, [getMyCityData])
+
+
+  const login = (response) => {
+    var token = jwt_decode(response.credential)
+  
+    const registerData = {
+        email: token.email,
+        token: response.credential,
+        type: "web" 
+    }
+    registerApi(registerData) 
+  }
+
   useEffect(() => {
-    console.log(myAirlines, myAirlinesCode);
-    console.log(myAirlinesDate);
-  }, [myAirlines, myAirlinesDate])
+    if(registerApiSuc) {
+      localStorage.setItem('access', registerApiData.jwt_token.access)
+      localStorage.setItem('refresh', registerApiData.jwt_token.refresh)
+    }
+  }, [registerApiData])
+
+  useEffect(() => {
+    if(getMyCiryErr) {
+      setLoader(false)
+    }
+  }, [getMyCiryErr])
+
+  useEffect(() => {
+    if(classModalShow) {
+      document.querySelector('.classBg').style.height = `${document.body.scrollHeight + 30}px`
+    }
+  }, [classModalShow])
+
 
   return (
-    <div className="main">
-      <Container>
-        <div className="flights">
-          <h2>
-            <AirplaneTicketIcon />
-            Aviachipta
-          </h2>
+    <>
+    {!loggedIn && (
+    <GoogleOAuthProvider clientId={clientId}>
+      <GoogleLogin
+        onSuccess={credentialResponse => {
+          login(credentialResponse)
+        }}
+        onError={() => {
+          console.log('Login Failed');
+        }}
+        useOneTap
+      />
+      </GoogleOAuthProvider>
+    )}
 
-          <Grid
-            sx={{
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-            container
-            spacing={2}
-          >
-            <Grid item lg={3} md={6} xs={12} sx={{ position: "relative" }}>
-              <label htmlFor="">
-                <p>
-                  Qayerdan <FlightTakeoffIcon />
-                </p>
-                <input type="text" name="" id="" placeholder="Tashkent" value={myAirlines} onChange={(e) => {setMyAirlines(e.target.value) ;searchAirportsFnc(e.target.value)}}/>
+<div className='mt-[5%] mb-11 main'>
+            <div className="container mx-auto">
+                <h1 className='text-center text-[64px] text-[#0057BE]  mb-[2%]'> Самый правильный путь к путешествиям</h1>
+                <Box sx={{ width: '100%' }}>
+                    <Box>
+                        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                            <Tab iconPosition='start' icon={<AirplanemodeActiveIcon />} label="Авиа" {...a11yProps(0)} />
+                            <Tab iconPosition='start' icon={<CorporateFareIcon />} label="Отели" {...a11yProps(1)} />
+                            <Tab iconPosition='start' icon={<TrainOutlinedIcon />} label="Ж/д" {...a11yProps(2)} />
+                        </Tabs>
+                    </Box>
 
-                <ChangeCircleIcon
-                  sx={{
-                    position: "absolute",
-                    bottom: "8px",
-                    right: "-22px",
-                    fontSize: "30px",
-                  }}
-                />
-              </label>
-              {airlinesDataFrom && (
-                <div className="searchDataList">
-                  {airlinesDataFrom.map((item, index) => 
-                  <div key={index} onClick={() => {setMyAirlines(item.cityName); setMyAirlinesCode(item.cityIataCode); setAirlinesDataFrom()}}>
-                      <p>{item.cityName}</p>
-                      <p>{item.cityIataCode}</p>
-                  </div>
-                  )}
+                    
+                    <CustomTabPanel value={value} index={0} className="mt-5 pb-5">
+                        <div className='bg-[#0057BE] h-[66px] flex items-center flex-wrap rounded-lg'>
+                          
+                         <div className="h-full w-full flex items-center" style={{padding: '3px'}}>
+                         <div className="relative col-4 h-full" style={{padding: '0'}}>
+                            <input className='h-full w-full rounded-l-lg border border-[#c0bfbf] capitalize outline-none px-[10px]' type="text" placeholder='Откуда' value={myAirlines || ''} onChange={(e) => {setMyAirlines(e.target.value) ;searchAirportsFnc(e.target.value)}}/>
+
+                            {airlinesDataFrom && (
+                                <div className="searchDataList z-10">
+                                {airlinesDataFrom.map((item, index) => 
+                                <div key={index} onClick={() => {setMyAirlines(item.cityName); setMyAirlinesCode(item.cityIataCode); setAirlinesDataFrom()}}>
+                                    <p>{item.cityName}</p>
+                                    <p>{item.cityIataCode}</p>
+                                </div>
+                                )}
+                                </div>
+                            )}
+
+                            </div>
+                            <div className='h-full col-1 border border-[#c0bfbf] outline-none bg-white w-[60px] flex items-center justify-center'>
+                                <img src={arrowSwap} className="cursor-pointer w-full" alt="" onClick={() => reverseAirportName()}/>
+                            </div>
+                            <div className="relative col-4 h-full" style={{padding: '0'}}>
+                            <input className='h-full w-full border border-[#c0bfbf] outline-none px-[10px]' type="text" placeholder='Куда' value={myAirlinesTo  || ''} onChange={(e) => {setMyAirlinesTo(e.target.value); searchAirportsToFnc(e.target.value)}}/>
+                            {airlinesDataTo && (
+                                <div className="searchDataList2 z-10">
+                                {airlinesDataTo.map((item, index) => 
+                                <div key={index} onClick={() => {setMyAirlinesTo(item.cityName); setMyAirlinesCodeTo(item.cityIataCode); setAirlinesDataTo()}}>
+                                    <p>{item.cityName}</p>
+                                    <p>{item.cityIataCode}</p>
+                                </div>
+                                )}
+                                </div>
+                            )}
+
+                            </div>
+                            <div className="col-4 h-full" style={{padding: '0'}}>
+                                <label htmlFor="">
+                                    <DatePicker
+                                    onChange={(e) => {setMyAirlinesDate(e)}}
+                                    // format="DD-MM-YYYY"
+                                    minDate={new Date()}
+                                    // value={myAirlinesDate}
+                                    animations={[transition()]}
+                                    headerOrder={["MONTH_YEAR", "LEFT_BUTTON", "RIGHT_BUTTON"]} 
+                                    numberOfMonths={2}
+                                    portal={true}
+                                    range
+                                    ref={datePickerRef}
+                                    style={{display: 'none'}}
+                                    />
+                                    <input type="text" placeholder="Когда" className='h-full w-full border border-[#c0bfbf] outline-none px-[10px]' value={myAirlinesDate[0] ? myAirlinesDate[0].format?.("DD-MM-YYYY"): ''} onClick={() => datePickerRef.current.openCalendar()}/>
+
+                                    </label> 
+                            </div>
+                            <input type="text" placeholder="Обратно" className='h-full w-full border border-[#c0bfbf] outline-none px-[10px] col-3' style={{padding: '0 10px'}} value={myAirlinesDate[1] ? myAirlinesDate[1].format?.("DD-MM-YYYY"): ''} onClick={() => datePickerRef.current.openCalendar()}/>
+
+                            <div className='h-full rounded-r-lg border border-[#c0bfbf] outline-none px-[10px] bg-white w-[226px]  flex items-center justify-between relative col-4'>
+                                  <div className="flex items-center justify-between w-full cursor-pointer" onClick={() => setClassModalShow(!classModalShow)}>
+                                    <div>
+                                        <h3>{ticketAdults + ticketChild + ticketBabies} пассажир</h3>
+                                        <p className='text-[#AEAEAE]'>{ticketTarif === 'b' ? 'Бизнес' : 'все'} класс</p>
+                                    </div>
+
+                                    <img src={arrowDown} alt="" />
+                                  </div>
+
+                               
+
+                                {classModalShow && (
+                                  <div className="absolute p-5 min-w-full right-0 bg-[white] z-10 text-[#222] shadow-2xl rounded-lg" style={{top: 'calc(100% + 10px)', width: '190%', maxWidth: '200%'}}>
+                                    <div><h3>{ticketAdults + ticketChild + ticketBabies} пассажир</h3></div>
+                                    <div className="flex items-center justify-between my-3">
+                                      <p className="text-lg mr-5 text-[#222] font-light">12 лет и старше</p>
+                                      <div className="flex items-center justify-between">
+                                        <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => dispatch(setTicketAdult(ticketAdults + 1))}>+</button>
+                                          <h1 className="mx-3">{ticketAdults}</h1>
+                                        <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => ticketAdults > 1 && dispatch(setTicketAdult(ticketAdults - 1))}>-</button>
+                                      </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-between mb-3">
+                                      <h2 className="text-lg mr-5 text-[#222] font-light">от 2 до 12 лет</h2>
+                                      <div className="flex items-center justify-between">
+                                        <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => dispatch(setTicketChild(ticketChild + 1))}>+</button>
+                                          <h1 className="mx-3">{ticketChild}</h1>
+                                        <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => ticketChild > 0 && dispatch(setTicketChild(ticketChild - 1))}>-</button>
+                                      </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-between mb-3">
+                                      <h2 className="text-lg mr-5 text-[#222] font-light">до 2 лет</h2>
+                                      <div className="flex items-center justify-between">
+                                        <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => dispatch(setTicketBabies(ticketBabies + 1))}>+</button>
+                                          <h1 className="mx-3">{ticketBabies}</h1>
+                                        <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => ticketBabies > 0 && dispatch(setTicketBabies(ticketBabies - 1))}>-</button>
+                                      </div>
+                                    </div>
+
+                                    <div className="border-b-4 pb-4 pt-2">
+                                      <p className="text-sm">Укажите возраст на момент отправления</p>
+                                    </div>
+
+                                    <div>
+                                      <Switch
+                                      checked={checkedBiznes}
+                                      onChange={(e) => {setCheckedBiznes(e.target.checked); e.target.checked ? dispatch(setTicketTarif('b')) : dispatch(setTicketTarif('a'))}}
+                                      inputProps={{ 'aria-label': 'controlled' }}
+                                    />
+                                    <label htmlFor="">Бизнес класс</label>
+                                    </div>
+                                  </div>
+                                )}
+                            </div>
+                            <div className='flex items-center justify-center col-4'>
+                                <button className='bg-[transparent] mr-3 text-white h-[66px] w-full' onClick={(e) => getRecommendationFnc('for_btn')}>
+                                    Найти
+                                </button>
+
+
+                            </div>
+                            
+                         </div>
+                        </div>
+
+                      
+                    </CustomTabPanel>
+                    <CustomTabPanel value={value} index={1} className="mt-5 pb-5">
+                    <div className='bg-[#0057BE] h-[66px] flex items-center flex-wrap rounded-lg'>
+                          
+                          <div className="h-full w-full flex items-center" style={{padding: '3px'}}>
+                          <div className="relative col-4 h-full" style={{padding: '0'}}>
+                             <input className='h-full w-full rounded-l-lg border border-[#c0bfbf] outline-none px-[10px]' type="text" placeholder='Откуда' value={myAirlines || ''} onChange={(e) => {setMyAirlines(e.target.value) ;searchAirportsFnc(e.target.value)}}/>
+ 
+                             {airlinesDataFrom && (
+                                 <div className="searchDataList z-10">
+                                 {airlinesDataFrom.map((item, index) => 
+                                 <div key={index} onClick={() => {setMyAirlines(item.cityName); setMyAirlinesCode(item.cityIataCode); setAirlinesDataFrom()}}>
+                                     <p>{item.cityName}</p>
+                                     <p>{item.cityIataCode}</p>
+                                 </div>
+                                 )}
+                                 </div>
+                             )}
+ 
+                             </div>
+                             <div className='h-full col-1 border border-[#c0bfbf] outline-none bg-white w-[60px] flex items-center justify-center'>
+                                 <img src={arrowSwap} className="cursor-pointer w-full" alt="" onClick={() => reverseAirportName()}/>
+                             </div>
+                             <div className="relative col-4 h-full" style={{padding: '0'}}>
+                             <input className='h-full w-full border border-[#c0bfbf] outline-none px-[10px]' type="text" placeholder='Куда' value={myAirlinesTo || ''} onChange={(e) => {setMyAirlinesTo(e.target.value); searchAirportsToFnc(e.target.value)}}/>
+                             {airlinesDataTo && (
+                                 <div className="searchDataList2 z-10">
+                                 {airlinesDataTo.map((item, index) => 
+                                 <div key={index} onClick={() => {setMyAirlinesTo(item.cityName); setMyAirlinesCodeTo(item.cityIataCode); setAirlinesDataTo()}}>
+                                     <p>{item.cityName}</p>
+                                     <p>{item.cityIataCode}</p>
+                                 </div>
+                                 )}
+                                 </div>
+                             )}
+ 
+                             </div>
+                             <div className="col-4 h-full" style={{padding: '0'}}>
+                                 <label htmlFor="">
+                                     <DatePicker
+                                     onChange={(e) => {setMyAirlinesDate(e)}}
+                                     // format="DD-MM-YYYY"
+                                     minDate={new Date()}
+                                     // value={myAirlinesDate}
+                                     animations={[transition()]}
+                                     headerOrder={["MONTH_YEAR", "LEFT_BUTTON", "RIGHT_BUTTON"]} 
+                                     numberOfMonths={2}
+                                     portal={true}
+                                     range
+                                     ref={datePickerRef}
+                                     style={{display: 'none'}}
+                                     />
+                                     <input type="text" placeholder="Когда" className='h-full w-full border border-[#c0bfbf] outline-none px-[10px]' value={myAirlinesDate[0] ? myAirlinesDate[0].format?.("DD-MM-YYYY"): ''} onClick={() => datePickerRef.current.openCalendar()}/>
+ 
+                                     </label> 
+                             </div>
+                             <input type="text" placeholder="Обратно" className='h-full w-full border border-[#c0bfbf] outline-none px-[10px] col-3' style={{padding: '0 10px'}} value={myAirlinesDate[1] ? myAirlinesDate[1].format?.("DD-MM-YYYY"): ''} onClick={() => datePickerRef.current.openCalendar()}/>
+ 
+                             <div className='h-full rounded-r-lg border border-[#c0bfbf] outline-none px-[10px] bg-white w-[226px]  flex items-center justify-between relative col-4'>
+                                   <div className="flex items-center justify-between w-full cursor-pointer" onClick={() => setClassModalShow(!classModalShow)}>
+                                     <div>
+                                         <h3>1 пассажир</h3>
+                                         <p className='text-[#AEAEAE]'>Эконом класс</p>
+                                     </div>
+ 
+                                     <img src={arrowDown} alt="" />
+                                   </div>
+ 
+                                 {classModalShow && (
+                                   <div className="absolute p-5 min-w-full right-0 bg-[white] z-10 text-[#222] shadow-2xl rounded-lg" style={{top: 'calc(100% + 10px)', width: '190%', maxWidth: '200%'}}>
+                                     <div><h3>1 пассажир</h3></div>
+                                     <div className="flex items-center justify-between my-3">
+                                       <p className="text-lg mr-5 text-[#222] font-light">12 лет и старше</p>
+                                       <div className="flex items-center justify-between">
+                                         <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => dispatch(setTicketAdult(ticketAdults + 1))}>+</button>
+                                           <h1 className="mx-3">{ticketAdults}</h1>
+                                         <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => ticketAdults > 1 && dispatch(setTicketAdult(ticketAdults - 1))}>-</button>
+                                       </div>
+                                     </div>
+ 
+                                     <div className="flex items-center justify-between mb-3">
+                                       <h2 className="text-lg mr-5 text-[#222] font-light">от 2 до 12 лет</h2>
+                                       <div className="flex items-center justify-between">
+                                         <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => dispatch(setTicketChild(ticketChild + 1))}>+</button>
+                                           <h1 className="mx-3">{ticketChild}</h1>
+                                         <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => ticketChild > 0 && dispatch(setTicketChild(ticketChild - 1))}>-</button>
+                                       </div>
+                                     </div>
+ 
+                                     <div className="flex items-center justify-between mb-3">
+                                       <h2 className="text-lg mr-5 text-[#222] font-light">до 2 лет</h2>
+                                       <div className="flex items-center justify-between">
+                                         <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => dispatch(setTicketBabies(ticketBabies + 1))}>+</button>
+                                           <h1 className="mx-3">{ticketBabies}</h1>
+                                         <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => ticketBabies > 0 && dispatch(setTicketBabies(ticketBabies - 1))}>-</button>
+                                       </div>
+                                     </div>
+ 
+                                     <div className="border-b-4 pb-4 pt-2">
+                                       <p className="text-sm">Укажите возраст на момент отправления</p>
+                                     </div>
+ 
+                                     <div>
+                                       <Switch
+                                       checked={checkedBiznes}
+                                       onChange={(e) => {setCheckedBiznes(e.target.checked); e.target.checked ? dispatch(setTicketTarif('b')) : dispatch(setTicketTarif('a'))}}
+                                       inputProps={{ 'aria-label': 'controlled' }}
+                                     />
+                                     <label htmlFor="">Бизнес класс</label>
+                                     </div>
+                                   </div>
+                                 )}
+                             </div>
+                             <div className='flex items-center justify-center col-4'>
+                                 <button className='bg-[transparent] mr-3 text-white h-[66px] w-full'>
+                                     Найти
+                                 </button>
+                             </div>
+                             
+                          </div>
+                         </div>
+                    </CustomTabPanel>
+                    <CustomTabPanel value={value} index={2} className="mt-5 pb-5">
+                    <div className='bg-[#0057BE] h-[66px] flex items-center flex-wrap rounded-lg'>
+                          
+                          <div className="h-full w-full flex items-center" style={{padding: '3px'}}>
+                          <div className="relative col-4 h-full" style={{padding: '0'}}>
+                             <input className='h-full w-full rounded-l-lg border border-[#c0bfbf] outline-none px-[10px]' type="text" placeholder='Откуда' value={myAirlines || ''} onChange={(e) => {setMyAirlines(e.target.value) ;searchAirportsFnc(e.target.value)}}/>
+ 
+                             {airlinesDataFrom && (
+                                 <div className="searchDataList z-10">
+                                 {airlinesDataFrom.map((item, index) => 
+                                 <div key={index} onClick={() => {setMyAirlines(item.cityName); setMyAirlinesCode(item.cityIataCode); setAirlinesDataFrom()}}>
+                                     <p>{item.cityName}</p>
+                                     <p>{item.cityIataCode}</p>
+                                 </div>
+                                 )}
+                                 </div>
+                             )}
+ 
+                             </div>
+                             <div className='h-full col-1 border border-[#c0bfbf] outline-none bg-white w-[60px] flex items-center justify-center'>
+                                 <img src={arrowSwap} className="cursor-pointer w-full" alt="" onClick={() => reverseAirportName()}/>
+                             </div>
+                             <div className="relative col-4 h-full" style={{padding: '0'}}>
+                             <input className='h-full w-full border border-[#c0bfbf] outline-none px-[10px]' type="text" placeholder='Куда' value={myAirlinesTo || ''} onChange={(e) => {setMyAirlinesTo(e.target.value); searchAirportsToFnc(e.target.value)}}/>
+                             {airlinesDataTo && (
+                                 <div className="searchDataList2 z-10">
+                                 {airlinesDataTo.map((item, index) => 
+                                 <div key={index} onClick={() => {setMyAirlinesTo(item.cityName); setMyAirlinesCodeTo(item.cityIataCode); setAirlinesDataTo()}}>
+                                     <p>{item.cityName}</p>
+                                     <p>{item.cityIataCode}</p>
+                                 </div>
+                                 )}
+                                 </div>
+                             )}
+ 
+                             </div>
+                             <div className="col-4 h-full" style={{padding: '0'}}>
+                                 <label htmlFor="">
+                                     <DatePicker
+                                     onChange={(e) => {setMyAirlinesDate(e)}}
+                                     // format="DD-MM-YYYY"
+                                     minDate={new Date()}
+                                     // value={myAirlinesDate}
+                                     animations={[transition()]}
+                                     headerOrder={["MONTH_YEAR", "LEFT_BUTTON", "RIGHT_BUTTON"]} 
+                                     numberOfMonths={2}
+                                     portal={true}
+                                     range
+                                     ref={datePickerRef}
+                                     style={{display: 'none'}}
+                                     />
+                                     <input type="text" placeholder="Когда" className='h-full w-full border border-[#c0bfbf] outline-none px-[10px]' value={myAirlinesDate[0] ? myAirlinesDate[0].format?.("DD-MM-YYYY"): ''} onClick={() => datePickerRef.current.openCalendar()}/>
+ 
+                                     </label> 
+                             </div>
+                             <input type="text" placeholder="Обратно" className='h-full w-full border border-[#c0bfbf] outline-none px-[10px] col-3' style={{padding: '0 10px'}} value={myAirlinesDate[1] ? myAirlinesDate[1].format?.("DD-MM-YYYY"): ''} onClick={() => datePickerRef.current.openCalendar()}/>
+ 
+                             <div className='h-full rounded-r-lg border border-[#c0bfbf] outline-none px-[10px] bg-white w-[226px]  flex items-center justify-between relative col-4'>
+                                   <div className="flex items-center justify-between w-full cursor-pointer" onClick={() => setClassModalShow(!classModalShow)}>
+                                     <div>
+                                         <h3>1 пассажир</h3>
+                                         <p className='text-[#AEAEAE]'>Эконом класс</p>
+                                     </div>
+ 
+                                     <img src={arrowDown} alt="" />
+                                   </div>
+ 
+                                 {classModalShow && (
+                                   <div className="absolute p-5 min-w-full right-0 bg-[white] z-10 text-[#222] shadow-2xl rounded-lg" style={{top: 'calc(100% + 10px)', width: '190%', maxWidth: '200%'}}>
+                                     <div><h3>1 пассажир</h3></div>
+                                     <div className="flex items-center justify-between my-3">
+                                       <p className="text-lg mr-5 text-[#222] font-light">12 лет и старше</p>
+                                       <div className="flex items-center justify-between">
+                                         <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => dispatch(setTicketAdult(ticketAdults + 1))}>+</button>
+                                           <h1 className="mx-3">{ticketAdults}</h1>
+                                         <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => ticketAdults > 1 && dispatch(setTicketAdult(ticketAdults - 1))}>-</button>
+                                       </div>
+                                     </div>
+ 
+                                     <div className="flex items-center justify-between mb-3">
+                                       <h2 className="text-lg mr-5 text-[#222] font-light">от 2 до 12 лет</h2>
+                                       <div className="flex items-center justify-between">
+                                         <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => dispatch(setTicketChild(ticketChild + 1))}>+</button>
+                                           <h1 className="mx-3">{ticketChild}</h1>
+                                         <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => ticketChild > 0 && dispatch(setTicketChild(ticketChild - 1))}>-</button>
+                                       </div>
+                                     </div>
+ 
+                                     <div className="flex items-center justify-between mb-3">
+                                       <h2 className="text-lg mr-5 text-[#222] font-light">до 2 лет</h2>
+                                       <div className="flex items-center justify-between">
+                                         <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => dispatch(setTicketBabies(ticketBabies + 1))}>+</button>
+                                           <h1 className="mx-3">{ticketBabies}</h1>
+                                         <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{lineHeight: '0.5'}} onClick={() => ticketBabies > 0 && dispatch(setTicketBabies(ticketBabies - 1))}>-</button>
+                                       </div>
+                                     </div>
+ 
+                                     <div className="border-b-4 pb-4 pt-2">
+                                       <p className="text-sm">Укажите возраст на момент отправления</p>
+                                     </div>
+ 
+                                     <div>
+                                       <Switch
+                                       checked={checkedBiznes}
+                                       onChange={(e) => {setCheckedBiznes(e.target.checked); e.target.checked ? dispatch(setTicketTarif('b')) : dispatch(setTicketTarif('a'))}}
+                                       inputProps={{ 'aria-label': 'controlled' }}
+                                     />
+                                     <label htmlFor="">Бизнес класс</label>
+                                     </div>
+                                   </div>
+                                 )}
+                             </div>
+                             <div className='flex items-center justify-center col-4'>
+                                 <button className='bg-[transparent] mr-3 text-white h-[66px] w-full' >
+                                     Найти
+                                 </button>
+                             </div>
+                             
+                          </div>
+                         </div>
+                    </CustomTabPanel>
+                </Box>
+                {!ticketLoad && (
+                <div className='bg-[#F7F7F7] w-[857px]  flex relative mx-auto mt-[2%]  p-[30px]'>
+                    <div className="">
+                        <h1 className='text-[#222222] text-[40px] font-bold  mb-[15px]'>Секономьте на ваших перелетах</h1>
+                        <p className=' text-[#222222] text-[20px] font-normal  leading-[26px] mb-[30px]'>Покупайте у нас билеты дешевле и при этом получайте бонусы и <br /> кэшбэк на каждый свой рейс!</p>
+                        <button className='text-white text-[18px] font-semibold bg-[#00A8FF] border-none p-[15px] rounded-lg'>Хочу сэкономить</button>
+                    </div>
+                    <img className='absolute left-[660px]' style={{top: '-20px', height: 'calc(100% + 20px)'}} src={girlImg} alt="" />
                 </div>
-              )}
-            </Grid>
+                )}
+            </div>
 
-            <Grid item lg={3} md={6} xs={12} sx={{ position: "relative" }}>
-              <label htmlFor="">
-                <p>
-                  Qayerga
-                  <FlightLandIcon />
-                </p>
-                <input type="text" name="" id="" value={myAirlinesTo} placeholder="Istanbul" onChange={(e) => {setMyAirlinesTo(e.target.value); searchAirportsToFnc(e.target.value)}}/>
-              </label>
+            {classModalShow && (
+                          <div className="classBg absolute top-0 left-0 w-full block" style={{zIndex: '5'}} onClick={() => setClassModalShow(false)}>
+                            sss
+                          </div>
+                        )}
 
-              {airlinesDataTo && (
-                <div className="searchDataList2">
-                  {airlinesDataTo.map((item, index) => 
-                  <div key={index} onClick={() => {setMyAirlinesTo(item.cityName); setMyAirlinesCodeTo(item.cityIataCode); setAirlinesDataTo()}}>
-                      <p>{item.cityName}</p>
-                      <p>{item.cityIataCode}</p>
-                  </div>
-                  )}
-                </div>
-              )}
-            </Grid>
 
-            <Grid item lg={2} xs={6}>
-              <label htmlFor="">
-                Ketish sanasi
-                <input type="date" name="" id="" onChange={(e) => setMyAirlinesDate(e.target.value)}/>
-              </label>
-            </Grid>
-
-            {/* <Grid item lg={2} xs={6}>
-              <label htmlFor="">
-                Kelish sanasi
-                <input type="date" name="" id=""/>
-              </label>
-            </Grid> */}
-
-            <Grid
-              item
-              sx={{
-                position: "relative",
-              }}
-              lg={2}
-              xs={12}
-            >
-              <label htmlFor="">
-                Yo'lovchilar va klass
-                {/* <input
-                  onFocus={() => setShow(true)}
-                  type="text"
-                  name=""
-                  id=""
-                /> */}
-                <div onClick={handleShow} className="passengers">
-                  <h3>
-                    1, <span>Istalgan</span>{" "}
-                  </h3>
-                  <ArrowDropDownIcon />
-                </div>
-                {/* <Button onClick={handleShow}>show modal</Button> */}
-              </label>
-              <TypeModal />
-            </Grid>
-
-            <Grid item lg={12} xs={12}>
-              <button className="find" onClick={(e) => getRecommendationFnc()}>
-                Chipta izlash
-                <ConnectingAirportsIcon />
-              </button>
-            </Grid>
-          </Grid>
+            <Ticket loading={loadingGetRecommendation}/>
+            {loader && <Loader />}
         </div>
-      </Container>
-    </div>
+    </>
   );
 }
 
