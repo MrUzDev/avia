@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/Footer/Footer";
-import Main from "./components/Main/Main";
+import Main from "./Components/Modal/Modal";
 import { Contexts } from "./contexts/Contexts";
-import BasicModal from "./components/Modal/Modal";
-import ShopTicket from "./components/ShopTicket/ShopTicket";
+
 import { Routes, Route } from "react-router-dom";
 import { Modal } from "@mui/material";
-import Home from "./pages/Home/Home";
 import './Grid/Grid.css'
+import Navbar from "./Components/Navbar/Navbar";
+import Footer from "./Components/Footer/Footer";
+import Home from "./pages/Home/Home";
+import ShopTicket from "./Components/ShopTicket/ShopTicket";
+import BasicModal from "./Components/Modal/Modal";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -23,7 +24,6 @@ function App() {
             <Route path='/' element={<Home />}/>
             <Route path='/order/:id' element={<ShopTicket/>}/>
           </Routes>
-
 
           <BasicModal/>
       </Contexts.Provider>

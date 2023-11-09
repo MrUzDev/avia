@@ -7,10 +7,11 @@ import Box from '@mui/material/Box';
 import AirplanemodeActiveIcon from '@mui/icons-material/AirplanemodeActive';
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
 import TrainOutlinedIcon from '@mui/icons-material/TrainOutlined';
-import arrowSwap from "../../assets/icons/arrow-swap-horizontal.svg"
-import kalendar from "../../assets/icons/calendar.svg";
-import arrowDown from "../../assets/icons/arrow-down.svg"
-import girlImg from "../../assets/images/girl.png"
+import arrowSwap from "../../Assets/icons/arrow-swap-horizontal.svg"
+import kalendar from "../../Assets/icons/calendar.svg";
+import arrowDown from "../../Assets/icons/arrow-down.svg"
+import girlImg from "../../Assets/images/girl.png"
+import "./ShowCase.css"
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -52,8 +53,8 @@ function ShowCase() {
         setValue(newValue);
     };
     return (
-        <div className='mt-[5%]'>
-            <div className="container mx-auto">
+        <div className='mt-[5%] reys'>
+            <div className=" w-full container mx-auto">
                 <h1 className='text-center text-[64px] text-[#0057BE]  mb-[2%]'>Самый правильный путь к путешествиям</h1>
                 <Box sx={{ width: '100%' }}>
                     <Box>

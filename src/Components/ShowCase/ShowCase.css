@@ -1,0 +1,9 @@
+.reys .MuiBox-root {
+    padding: 15px 0;
+}
+
+@media (max-width: 768px) {
+    .container {
+        max-width: 90% !important;
+    }
+}

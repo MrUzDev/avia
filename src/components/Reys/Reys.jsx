@@ -1,12 +1,12 @@
 import React from 'react'
-import tRus from "../../assets/images/t-rossiya.png"
-import newYork from "../../assets/images/newyork.png"
-import parij from "../../assets/images/parij.png"
-import maldiva from "../../assets/images/maldiva.png"
-import puket from "../../assets/images/puket.png"
-import london from "../../assets/images/london.png"
-import samarkand from "../../assets/images/samarkand.png"
-import kair from "../../assets/images/kair.png"
+import tRus from "../../Assets/images/t-rossiya.png"
+import newYork from "../../Assets/images/newyork.png"
+import parij from "../../Assets/images/parij.png"
+import maldiva from "../../Assets/images/maldiva.png"
+import puket from "../../Assets/images/puket.png"
+import london from "../../Assets/images/london.png"
+import samarkand from "../../Assets/images/samarkand.png"
+import kair from "../../Assets/images/kair.png"
 
 function Reys() {
     const reysData = [
@@ -54,7 +54,7 @@ function Reys() {
     ]
     return (
         <div className='container mx-auto mt-[2%]'>
-            <div className="grid grid-cols-4 gap-[20px]">
+            <div className="grid xs:grid-cols-1 gap-[20px]  sm:grid-cols-2 lg:grid-cols-4">
                 {
                     reysData.map(item => (
                         <div className='flex items-center mb-[10px]'>

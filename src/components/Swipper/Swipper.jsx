@@ -6,7 +6,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 
-import image from "../../assets/images/swiper.png"
+import image from "../../Assets/images/swiper.png"
 function Swipper() {
     return (
         <Swiper

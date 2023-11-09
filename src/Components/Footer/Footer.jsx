@@ -1,10 +1,10 @@
 import React from 'react'
-import logo from "../../assets/icons/footerLogo.svg"
-import appStore from "../../assets/icons/app store.svg"
-import googlePlay from "../../assets/icons/google play.svg"
-import twitter from "../../assets/icons/twitter.svg"
-import instagram from "../../assets/icons/instagram.svg"
-import facebook from "../../assets/icons/facebook.svg"
+import logo from "../../Assets/icons/footerLogo.svg"
+import appStore from "../../Assets/icons/app store.svg"
+import googlePlay from "../../Assets/icons/google play.svg"
+import twitter from "../../Assets/icons/twitter.svg"
+import instagram from "../../Assets/icons/instagram.svg"
+import facebook from "../../Assets/icons/facebook.svg"
 
 function Footer() {
     const ulData = [
@@ -48,9 +48,9 @@ function Footer() {
         },
     ]
     return (
-        <div className=''>
+<div className=''>
             <div className="container mx-auto mt-[100px]">
-                <div className='flex justify-between items-start'>
+                <div className='grid xs:grid-cols-1 gap-[20px] sm:grid-cols-3 lg:grid-cols-5'>
                     <img src={logo} alt="" />
                     {
                         ulData.map((item, index) => (
