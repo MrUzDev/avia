@@ -3,7 +3,7 @@ import Main from "./Components/Modal/Modal";
 import { Contexts } from "./contexts/Contexts";
 
 import { Routes, Route } from "react-router-dom";
-import { Modal } from "@mui/material";
+// import { Modal } from "@mui/material";
 import './Grid/Grid.css'
 import Navbar from "./Components/Navbar/Navbar";
 import Footer from "./Components/Footer/Footer";

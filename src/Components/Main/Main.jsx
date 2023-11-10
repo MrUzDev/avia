@@ -229,6 +229,7 @@ function Main() {
 
   useEffect(() => {
     if (getRecommendationSuc) {
+      console.log(getRecommendationData.data);
       dispatch(changeTicketData(getRecommendationData.data))
       console.log(getRecommendationData.data);
       getRecommendationData.data && setTokenAirlines(getRecommendationData.data.search.token)
@@ -251,6 +252,7 @@ function Main() {
     setMyAirlinesCode(myAirlinesCodeToDef)
     setMyAirlinesCodeTo(myAirlinesCodeDef)
   }
+  
   // reverse Airport Name end
 
   useEffect(() => {
@@ -324,7 +326,7 @@ function Main() {
 
 
             <CustomTabPanel value={value} index={0} className="mt-5 pb-5">
-              <div className='bg-[#0057BE] h-[66px] hidden lg:flex items-center px-[3px] rounded-lg'>
+              <div className='bg-[#0057BE] h-[66px] hidden lg:flex items-center  rounded-lg'>
                 <div className="h-full w-full flex items-center" style={{ padding: '3px' }}>
                   <div className="relative col-4 h-full" style={{ padding: '0' }}>
                     <input className='h-full w-full rounded-l-lg border border-[#c0bfbf] capitalize outline-none px-[10px]' type="text" placeholder='Откуда' value={myAirlines || ''} onChange={(e) => { setMyAirlines(e.target.value); searchAirportsFnc(e.target.value) }} />
@@ -361,9 +363,7 @@ function Main() {
                     <label htmlFor="">
                       <DatePicker
                         onChange={(e) => { setMyAirlinesDate(e) }}
-                        // format="DD-MM-YYYY"
                         minDate={new Date()}
-                        // value={myAirlinesDate}
                         animations={[transition()]}
                         headerOrder={["MONTH_YEAR", "LEFT_BUTTON", "RIGHT_BUTTON"]}
                         numberOfMonths={2}
@@ -439,29 +439,64 @@ function Main() {
                     <button className='bg-[transparent] mr-3 text-white h-[66px] w-full' onClick={(e) => getRecommendationFnc('for_btn')}>
                       Найти
                     </button>
-
-
                   </div>
 
                 </div>
               </div>
-              <div className='flex lg:hidden flex-col'>
-                <div className='p-[15px] flex flex-col border border-[#c0bfbf] rounded-lg'>
-                  <input className=' outline-none px-[10px]' type="text" placeholder='Откуда' />
-                  <div className='flex w-full items-center'>
+              <div className='flex lg:hidden   flex-col'>
+                <div className='p-[15px] relative flex flex-col border border-[#c0bfbf] rounded-lg'>
+                  <input className='outline-none px-[10px]' type="text" placeholder='Откуда' value={myAirlines || ''} onChange={(e) => { setMyAirlines(e.target.value); searchAirportsFnc(e.target.value) }}/>
+
+                     {airlinesDataFrom && (
+                      <div className="searchDataList z-10">
+                        {airlinesDataFrom.map((item, index) =>
+                          <div key={index} onClick={() => { setMyAirlines(item.cityName); setMyAirlinesCode(item.cityIataCode); setAirlinesDataFrom() }}>
+                            <p>{item.cityName}</p>
+                            <p>{item.cityIataCode}</p>
+                          </div>
+                        )}
+                      </div>
+                    )} 
+
+                  <div className='flex w-full items-center relative'>
                     <div className='border border-[#c0bfbf] w-full'></div>
                     <div className='h-[40px] w-[50px] flex items-center justify-center rounded-[50%] bg-[#AEAEAE]'>
-                      <img className='' src={arrowSwap2} alt="" />
+                      <img className='' src={arrowSwap2} alt="" onClick={() => reverseAirportName()}/>
                     </div>
                   </div>
-                  <input className=' outline-none px-[10px]' type="text" placeholder='Куда' />
+                  <input className=' outline-none px-[10px]' type="text" placeholder='Куда' value={myAirlinesTo || ''} onChange={(e) => { setMyAirlinesTo(e.target.value); searchAirportsToFnc(e.target.value) }}/>
+                    
+                  {airlinesDataTo && (
+                      <div className="searchDataList2 z-10">
+                        {airlinesDataTo.map((item, index) =>
+                          <div key={index} onClick={() => { setMyAirlinesTo(item.cityName); setMyAirlinesCodeTo(item.cityIataCode); setAirlinesDataTo() }}>
+                            <p>{item.cityName}</p>
+                            <p>{item.cityIataCode}</p>
+                          </div>
+                        )}
+                      </div>
+                  )}
+               
                 </div>
                 <div className='flex items-center justify-between mt-[15px] gap-3'>
-                  <div className=' h-[60px] border border-[#c0bfbf] outline-none px-[10px] bg-white w-full flex items-center justify-between rounded-lg'>
-                    <p className='text-[#AEAEAE]'>Когда</p>
-                    <img src={kalendar} alt="" />
+                  <div className=' h-[60px]  bg-white w-full flex items-center justify-between rounded-lg'>
+                  <label htmlFor="" className="h-full w-full ">
+                      <DatePicker
+                        onChange={(e) => { setMyAirlinesDate(e) }}
+                        minDate={new Date()}
+                        animations={[transition()]}
+                        headerOrder={["MONTH_YEAR", "LEFT_BUTTON", "RIGHT_BUTTON"]}
+                        numberOfMonths={2}
+                        portal={true}
+                        range
+                        ref={datePickerRef}
+                        style={{ display: 'none' }}
+                      />
+                      <input type="text" placeholder="Когда" className='h-full w-full border rounded-lg border-[#c0bfbf] outline-none px-[10px]' value={myAirlinesDate[0] ? myAirlinesDate[0].format?.("DD-MM-YYYY") : ''} onClick={() => datePickerRef.current.openCalendar()} />
+
+                    </label>
                   </div>
-                  <input className='h-[60px] border border-[#c0bfbf] outline-none px-[10px] w-full rounded-lg' type="text" placeholder='Обратно' />
+                  <input className='h-[60px] border border-[#c0bfbf] outline-none px-[10px] w-full rounded-lg' type="text" placeholder='Обратно' value={myAirlinesDate[1] ? myAirlinesDate[1].format?.("DD-MM-YYYY") : ''} onClick={() => datePickerRef.current.openCalendar()}/>
                 </div>
                 <div className='h-[60px] mt-[15px] rounded-lg border border-[#c0bfbf] outline-none px-[10px] bg-white w-full  flex items-center justify-between'>
                   <div>
@@ -469,6 +504,11 @@ function Main() {
                     <p className='text-[#AEAEAE]'>Эконом класс</p>
                   </div>
                   <img src={arrowDown} alt="" />
+                </div>
+                <div>
+                <button className='bg-[#0057BE] rounded-lg mt-3 mr-3 text-white h-[66px] w-full' onClick={(e) => getRecommendationFnc('for_btn')}>
+                      Найти
+                </button>
                 </div>
               </div>
 

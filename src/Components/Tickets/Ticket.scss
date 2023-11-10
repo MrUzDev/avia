@@ -112,12 +112,8 @@
       }
 
       .bottom {
-        // display: grid;
-        // margin-top: 65px;
-        // grid-template-columns: repeat(3, auto);
-        // margin-right: 10px;
         display: flex;
-        align-items: center;
+        // align-items: center;
         justify-content: space-between;
         margin-top: 20px;
 
@@ -170,15 +166,7 @@
           svg {
             color: #605dec;
           }
-          div.line {
-            text-align: center;
-            margin-top: 30px;
-            div {
-              width: 150px;
-              height: 1px;
-              background-color: gray;
-            }
-          }
+          
 
           div.middle {
             color: gray;
@@ -188,20 +176,19 @@
           }
         }
       }
+      div.line {
+        text-align: center;
+        div {
+          width: 150px;
+          height: 1px;
+          background-color: gray;
+        }
+      }
     }
 
     .right {
-      // margin-bottom: 15px;
-      // padding-bottom: 30px;
-      // height: 180px;
-      // width: 180px;
-      border-left: 2px solid gray;
-      // padding-left: 5px;
-      // padding-right: 0;
-      width: 20%;
       display: flex;
       flex-direction: column;
-      align-items: center;
       p.rate {
         font-weight: 700;
       }
@@ -212,7 +199,7 @@
 
       button.bgBlue {
         // width: 100%;
-        background-color: #605dec;
+        background-color: #0057BE;
         border: none;
         border-radius: 8px;
         color: white;
@@ -234,58 +221,3 @@
     }
   }
 }
-
-.af::after {
-  content: "";
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  border: 3px solid #605dec;
-  // border-bottom: none;
-  // border-top: none;
-  background-color: #605dec;
-}
-
-// @media (max-width: 1110px) {
-//   .Ticket {
-//     display: inline-block;
-//     .checklist {
-//       margin: auto;
-//     }
-//   }
-// }
-
-// @media (max-width: 900px) {
-//   .Ticket {
-//     display: inline-block;
-//     width: 100%;
-//     margin-bottom: 20px;
-//     .checklist {
-//       margin: auto;
-//       width: 100%;
-//       margin-bottom: 25px;
-//     }
-//     .box {
-//       display: inline-block;
-//       margin: auto;
-//       width: 100%;
-//       height: 400px;
-//       .left {
-//         margin-bottom: 20px;
-//         width: 100%;
-//         .bottom {
-//           .line {
-//           }
-//         }
-//       }
-//       .right {
-//         width: 100%;
-//         padding: 0;
-//         border-left: none;
-//         border-top: 1px solid gray;
-//         padding-top: 20px;
-//       }
-//     }
-//   }
-// }
