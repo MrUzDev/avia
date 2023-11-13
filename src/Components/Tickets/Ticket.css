@@ -7,8 +7,7 @@
   width: 100%;
   height: auto;
   border: 1px solid white;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-          box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 20px;
   padding: 30px 20px;
 }
@@ -68,24 +67,18 @@
   width: 100%;
   height: auto;
   border: 1px solid white;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-          box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 20px;
   padding: 20px 25px;
 }
 
 .Ticket .box .container-box {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
 }
+
 
 .Ticket .box .container-box:nth-child(2) {
   margin-top: 20px;
@@ -98,8 +91,6 @@
 }
 
 .Ticket .box .left .top {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
 }
 
@@ -117,18 +108,12 @@
 }
 
 .Ticket .box .left .bottom {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
   margin-top: 20px;
 }
 
 .Ticket .box .left .bottom p.data {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   font-size: 15px;
 }
@@ -149,8 +134,6 @@
 }
 
 .Ticket .box .left .bottom .map {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
 }
 
@@ -202,13 +185,8 @@
 }
 
 .Ticket .box .right {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  flex-direction: column;
 }
 
 .Ticket .box .right p.rate {
@@ -236,4 +214,61 @@
   border-radius: 8px;
   padding: 10px 20px;
 }
+
 /*# sourceMappingURL=Ticket.css.map */
+
+
+@media screen and (max-width:647px) {
+  .Ticket .box {
+    width: 290px;
+    padding: 15px;
+  }
+
+  .Ticket .box .container-box {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .Ticket .box .left {
+    width: 100%;
+  }
+
+  .Ticket .box .left div.line {
+    display: none;
+  }
+
+  .Ticket .box .left .bottom .map {
+    gap: 20px;
+  }
+}
+
+@media screen and (max-width:768px) {
+  .Ticket .box {
+    width: 700px;
+  }
+
+  .Ticket .box .container-box {
+    gap: 20px;
+  }
+}
+
+@media screen and (min-width:770px) and (max-width:1024px) {
+  .Ticket .box {
+    width: 770px;
+  }
+
+  .Ticket .box .container-box {
+    gap: 20px;
+  }
+}
+
+@media screen and (max-width:1200px) {
+  .Ticket .box {
+    width: 1030px;
+  }
+
+  .Ticket .box .container-box {
+    gap: 20px;
+  }
+}

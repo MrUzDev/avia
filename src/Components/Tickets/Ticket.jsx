@@ -56,11 +56,9 @@ function Ticket(props) {
           container
           spacing={2}
           sx={{ justifyContent: "space-between", alignItems: "flex-start" }}>
-
             {ticketFilterShow === true &&(
             <Grid item lg={3} className="w-full">
             <div className="checklist">
-
               <div className="transfer">
                 <h3>O'tkazish</h3>
 
@@ -99,11 +97,11 @@ function Ticket(props) {
           {TicketData && TicketData.flights.length > 0
             ? TicketData.flights.map((item, inx) => (
                 <Grid item lg={12} sx={{marginBottom: '20px'}}>
-                  <div className="box">
+                  <div className="box w-[100%]">
                     {item.segments.length == 2 ? (
                       item.segments.map((twoItem, index) => (
                         <div className="container-box" key={index}>
-                          <div className="left border border-[#ccc]">
+                          <div className="left border border-[#ccc] w-full">
                             <div className="top">
                               <img src="" alt="" />
 

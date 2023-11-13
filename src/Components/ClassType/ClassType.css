@@ -2,25 +2,17 @@
   background-color: white;
   border-radius: 25px;
 }
-
 .classTypeAll .classType {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
 }
-
 .classTypeAll .classType:nth-child(2) {
   margin-top: 50px;
   margin-bottom: 50px;
 }
-
 .classTypeAll .classType p {
   font-size: 14px;
 }
-
 .classTypeAll .classType span {
   font-size: 12px;
   color: gray;
@@ -28,26 +20,16 @@
 }
 
 .regime {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  justify-content: space-between;
   margin-top: 25px;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
   border-top: 1px solid gray;
   padding-top: 15px;
 }
-
 .regime .box {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
 }
-
 .regime .box input {
   margin-right: 5px;
 }
@@ -56,5 +38,4 @@
   .css-jly24a {
     width: 350px !important;
   }
-}
-/*# sourceMappingURL=ClassType.css.map */
+}/*# sourceMappingURL=ClassType.css.map */
