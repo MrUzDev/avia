@@ -29,21 +29,21 @@ function Ticket(props) {
   };
 
   const currency = (number, currency, lang = undefined) =>
-  Intl.NumberFormat(lang, { style: "currency", currency }).format(number);
+    Intl.NumberFormat(lang, { style: "currency", currency }).format(number);
 
 
   const filterInputChange = (checkbox) => {
 
-      if(checkbox.currentTarget.checked) {
-        dispatch(addFilterAirlines(checkbox.target.value))
-      }else {
-       dispatch(removeFilterAirlines(checkbox.target.value)) 
-      }
-      dispatch(checkChangeAir())
+    if (checkbox.currentTarget.checked) {
+      dispatch(addFilterAirlines(checkbox.target.value))
+    } else {
+      dispatch(removeFilterAirlines(checkbox.target.value))
+    }
+    dispatch(checkChangeAir())
   }
 
   useEffect(() => {
-    if(TicketData || props.loading) {
+    if (TicketData || props.loading) {
       setTicketFilterShow(true)
     }
   }, [TicketData, props.loading])
@@ -56,49 +56,49 @@ function Ticket(props) {
           container
           spacing={2}
           sx={{ justifyContent: "space-between", alignItems: "flex-start" }}>
-            {ticketFilterShow === true &&(
+          {ticketFilterShow === true && (
             <Grid item lg={3} className="w-full">
-            <div className="checklist">
-              <div className="transfer">
-                <h3>O'tkazish</h3>
+              <div className="checklist">
+                <div className="transfer">
+                  <h3>O'tkazish</h3>
 
-                <div className="checkbox ">
-                  <input type="checkbox" id="wout" />
-                  <label htmlFor="wout">O'tkazishsiz</label>
+                  <div className="checkbox ">
+                    <input type="checkbox" id="wout" />
+                    <label htmlFor="wout">O'tkazishsiz</label>
+                  </div>
+
+                  <div className="checkbox">
+                    <input type="checkbox" id="1" />
+                    <label htmlFor="1">1ta O'tkazish</label>
+                  </div>
+
+                  <div className="checkbox">
+                    <input type="checkbox" id="2" />
+
+                    <label htmlFor="2">2 O'tkazish</label>
+
+                  </div>
+
                 </div>
 
-                <div className="checkbox">
-                  <input type="checkbox" id="1" />
-                  <label htmlFor="1">1ta O'tkazish</label>
+                <div className="company">
+                  <h3>O'tkazish</h3>
+                  {allAirlinesName && allAirlinesName.map((item) =>
+                    <div className="checkbox">
+                      <input type="checkbox" id={item.name} value={item.code} onClick={(e) => { filterInputChange(e) }} />
+                      <label htmlFor={item.name}>{item.name}</label>
+                    </div>
+                  )}
                 </div>
-
-                <div className="checkbox">
-                  <input type="checkbox" id="2" />
-                  
-                  <label htmlFor="2">2 O'tkazish</label>
-
-                </div>
-
               </div>
-              
-              <div className="company">
-                <h3>O'tkazish</h3>
-                {allAirlinesName && allAirlinesName.map((item) => 
-                <div className="checkbox">
-                  <input type="checkbox" id={item.name} value={item.code} onClick={(e) => {filterInputChange(e)}}/>
-                  <label htmlFor={item.name}>{item.name}</label>
-                </div>
-                )}
-              </div>
-            </div>
-             </Grid>
-            )
-            } 
+            </Grid>
+          )
+          }
           <Grid item lg={9} >
 
-          {TicketData && TicketData.flights.length > 0
-            ? TicketData.flights.map((item, inx) => (
-                <Grid item lg={12} sx={{marginBottom: '20px'}}>
+            {TicketData && TicketData.flights.length > 0
+              ? TicketData.flights.map((item, inx) => (
+                <Grid item lg={12} sx={{ marginBottom: '20px' }}>
                   <div className="box w-[100%]">
                     {item.segments.length == 2 ? (
                       item.segments.map((twoItem, index) => (
@@ -107,25 +107,24 @@ function Ticket(props) {
                             <div className="top">
                               <img src="" alt="" />
 
-
-                                <h2>
-                                  <p>{item.provider.supplier.title}</p>
-                                    <span className="type">
-                                    {item.segments[index].class.name == "E"
-                                      ? "Ekonom"
-                                      : item.segments[index].class.name == "e"
+                              <h2>
+                                <p>{item.provider.supplier.title}</p>
+                                <span className="type">
+                                  {item.segments[index].class.name == "E"
+                                    ? "Ekonom"
+                                    : item.segments[index].class.name == "e"
                                       ? "Ekonom"
                                       : item.segments[index].class.name == "A"
-                                      ? "Istalgan"
-                                      : item.segments[index].class.name ==
-                                          "B" && "Biznes"}
-                                  </span>
-                                  <span className="class">
-                                    ({item.segments[index].class.name})
-                                  </span>
-                                  <AirlineSeatReclineNormalIcon />
-                                </h2>
-                          
+                                        ? "Istalgan"
+                                        : item.segments[index].class.name ==
+                                        "B" && "Biznes"}
+                                </span>
+                                <span className="class">
+                                  ({item.segments[index].class.name})
+                                </span>
+                                <AirlineSeatReclineNormalIcon />
+                              </h2>
+
                             </div>
 
                             <div className="bottom">
@@ -199,7 +198,7 @@ function Ticket(props) {
                               onClick={() => toShoppingTicket(item.id, item.price.UZS.amount)}
                             >
                               {item.price.UZS.amount && currency(item.price.UZS.amount, 'UZS').replace("UZS", "")
-                            .replace("soʻm", "").replace(/,/g, ".").slice(0, -3)} UZS
+                                .replace("soʻm", "").replace(/,/g, ".").slice(0, -3)} UZS
                             </button>
                           </div>
                         </div>
@@ -208,23 +207,27 @@ function Ticket(props) {
                       <div className="container-box" key={inx}>
                         <div className="left border-r pr-5 border-[#ccc]">
                           <div className="top">
-                            <h2 className="flex w-full justify-between items-center">
-                            <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.provider.supplier.code}.png`} alt="" />
+                            <h2 className="flex w-full justify-between items-center log">
+                              <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.provider.supplier.code}.png`} alt="" />
                               {/* <p>{item.provider.supplier.title}</p> */}
                               <p>
-                              <span className="type">
-                                {item.segments[0].class.name == "E"
-                                  ? "Ekonom"
-                                  : item.segments[0].class.name == "e"
-                                  ? "Ekonom"
-                                  : item.segments[0].class.name == "A"
-                                  ? "Istalgan"
-                                  : item.segments[0].class.name == "B" &&
-                                    "Biznes"}
-                              </span>
-                              <span className="class">
-                                ({item.segments[0].class.name})
-                              </span>
+                                <span className="type">
+                                  {item.segments[0].class.name == "E"
+                                    ? "Ekonom"
+                                    : item.segments[0].class.name == "e"
+                                      ? "Ekonom"
+                                      : item.segments[0].class.name == "A"
+                                        ? "Istalgan"
+                                        : item.segments[0].class.name == "B" &&
+                                        "Biznes"}
+                                </span>
+                                <span className="class">
+                                  ({item.segments[0].class.name})
+                                </span>
+                                <span className="hidden w-max sum">
+                                  {item.price.UZS.amount && currency(item.price.UZS.amount, 'UZS').replace("UZS", "")
+                                    .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ")} UZS
+                                </span>
                               </p>
                             </h2>
                           </div>
@@ -234,52 +237,51 @@ function Ticket(props) {
                               <h2 className="time">
                                 {item.segments[0].dep.time}
                               </h2>
-                              <p className="font-mono">
-                              {moment(item.segments[0].dep.date).format("MM MMMM ")}
-                              {moment(item.segments[0].arr.date).format("dddd").slice(0,3)}
+                              <p className="font-mono tex">
+                                {moment(item.segments[0].dep.date).format("MM MMMM ")}
+                                {moment(item.segments[0].arr.date).format("dddd").slice(0, 3)}
 
                               </p>
-                              <p className="font-mono"> {item.segments[0].dep.city.title} ({item.segments[0].dep.city.code})</p>
-                            
+                              <p className="font-mono tex"> {item.segments[0].dep.city.title} ({item.segments[0].dep.city.code})</p>
                             </div>
                             <div>
-                            <div className="map w-full justify-between">
-                              <div className="from">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                  <g clip-path="url(#clip0_865_2363)">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE"/>
-                                  </g>
-                                  <defs>
-                                    <clipPath id="clip0_865_2363">
-                                      <rect width="24" height="24" rx="4" fill="white"/>
-                                    </clipPath>
-                                  </defs>
-                                </svg>
+                              <div className="map w-full justify-between">
+                                <div className="from">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <g clip-path="url(#clip0_865_2363)">
+                                      <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
+                                    </g>
+                                    <defs>
+                                      <clipPath id="clip0_865_2363">
+                                        <rect width="24" height="24" rx="4" fill="white" />
+                                      </clipPath>
+                                    </defs>
+                                  </svg>
+                                </div>
+
+                                <div className="to">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <g clip-path="url(#clip0_865_2363)">
+                                      <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
+                                    </g>
+                                    <defs>
+                                      <clipPath id="clip0_865_2363">
+                                        <rect width="24" height="24" rx="4" fill="white" />
+                                      </clipPath>
+                                    </defs>
+                                  </svg>
+                                </div>
                               </div>
-                   
-                              <div className="to">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                  <g clip-path="url(#clip0_865_2363)">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE"/>
-                                  </g>
-                                  <defs>
-                                    <clipPath id="clip0_865_2363">
-                                      <rect width="24" height="24" rx="4" fill="white"/>
-                                    </clipPath>
-                                  </defs>
-                                </svg>
-                              </div>
-                            </div>
-                          
-                            <div className="line mt-4">
+
+                              <div className="line mt-4">
                                 <div className="relative">
                                   <span className="absolute block left-0 bottom-0 translate-y-1 rounded-md bg-[#FFC107] w-10 h-2"></span>
                                   <span className="absolute block right-2/4 bottom-0 translate-y-1 translate-x-4  rounded-md bg-[#EF2323] w-6 h-2"></span>
                                   <span className="absolute block right-0 bottom-0 translate-y-1 rounded-md bg-[#EF2323] w-10 h-2"></span>
                                 </div>
                               </div>
-                              <div className="flex items-center justify-between mt-3">
-                              <p className="font-mono">{item.segments[0].dep.city.code}</p>
+                              <div className="namCity flex items-center justify-between mt-3">
+                                <p className="font-mono">{item.segments[0].dep.city.code}</p>
                                 <p className="font-mono">{item.segments[0].arr.city.code}</p>
                               </div>
                             </div>
@@ -287,27 +289,34 @@ function Ticket(props) {
                               <h2 className="time">
                                 {item.segments[0].arr.time}
                               </h2>
-                              <p className="font-mono">
-                              {moment(item.segments[0].arr.date).format("MM MMMM ")}
-                              {moment(item.segments[0].arr.date).format("dddd").slice(0,3)}
+                              <p className="font-mono tex">
+                                {moment(item.segments[0].arr.date).format("MM MMMM ")}
+                                {moment(item.segments[0].arr.date).format("dddd").slice(0, 3)}
                               </p>
-                              <p className="font-mono"> {item.segments[0].arr.city.title} {item.segments[0].arr.city.code}</p>
+                              <p className="font-mono tex"> {item.segments[0].arr.city.title} {item.segments[0].arr.city.code}</p>
                             </div>
 
                             <div>
-                            <h2>
-                                  {item.segments[0].duration.flight.hour} ч{" "}
-                                  {item.segments[0].duration.flight.minute}{" "}
-                                  м{" "}
-                                </h2>
+                              <h2 className="text-[16px]">
+                                <span >
+                                  {item.segments[0].duration.flight.hour}
+                                </span>
+                                <span className="mx-[3px]">
+                                  ч
+                                </span>
+                                <span>
+                                  {item.segments[0].duration.flight.minute}
+                                </span>
+                                м
+                              </h2>
                             </div>
                           </div>
                         </div>
 
                         <div className="right px-3">
                           <h2 className="text-3xl w-max	">
-                          {item.price.UZS.amount && currency(item.price.UZS.amount, 'UZS').replace("UZS", "")
-                            .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ")} UZS
+                            {item.price.UZS.amount && currency(item.price.UZS.amount, 'UZS').replace("UZS", "")
+                              .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ")} UZS
                           </h2>
                           <p className="font-mono">&nbsp;за всех пассажиров</p>
                           <p
@@ -315,9 +324,9 @@ function Ticket(props) {
                             style={{ display: "flex", alignItems: "center" }}
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <path d="M10.5801 15.5804C10.3801 15.5804 10.1901 15.5004 10.0501 15.3604L7.22006 12.5304C6.93006 12.2404 6.93006 11.7604 7.22006 11.4704C7.51006 11.1804 7.99006 11.1804 8.28006 11.4704L10.5801 13.7704L15.7201 8.6304C16.0101 8.3404 16.4901 8.3404 16.7801 8.6304C17.0701 8.9204 17.0701 9.4004 16.7801 9.6904L11.1101 15.3604C10.9701 15.5004 10.7801 15.5804 10.5801 15.5804Z" fill="#27AE60"/>
-                          </svg>
-                          Багаж:{" "}
+                              <path d="M10.5801 15.5804C10.3801 15.5804 10.1901 15.5004 10.0501 15.3604L7.22006 12.5304C6.93006 12.2404 6.93006 11.7604 7.22006 11.4704C7.51006 11.1804 7.99006 11.1804 8.28006 11.4704L10.5801 13.7704L15.7201 8.6304C16.0101 8.3404 16.4901 8.3404 16.7801 8.6304C17.0701 8.9204 17.0701 9.4004 16.7801 9.6904L11.1101 15.3604C10.9701 15.5004 10.7801 15.5804 10.5801 15.5804Z" fill="#27AE60" />
+                            </svg>
+                            Багаж:{" "}
                             {item.segments[0].baggage.weight
                               ? item.segments[0].baggage.weight
                               : 0}{" "}
@@ -336,12 +345,12 @@ function Ticket(props) {
                   </div>
                 </Grid>
               ))
-            : TicketData && (
+              : TicketData && (
                 <h2 style={{ textAlign: "center" }}>Chipta topilmadi</h2>
               )}
 
-         {props.loading && <TicketSkeleton loading={props.loading}/>}
-        </Grid>
+            {props.loading && <TicketSkeleton loading={props.loading} />}
+          </Grid>
 
 
         </Grid>
@@ -349,7 +358,7 @@ function Ticket(props) {
       </div>
     </div>
 
-   
+
   );
 }
 

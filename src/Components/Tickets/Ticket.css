@@ -215,60 +215,116 @@
   padding: 10px 20px;
 }
 
-/*# sourceMappingURL=Ticket.css.map */
 
 
-@media screen and (max-width:647px) {
-  .Ticket .box {
-    width: 290px;
-    padding: 15px;
-  }
-
+@media screen and (max-width: 1200px) {
   .Ticket .box .container-box {
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
+    width: 970px;
+  }
+}
+
+@media screen and (max-width:1024px) {
+  .Ticket .box .container-box {
+    width: 720px;
   }
 
-  .Ticket .box .left {
-    width: 100%;
+  .Ticket .box .left .bottom .map {
+    display: none;
   }
 
   .Ticket .box .left div.line {
     display: none;
   }
 
-  .Ticket .box .left .bottom .map {
-    gap: 20px;
+  .Ticket .box .left .namCity {
+    display: none;
   }
 }
 
 @media screen and (max-width:768px) {
-  .Ticket .box {
-    width: 700px;
+  .Ticket .box .container-box {
+    width: 640px;
   }
 
-  .Ticket .box .container-box {
-    gap: 20px;
+  .Ticket .box .right {
+    display: none;
+  }
+
+  .Ticket .box .left {
+    border: none;
+    width: 100%;
+  }
+  .Ticket .box .left .top h2 span.type{
+    display: none;
+  }
+  .Ticket .box .left .top h2 span.class{
+    display: none;
+  }
+  .Ticket .box .left .top .sum{
+    display: block;
+    font-size: 18px;
   }
 }
 
-@media screen and (min-width:770px) and (max-width:1024px) {
-  .Ticket .box {
-    width: 770px;
-  }
-
+@media screen and (max-width:760px) {
   .Ticket .box .container-box {
-    gap: 20px;
+    width: 630px;
+  }
+}
+@media screen and (max-width:740px) {
+  .Ticket .box .container-box {
+    width: 600px;
+  }
+}
+@media screen and (max-width:710px) {
+  .Ticket .box .container-box {
+    width: 580px;
+  }
+}
+@media screen and (max-width:680px) {
+  .Ticket .box .container-box {
+    width: 540px;
+  }
+}
+@media screen and  (max-width:620px){
+  .Ticket .box .container-box {
+    width: 500px;
+  }
+}
+@media screen and (max-width:570px) {
+  .Ticket .box .container-box {
+    width: 460px;
+  }
+}
+@media screen and (max-width:530px) {
+  .Ticket .box .container-box {
+    width: 420px;
   }
 }
 
-@media screen and (max-width:1200px) {
-  .Ticket .box {
-    width: 1030px;
-  }
-
+@media screen and (max-width:490px) {
   .Ticket .box .container-box {
-    gap: 20px;
+    width: 390px;
+  }
+}
+
+@media screen and (max-width: 400px){
+  .Ticket .box .container-box {
+    width: 310px;
+  }
+  .Ticket .box .left .bottom h2.time{
+    font-size: 17px;
+  }
+  .Ticket .box .left .bottom .tex{
+    font-size: 14px;
+  }
+  .Ticket .box .log{
+    justify-content: flex-start;
+  }
+  .Ticket .box .left .top .sum{
+    margin-left: 10px;
+  }
+  .Ticket .box .bottom .watch{
+    font-size: 16px;
   }
 }
