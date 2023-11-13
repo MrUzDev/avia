@@ -74,7 +74,9 @@ function Ticket(props) {
 
                 <div className="checkbox">
                   <input type="checkbox" id="2" />
+                  
                   <label htmlFor="2">2 O'tkazish</label>
+
                 </div>
 
               </div>
@@ -104,6 +106,7 @@ function Ticket(props) {
                           <div className="left border border-[#ccc] w-full">
                             <div className="top">
                               <img src="" alt="" />
+
 
                                 <h2>
                                   <p>{item.provider.supplier.title}</p>
