@@ -252,6 +252,10 @@ function Main() {
     setMyAirlinesCode(myAirlinesCodeToDef)
     setMyAirlinesCodeTo(myAirlinesCodeDef)
   }
+
+  useEffect(() => {
+    console.log(myAirlinesTo);
+  }, [myAirlinesTo])
   
   // reverse Airport Name end
 
