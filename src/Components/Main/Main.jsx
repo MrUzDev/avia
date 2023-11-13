@@ -255,7 +255,7 @@ function Main() {
 
   useEffect(() => {
     console.log(myAirlinesTo);
-  }, [myAirlinesTo])
+  }, [myAirlinesTo]);
   
   // reverse Airport Name end
 
