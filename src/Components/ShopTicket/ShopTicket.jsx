@@ -31,6 +31,7 @@ import { useRegisterApiMutation } from "../../RTKQueryApi/AllApi";
 import {GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 function ShopTicket() {
+
   const [
     bookingCreate,
     {
@@ -181,6 +182,12 @@ function ShopTicket() {
     }
 
   };
+
+  useEffect(() => {
+    if(bookingCreateErr && bookingCreateErr.status === 401) {
+      setOpen(true)
+    }
+  }, [bookingCreateErr])
 
   const confirmBooking = () => {
     const ChangeCardExp = cardExp.split("/").reverse("").join("");

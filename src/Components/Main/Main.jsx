@@ -63,6 +63,8 @@ function a11yProps(index) {
   };
 }
 
+
+
 function Main() {
   const { show, setShow } = useContext(Contexts);
   const [airlinesDataFrom, setAirlinesDataFrom] = useState()
@@ -112,8 +114,6 @@ function Main() {
   const [getRecommendation, { data: getRecommendationData, isLoading: loadingGetRecommendation, isSuccess: getRecommendationSuc }] = useGetRecommendationMutation()
   const { data: getMyCityData, isLoading: getMyCityLoading, isSuccess: getMyCitySuc, isError: getMyCiryErr } = useGetMyCityQuery()
   const [registerApi, { data: registerApiData, isSuccess: registerApiSuc }] = useRegisterApiMutation()
-
-
 
   const dataError = () => toast.error("Ma'lumotlar to'liq kiritilmadi!");
 
@@ -330,7 +330,7 @@ function Main() {
 
 
             <CustomTabPanel value={value} index={0} className="mt-5 pb-5">
-              <div className='bg-[#0057BE] h-[66px] hidden lg:flex items-center  rounded-lg'>
+              <div className='bg-[#0057BE] h-[66px] hidden lg:flex items-center rounded-lg'>
                 <div className="h-full w-full flex items-center" style={{ padding: '3px' }}>
                   <div className="relative col-4 h-full" style={{ padding: '0' }}>
                     <input className='h-full w-full rounded-l-lg border border-[#c0bfbf] capitalize outline-none px-[10px]' type="text" placeholder='Откуда' value={myAirlines || ''} onChange={(e) => { setMyAirlines(e.target.value); searchAirportsFnc(e.target.value) }} />
@@ -447,7 +447,11 @@ function Main() {
 
                 </div>
               </div>
-              <div className='flex lg:hidden   flex-col'>
+
+
+
+
+              <div className='flex lg:hidden flex-col'>
                 <div className='p-[15px] relative flex flex-col border border-[#c0bfbf] rounded-lg'>
                   <input className='outline-none px-[10px]' type="text" placeholder='Откуда' value={myAirlines || ''} onChange={(e) => { setMyAirlines(e.target.value); searchAirportsFnc(e.target.value) }}/>
 
@@ -468,7 +472,7 @@ function Main() {
                       <img className='' src={arrowSwap2} alt="" onClick={() => reverseAirportName()}/>
                     </div>
                   </div>
-                  <input className=' outline-none px-[10px]' type="text" placeholder='Куда' value={myAirlinesTo || ''} onChange={(e) => { setMyAirlinesTo(e.target.value); searchAirportsToFnc(e.target.value) }}/>
+                  <input className='outline-none px-[10px]' type="text" placeholder='Куда' value={myAirlinesTo || ''} onChange={(e) => { setMyAirlinesTo(e.target.value); searchAirportsToFnc(e.target.value) }}/>
                     
                   {airlinesDataTo && (
                       <div className="searchDataList2 z-10">
@@ -483,38 +487,77 @@ function Main() {
                
                 </div>
                 <div className='flex items-center justify-between mt-[15px] gap-3'>
-                  <div className=' h-[60px]  bg-white w-full flex items-center justify-between rounded-lg'>
+                  <div className='h-[60px] bg-white w-full flex items-center justify-between rounded-lg'>
                   <label htmlFor="" className="h-full w-full ">
-                      <DatePicker
-                        onChange={(e) => { setMyAirlinesDate(e) }}
-                        minDate={new Date()}
-                        animations={[transition()]}
-                        headerOrder={["MONTH_YEAR", "LEFT_BUTTON", "RIGHT_BUTTON"]}
-                        numberOfMonths={2}
-                        portal={true}
-                        range
-                        ref={datePickerRef}
-                        style={{ display: 'none' }}
-                      />
+                    
                       <input type="text" placeholder="Когда" className='h-full w-full border rounded-lg border-[#c0bfbf] outline-none px-[10px]' value={myAirlinesDate[0] ? myAirlinesDate[0].format?.("DD-MM-YYYY") : ''} onClick={() => datePickerRef.current.openCalendar()} />
 
                     </label>
                   </div>
                   <input className='h-[60px] border border-[#c0bfbf] outline-none px-[10px] w-full rounded-lg' type="text" placeholder='Обратно' value={myAirlinesDate[1] ? myAirlinesDate[1].format?.("DD-MM-YYYY") : ''} onClick={() => datePickerRef.current.openCalendar()}/>
                 </div>
-                <div className='h-[60px] mt-[15px] rounded-lg border border-[#c0bfbf] outline-none px-[10px] bg-white w-full  flex items-center justify-between'>
+                <div className='h-[60px] mt-[15px] rounded-lg border border-[#c0bfbf] outline-none px-[10px] bg-white w-full  flex items-center justify-between' onClick={() => setClassModalShow(!classModalShow)}>
                   <div>
-                    <h3>1 пассажир</h3>
-                    <p className='text-[#AEAEAE]'>Эконом класс</p>
+                    <h3>{ticketAdults + ticketChild + ticketBabies} пассажир</h3>
+                    <p className='text-[#AEAEAE]'>{ticketTarif === 'b' ? 'Бизнес' : 'все'} класс</p>
                   </div>
                   <img src={arrowDown} alt="" />
                 </div>
+
+                {classModalShow && (
+                      <div className="absolute p-5 min-w-full right-0 bg-[white] z-10 shadow-2xl rounded-lg" style={{ top: 'calc(100% + 10px)', width: '100%'}}>
+                        <div><h3>{ticketAdults + ticketChild + ticketBabies} пассажир</h3></div>
+                        <div className="flex items-center justify-between my-3">
+                          <p className="text-lg mr-5 text-[#222] font-light ">12 лет и старше</p>
+                          <div className="flex items-center justify-between">
+                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketAdult(ticketAdults + 1))}>+</button>
+                            <h1 className="mx-3">{ticketAdults}</h1>
+                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => ticketAdults > 1 && dispatch(setTicketAdult(ticketAdults - 1))}>-</button>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between mb-3">
+                          <h2 className="text-lg mr-5 text-[#222] font-light">от 2 до 12 лет</h2>
+                          <div className="flex items-center justify-between">
+                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketChild(ticketChild + 1))}>+</button>
+                            <h1 className="mx-3">{ticketChild}</h1>
+                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => ticketChild > 0 && dispatch(setTicketChild(ticketChild - 1))}>-</button>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between mb-3">
+                          <h2 className="text-lg mr-5 text-[#222] font-light">до 2 лет</h2>
+                          <div className="flex items-center justify-between">
+                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketBabies(ticketBabies + 1))}>+</button>
+                            <h1 className="mx-3">{ticketBabies}</h1>
+                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => ticketBabies > 0 && dispatch(setTicketBabies(ticketBabies - 1))}>-</button>
+                          </div>
+                        </div>
+
+                        <div className="border-b-4 pb-4 pt-2">
+                          <p className="text-sm">Укажите возраст на момент отправления</p>
+                        </div>
+
+                        <div>
+                          <Switch
+                            checked={checkedBiznes}
+                            onChange={(e) => { setCheckedBiznes(e.target.checked); e.target.checked ? dispatch(setTicketTarif('b')) : dispatch(setTicketTarif('a')) }}
+                            inputProps={{ 'aria-label': 'controlled' }}
+                          />
+                          <label htmlFor="">Бизнес класс</label>
+                        </div>
+                      </div>
+                    )}
+
                 <div>
                 <button className='bg-[#0057BE] rounded-lg mt-3 mr-3 text-white h-[66px] w-full' onClick={(e) => getRecommendationFnc('for_btn')}>
                       Найти
                 </button>
                 </div>
               </div>
+
+
+
 
 
             </CustomTabPanel>
@@ -586,7 +629,7 @@ function Main() {
 
 
                     {classModalShow && (
-                      <div className="absolute p-5 min-w-full right-0 bg-[white] z-10 text-[#222] shadow-2xl rounded-lg" style={{ top: 'calc(100% + 10px)', width: '190%', maxWidth: '200%' }}>
+                      <div className="absolute p-5 min-w-full right-0 bg-[white] z-10 text-[#222] shadow-2xl rounded-lg" style={{ top: 'calc(100% + 10px)', width: '100%'}}>
                         <div><h3>{ticketAdults + ticketChild + ticketBabies} пассажир</h3></div>
                         <div className="flex items-center justify-between my-3">
                           <p className="text-lg mr-5 text-[#222] font-light">12 лет и старше</p>
@@ -640,24 +683,31 @@ function Main() {
 
                 </div>
               </div>
+
+              
               <div className='flex lg:hidden flex-col'>
-                <div className='p-[15px] flex flex-col border border-[#c0bfbf] rounded-lg'>
+                <div className='p-[15px] flex relative flex-col border border-[#c0bfbf] rounded-lg'>
                   <input className=' outline-none px-[10px]' type="text" placeholder='Откуда' />
                   <div className='flex w-full items-center'>
-                    <div className='border border-[#c0bfbf] w-full'></div>
+                    <div className='border border-[#c0bfbf] w-full relative'></div>
                     <div className='h-[40px] w-[50px] flex items-center justify-center rounded-[50%] bg-[#AEAEAE]'>
                       <img className='' src={arrowSwap2} alt="" />
                     </div>
                   </div>
                   <input className=' outline-none px-[10px]' type="text" placeholder='Куда' />
                 </div>
-                <div className='flex items-center justify-between mt-[15px] gap-3'>
+
+                
+             <div className='flex items-center justify-between mt-[15px] gap-3'>
                   <div className=' h-[60px] border border-[#c0bfbf] outline-none px-[10px] bg-white w-full flex items-center justify-between rounded-lg'>
                     <p className='text-[#AEAEAE]'>Когда</p>
                     <img src={kalendar} alt="" />
                   </div>
                   <input className='h-[60px] border border-[#c0bfbf] outline-none px-[10px] w-full rounded-lg' type="text" placeholder='Обратно' />
                 </div>
+
+
+
                 <div className='h-[60px] mt-[15px] rounded-lg border border-[#c0bfbf] outline-none px-[10px] bg-white w-full  flex items-center justify-between'>
                   <div>
                     <h3>1 пассажир</h3>
@@ -831,7 +881,6 @@ function Main() {
 
         {classModalShow && (
           <div className="classBg absolute top-0 left-0 w-full block" style={{ zIndex: '5' }} onClick={() => setClassModalShow(false)}>
-            sss
           </div>
         )}
 
@@ -844,3 +893,8 @@ function Main() {
 }
 
 export default Main;
+
+
+
+
+

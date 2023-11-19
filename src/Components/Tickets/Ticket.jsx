@@ -94,7 +94,7 @@ function Ticket(props) {
             </Grid>
           )
           }
-          <Grid item lg={9} >
+          <Grid item lg={9} className="w-full">
 
             {TicketData && TicketData.flights.length > 0
               ? TicketData.flights.map((item, inx) => (
@@ -105,7 +105,6 @@ function Ticket(props) {
                         <div className="container-box" key={index}>
                           <div className="left border border-[#ccc] w-full">
                             <div className="top">
-                              <img src="" alt="" />
 
                               <h2>
                                 <p>{item.provider.supplier.title}</p>
@@ -204,12 +203,11 @@ function Ticket(props) {
                         </div>
                       ))
                     ) : (
-                      <div className="container-box" key={inx}>
+                      <div className="container-box" key={inx} onClick={() => window.innerWidth < 768 && toShoppingTicket(item.id, item.price.UZS.amount)}>
                         <div className="left border-r pr-5 border-[#ccc]">
                           <div className="top">
                             <h2 className="flex w-full justify-between items-center log">
                               <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.provider.supplier.code}.png`} alt="" />
-                              {/* <p>{item.provider.supplier.title}</p> */}
                               <p>
                                 <span className="type">
                                   {item.segments[0].class.name == "E"
@@ -293,7 +291,7 @@ function Ticket(props) {
                                 {moment(item.segments[0].arr.date).format("MM MMMM ")}
                                 {moment(item.segments[0].arr.date).format("dddd").slice(0, 3)}
                               </p>
-                              <p className="font-mono tex"> {item.segments[0].arr.city.title} {item.segments[0].arr.city.code}</p>
+                              <p className="font-mono tex"> {item.segments[0].arr.city.title} ({item.segments[0].arr.city.code})</p>
                             </div>
 
                             <div>
