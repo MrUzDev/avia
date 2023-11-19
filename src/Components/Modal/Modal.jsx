@@ -26,7 +26,7 @@ const style = {
   bgcolor: "background.paper",
   boxShadow: 24,
   borderRadius: "25px",
-  padding: "20px 0",
+  padding: "20px ",
   overflow: "hidden",
 };
 
@@ -39,7 +39,7 @@ const style2 = {
   bgcolor: "background.paper",
   boxShadow: 24,
   borderRadius: "25px",
-  padding: "20px 0",
+  padding: "20px ",
   overflow: "hidden",
 };
 
@@ -120,7 +120,7 @@ export default function BasicModal(props) {
     };
 
     loginPhone(loginBody)
-  };  
+  };
 
   useEffect(() => {
     if (registerOneData && registerOneSuc) {
@@ -148,8 +148,8 @@ export default function BasicModal(props) {
 
       console.log(loginPhoneData);
 
-      localStorage.setItem("access", registerPhoneData ?  registerPhoneData.jwt_token.access : loginPhoneData.jwt_token.access);
-      localStorage.setItem("refresh", registerPhoneData ?  registerPhoneData.jwt_token.refresh : loginPhoneData.jwt_token.refresh);
+      localStorage.setItem("access", registerPhoneData ? registerPhoneData.jwt_token.access : loginPhoneData.jwt_token.access);
+      localStorage.setItem("refresh", registerPhoneData ? registerPhoneData.jwt_token.refresh : loginPhoneData.jwt_token.refresh);
 
       window.location.reload();
     }
@@ -164,13 +164,14 @@ export default function BasicModal(props) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+
           <Typography
             sx={{ textAlign: "center", fontSize: "28px" }}
             id="modal-modal-title"
             variant="h6"
             component="h2"
           >
-            Ro'yhatdan o'tish
+            Регистрация
           </Typography>
           <CloseIcon
             sx={{
@@ -189,8 +190,8 @@ export default function BasicModal(props) {
             id="modal-modal-description"
             sx={{ mt: 2, textAlign: "center", fontSize: "18px" }}
           >
-            <div className="confirmModalContainer">
-              <div style={{ width: "50%", marginRight: "40px" }}>
+            <div className=" flex-col">
+              <div style={{ width: "100%", marginRight: "40px", marginBottom: "15px" }}>
                 <MuiTelInput
                   sx={{ width: "100%", borderRadius: "10px" }}
                   value={phoneNum}
@@ -198,50 +199,39 @@ export default function BasicModal(props) {
                     setPhoneNum(e);
                   }}
                 />
+              </div>
+              <div
+                style={{ width: "100%", marginBottom: "30px", border: "1px solid #CCCCCC", display: "flex", alignItems: "center", justifyContent: "center",padding:"10px",borderRadius:"10px" }}
+                className="otpContainer"
+              >
 
-                <p
-                  style={{ marginTop: "10px", textDecoration: "underline" }}
-                  onClick={() => {
-                    setOpen(false);
-                    setLoginModal(true);
-                  }}
-                >
-                  Hisongingiz bormi unda bu yerga bosing.
-                </p>
+                <OTPInput
+                  value={OTP}
+                  onChange={setOTP}
+                  OTPLength={5}
+                  otpType="number"
+                  disabled={false}
+                  type="number"
+                />
               </div>
 
-              <div style={{ width: "50%" }}>
-                <div
-                  style={{ width: "100%", marginBottom: "30px" }}
-                  className="otpContainer"
-                >
-                  <OTPInput
-                    value={OTP}
-                    onChange={setOTP}
-                    OTPLength={5}
-                    otpType="number"
-                    disabled={false}
-                    type="number"
-                  />
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <p>Tasdiqlash kodi yuborildi.</p> <p>{timer} s</p>
-                </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <p>код устаревает.</p> <p>{timer} s</p>
               </div>
             </div>
+
 
             <div style={{ padding: "0 20px" }}>
               <Button
                 className="btn"
                 style={{
-                  background: "#605dec",
+                  background: "#0057BE",
                   color: "#fff",
                   borderRadius: "10px",
                   marginTop: "20px",
@@ -251,9 +241,18 @@ export default function BasicModal(props) {
                   registerOneSuc ? RegisterTwoFnc() : RegisterOneFnc()
                 }
               >
-                Tasdiqlash
+                Подтвердить номер
               </Button>
             </div>
+            <p
+              style={{ marginTop: "10px", textDecoration: "underline" }}
+              onClick={() => {
+                setOpen(false);
+                setLoginModal(true);
+              }}
+            >
+              Уже есть аккаунт
+            </p>
           </Typography>
         </Box>
       </Modal>
@@ -271,7 +270,7 @@ export default function BasicModal(props) {
             variant="h6"
             component="h2"
           >
-            Ro'yhatdan o'tish
+            Регистрация
           </Typography>
           <CloseIcon
             sx={{
@@ -332,7 +331,7 @@ export default function BasicModal(props) {
               <Button
                 className="btn"
                 style={{
-                  background: "#605dec",
+                  background: "#0057BE",
                   color: "#fff",
                   borderRadius: "10px",
                   marginTop: "20px",
@@ -340,7 +339,7 @@ export default function BasicModal(props) {
                 }}
                 onClick={() => registerFnc()}
               >
-                Tasdiqlash
+                Зарегестрироваться
               </Button>
             </div>
           </Typography>
@@ -360,7 +359,7 @@ export default function BasicModal(props) {
             variant="h6"
             component="h2"
           >
-            Hisobga kirish
+            Войти
           </Typography>
           <CloseIcon
             sx={{
@@ -379,9 +378,9 @@ export default function BasicModal(props) {
             id="modal-modal-description"
             sx={{ mt: 2, textAlign: "center", fontSize: "18px" }}
           >
-            <div style={{ width: "100%", padding: "0 20px", display: "flex" }}>
+            <div style={{ width: "100%", padding: "0 20px", }}>
               <MuiTelInput
-                sx={{ width: "100%", marginRight: "10px" }}
+                sx={{ width: "100%", marginRight: "10px",marginBottom:"20px" }}
                 value={phoneNum}
                 onChange={(e) => {
                   setPhoneNum(e);
@@ -402,7 +401,6 @@ export default function BasicModal(props) {
                 InputProps={{
                   style: {
                     borderRadius: "10px",
-                    marginBottom: "20px",
                   },
                 }}
                 onChange={(e) => {
@@ -411,11 +409,11 @@ export default function BasicModal(props) {
               />
             </div>
 
-            <div style={{ padding: "0 20px" }}>
+            <div style={{ padding: "0 20px",marginTop:"20px" }}>
               <Button
                 className="btn"
                 style={{
-                  background: "#605dec",
+                  background: "#0057BE",
                   color: "#fff",
                   borderRadius: "10px",
                   marginTop: "20px",
@@ -423,7 +421,7 @@ export default function BasicModal(props) {
                 }}
                 onClick={() => loginFnc()}
               >
-                Tasdiqlash
+                Войти
               </Button>
             </div>
           </Typography>
