@@ -216,17 +216,8 @@
 }
 
 
-
-@media screen and (max-width: 1200px) {
-  .Ticket .box .container-box {
-    width: 970px;
-  }
-}
-
 @media screen and (max-width:1024px) {
-  .Ticket .box .container-box {
-    width: 720px;
-  }
+ 
 
   .Ticket .box .left .bottom .map {
     display: none;
@@ -242,9 +233,6 @@
 }
 
 @media screen and (max-width:768px) {
-  .Ticket .box .container-box {
-    width: 640px;
-  }
 
   .Ticket .box .right {
     display: none;
@@ -266,60 +254,13 @@
   }
 }
 
-@media screen and (max-width:760px) {
-  .Ticket .box .container-box {
-    width: 630px;
-  }
-}
-@media screen and (max-width:740px) {
-  .Ticket .box .container-box {
-    width: 600px;
-  }
-}
-@media screen and (max-width:710px) {
-  .Ticket .box .container-box {
-    width: 580px;
-  }
-}
-@media screen and (max-width:680px) {
-  .Ticket .box .container-box {
-    width: 540px;
-  }
-}
-@media screen and  (max-width:620px){
-  .Ticket .box .container-box {
-    width: 500px;
-  }
-}
-@media screen and (max-width:570px) {
-  .Ticket .box .container-box {
-    width: 460px;
-  }
-}
-@media screen and (max-width:530px) {
-  .Ticket .box .container-box {
-    width: 420px;
-  }
-}
-
-@media screen and (max-width:490px) {
-  .Ticket .box .container-box {
-    width: 390px;
-  }
-}
-
 @media screen and (max-width: 400px){
-  .Ticket .box .container-box {
-    width: 310px;
-  }
+ 
   .Ticket .box .left .bottom h2.time{
     font-size: 17px;
   }
   .Ticket .box .left .bottom .tex{
     font-size: 14px;
-  }
-  .Ticket .box .log{
-    justify-content: flex-start;
   }
   .Ticket .box .left .top .sum{
     margin-left: 10px;

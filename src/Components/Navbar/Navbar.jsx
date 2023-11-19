@@ -30,7 +30,7 @@ function Navbar() {
   return (
     <div className='h-[92px] bg-[#0057BE]'>
       <div className="container flex justify-between items-center mx-auto h-full">
-        <img className='w-[200px] cursor-pointer' src={logo} alt="" />
+        <img className='w-[200px] cursor-pointer' src={logo} alt="" onClick={() => navigate('/')}/>
         <ul className='text-white xs:hidden lg:flex'>
           <li className='flex items-center mr-5 cursor-pointer'><img className='mr-2' src={discount} alt="" /> Акции и скидки</li>
           <li className='flex items-center mr-5 cursor-pointer'><img className='mr-2' src={message} alt="" /> Поддержка</li>
