@@ -7,13 +7,23 @@
   src: url('../font-family/gilroy-black.ttf');
 }
 
+@font-face {
+  font-family: NunitoSans800;
+  src: url('../font-family/Nunito\ Sans\ ExtraBold\ 800.ttf');
+}
+
+@font-face {
+  font-family: GilroyBlack;
+  src: url('../font-family/gilroy-black.ttf');
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   list-style: none;
   text-decoration: none;
-  font-family: aviaFont;
+  /* font-family: aviaFont; */
 }
 
 

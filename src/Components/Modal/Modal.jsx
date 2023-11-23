@@ -51,8 +51,7 @@ export default function BasicModal(props) {
   const [otpToken, setOtpToken] = useState();
   const [registerModal, setRegisterModal] = useState(false);
   const [loginModal, setLoginModal] = useState(false);
-  const [userName, setUserName] = useState();
-  const [lastName, setLastName] = useState();
+  const [sendSms, setSendSms] = useState(false);
   const [password, setPassword] = useState();
   const [verifyPassword, setVerifyPassword] = useState();
 
@@ -97,6 +96,7 @@ export default function BasicModal(props) {
 
   const changeTimer = () => {
     setTimer((timerr) => (timerr > 0 ? timerr - 1 : timerr));
+    setSendSms(true)
   };
 
   const registerFnc = () => {
@@ -142,6 +142,7 @@ export default function BasicModal(props) {
       }
     }
     if ((registerTwoData, registerTwoSuc)) {
+      setOpen(false)
       setRegisterModal(true);
     }
     if (registerPhoneData || loginPhoneData) {
@@ -193,10 +194,15 @@ export default function BasicModal(props) {
             <div className=" flex-col">
               <div style={{ width: "100%", marginRight: "40px", marginBottom: "15px" }}>
                 <MuiTelInput
-                  sx={{ width: "100%", borderRadius: "10px" }}
+                  sx={{ width: "100%",}}
                   value={phoneNum}
                   onChange={(e) => {
                     setPhoneNum(e);
+                  }}
+                  InputProps={{
+                    style: {
+                      borderRadius: "10px",
+                    },
                   }}
                 />
               </div>
@@ -210,9 +216,10 @@ export default function BasicModal(props) {
                   onChange={setOTP}
                   OTPLength={5}
                   otpType="number"
-                  disabled={false}
+                  disabled={!sendSms}
                   type="number"
                 />
+                
               </div>
 
               <div
@@ -380,7 +387,7 @@ export default function BasicModal(props) {
           >
             <div style={{ width: "100%", padding: "0 20px", }}>
               <MuiTelInput
-                sx={{ width: "100%", marginRight: "10px",marginBottom:"20px" }}
+                sx={{ width: "100%", marginRight: "10px", marginBottom:"20px" }}
                 value={phoneNum}
                 onChange={(e) => {
                   setPhoneNum(e);
@@ -423,6 +430,12 @@ export default function BasicModal(props) {
               >
                 Войти
               </Button>
+              <p
+               style={{ marginTop: "10px", textDecoration: "underline" }}
+               onClick={() => {
+                 setOpen(true);
+                 setLoginModal(false);
+               }}>Регистрация</p>
             </div>
           </Typography>
         </Box>
