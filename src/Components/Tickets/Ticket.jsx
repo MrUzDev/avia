@@ -11,8 +11,36 @@ import { setTicketId, addFilterAirlines, removeFilterAirlines, checkChangeAir, a
 import { useNavigate } from "react-router-dom";
 import TicketSkeleton from "../TicketSkeleton/TicketSkeleton";
 import moment from "moment";
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import cirClose from '../../Assets/icons/close-circle.svg'
+import uzbAirwaysLogo from '../../Assets/icons/Ellipse 5.svg'
+import airplane from '../../Assets/icons/airplane.svg'
+import line from '../../Assets/icons/line.svg'
+import line2 from '../../Assets/icons/line2.svg'
+import moon from '../../Assets/icons/moon.svg'
+
+
+const style = {
+  position: 'absolute',
+  bottom: '0',
+  left: '0',
+  width: '100%',
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  paddingLeft: "20px",
+  paddingRight: "20px",
+  paddingBottom: "20px",
+  borderTopLeftRadius: "8px",
+  borderTopRightRadius: "8px",
+  height: "95vh",
+  overflowY: "scroll"
+};
 
 function Ticket(props) {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const TicketData = useSelector((state) => state.loginSlice.ticketData);
   const allAirlinesName = useSelector((state) => state.loginSlice.allAirlinesName);
 
@@ -203,7 +231,7 @@ function Ticket(props) {
                         </div>
                       ))
                     ) : (
-                      <div className="container-box" key={inx} onClick={() => window.innerWidth < 768 && toShoppingTicket(item.id, item.price.UZS.amount)}>
+                      <div className="container-box" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
                         <div className="left border-r pr-5 border-[#ccc]">
                           <div className="top">
                             <h2 className="flex w-full justify-between items-center log">
@@ -352,11 +380,120 @@ function Ticket(props) {
 
 
         </Grid>
+        <div>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <div className="flex items-center justify-between mb-[20px] sticky top-0 bg-white z-50 h-[60px]">
+                <h1 className="text-[18px] font-semibold">Подробнее о маршруте</h1>
+                <img onClick={() => handleClose()} src={cirClose} alt="" />
+              </div>
+              <div className="mb-[10px]">
+                <h1 className="text-[20px] font-bold">Ташкент - Париж</h1>
+                <p className="text-[14px] font-normal text-[#222222]" >21ч 40 мин в пути, 2 пересадки</p>
+              </div>
+              <div className="flex justify-between mb-[15px]">
+                <div>
+                  <h1 className="text-[18px] font-semibold flex">Uzbekistan Airways <img className="ml-[8px]" src={airplane} alt="" /></h1>
+                  <p className="text-[14px] font-normal text-[#222222]">5ч 20 мин в пути, Airbus A330, рейс HH-437</p>
+                </div>
+                <img src={uzbAirwaysLogo} alt="" />
+              </div>
+              <div className="flex justify-between w-[60%] mb-[15px]">
+                <div>
+                  <h1 className="text-[18px] font-semibold mb-[20px]"> 13:20
+                    <p className="text-[14px] font-normal text-[#222222]">13 ноя, ср</p>
+                  </h1>
+                  <h1 className="text-[18px] font-semibold"> 17:20
+                    <p className="text-[14px] font-normal text-[#222222]"> 13 ноя, ср</p>
+                  </h1>
+                </div>
+                <img src={line} alt="" />
+                <div>
+                  <h1 className="text-[18px] font-semibold mb-[20px]"> Ташкент
+                    <p className="text-[14px] font-normal text-[#222222]">Ташкент (TAS)</p>
+                  </h1>
+                  <h1 className="text-[18px] font-semibold"> Москва
+                    <p className="text-[14px] font-normal text-[#222222]"> Москва (MOS)</p>
+                  </h1>
+                </div>
+              </div>
+              <div className="bg-[#F7F7F7] rounded-lg p-[25px] flex justify-between items-start">
+                <h1 className="text-[18px] font-semibold">Пересадка
+                  <p className="text-[14px] font-normal text-[#222222] mt-[15px]">9ч 40 мин, ночная пересадка </p>
+                </h1>
+                <img src={moon} alt="" />
+              </div>
 
+
+              <div className="flex justify-between my-[15px]">
+                <div>
+                  <h1 className="text-[18px] font-semibold flex">Turkish Airlines <img className="ml-[8px]" src={airplane} alt="" /></h1>
+                  <p className="text-[14px] font-normal text-[#222222]">3ч 30 мин в пути, Airbus A170,  рейс IPA-105</p>
+                </div>
+                <img src={uzbAirwaysLogo} alt="" />
+              </div>
+              <div className="flex justify-between w-[60%] mb-[15px]">
+                <div>
+                  <h1 className="text-[18px] font-semibold mb-[20px]"> 06:40
+                    <p className="text-[14px] font-normal text-[#222222]">14 ноя, ср</p>
+                  </h1>
+                  <h1 className="text-[18px] font-semibold"> 10:10
+                    <p className="text-[14px] font-normal text-[#222222]"> 14 ноя, ср</p>
+                  </h1>
+                </div>
+                <img src={line2} alt="" />
+                <div>
+                  <h1 className="text-[18px] font-semibold mb-[20px]"> Москва
+                    <p className="text-[14px] font-normal text-[#222222]">Москва (MOS)</p>
+                  </h1>
+                  <h1 className="text-[18px] font-semibold">Стамбул
+                    <p className="text-[14px] font-normal text-[#222222]"> Стамбул (IST)</p>
+                  </h1>
+                </div>
+              </div>
+              <div className="bg-[#F7F7F7] rounded-lg p-[25px]">
+                <h1 className="text-[18px] font-semibold">Пересадка
+                  <p className="text-[14px] font-normal text-[#222222] mt-[15px]">3ч 10 мин </p>
+                </h1>
+              </div>
+
+              <div className="flex justify-between my-[15px]">
+                <div>
+                  <h1 className="text-[18px] font-semibold flex">Turkish Airlines <img className="ml-[8px]" src={airplane} alt="" /></h1>
+                  <p className="text-[14px] font-normal text-[#222222]">3ч 30 мин в пути, Airbus A170,  рейс IPA-105</p>
+                </div>
+                <img src={uzbAirwaysLogo} alt="" />
+              </div>
+              <div className="flex justify-between w-[60%] mb-[15px]">
+                <div>
+                  <h1 className="text-[18px] font-semibold mb-[20px]"> 06:40
+                    <p className="text-[14px] font-normal text-[#222222]">14 ноя, ср</p>
+                  </h1>
+                  <h1 className="text-[18px] font-semibold"> 10:10
+                    <p className="text-[14px] font-normal text-[#222222]"> 14 ноя, ср</p>
+                  </h1>
+                </div>
+                <img src={line2} alt="" />
+                <div>
+                  <h1 className="text-[18px] font-semibold mb-[20px]"> Москва
+                    <p className="text-[14px] font-normal text-[#222222]">Москва (MOS)</p>
+                  </h1>
+                  <h1 className="text-[18px] font-semibold">Стамбул
+                    <p className="text-[14px] font-normal text-[#222222]"> Стамбул (IST)</p>
+                  </h1>
+                </div>
+              </div>
+              <button className="mt-[20px] bg-[#0064FA] w-full p-[16px] text-white text-[16px] font-thin rounded-lg">Купить</button>
+            </Box>
+          </Modal>
+        </div>
       </div>
     </div>
-
-
   );
 }
 
