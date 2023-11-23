@@ -93,7 +93,6 @@ function Main() {
   const loggedIn = useSelector((state) => state.loginSlice.loggedIn);
 
 
-
   const clientId = "428493911231-e8ipsql0crd7loti8t96cun9u397valg.apps.googleusercontent.com";
 
   const datePickerRef = useRef()
@@ -125,9 +124,12 @@ function Main() {
         lang: 'ru',
         part: e
       }
-
+     
       searchAirports(searchData)
+    } else {
+      setMyAirlinesCode()
     }
+
   }
 
   useEffect(() => {
@@ -156,6 +158,8 @@ function Main() {
         part: e
       }
       searchAirportsto(searchData)
+    }else {
+      setMyAirlinesCodeTo()
     }
   }
 
@@ -180,7 +184,6 @@ function Main() {
   // get recommendation start
 
   const getRecommendationFnc = (e) => {
-    setTicketLoad(true)
     dispatch(changeTicketData(undefined))
     if (e == 'for_btn') {
       dispatch(clearFilterAirlinesName())
@@ -222,6 +225,8 @@ function Main() {
         price_order: 1,
         is_charter: false,
       }
+
+      setTicketLoad(true)
 
       getRecommendation(recomData)
     } else dataError()
@@ -299,6 +304,10 @@ function Main() {
     }
   }, [classModalShow])
 
+  useEffect(() => {
+    
+  }, [myAirlinesCode])
+
 
   return (
     <>
@@ -318,7 +327,7 @@ function Main() {
 
       <div className='mt-[5%] mb-11 main'>
         <div className="container mx-auto">
-          <h1 className='hidden lg:block text-center text-[64px] text-[#0057BE] mb-[2%]'> Самый правильный путь к путешествиям</h1>
+          <h1 className='hidden lg:block text-center text-[64px] text-[#0057BE] mb-[2%] font-bold' style={{fontFamily: 'GilroyBlack'}}> Самый правильный путь к путешествиям</h1>
           <Box sx={{ width: '100%' }}>
             <Box>
               <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
