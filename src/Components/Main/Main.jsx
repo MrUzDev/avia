@@ -84,6 +84,7 @@ function Main() {
   const [checkedBiznes, setCheckedBiznes] = useState(false);
   const [ticketLoad, setTicketLoad] = useState(false)
 
+  
   const ticketAdults = useSelector((state) => state.loginSlice.ticketAdults);
   const ticketChild = useSelector((state) => state.loginSlice.ticketChild);
   const ticketBabies = useSelector((state) => state.loginSlice.ticketBabies);
@@ -348,7 +349,7 @@ function Main() {
                         {airlinesDataFrom.map((item, index) =>
                           <div key={index} onClick={() => { setMyAirlines(item.cityName); setMyAirlinesCode(item.cityIataCode); setAirlinesDataFrom() }}>
                             <p>{item.cityName}</p>
-                            <p>{item.cityIataCode}</p>
+                            <p className="text-[#AEAEAE] hover:text-[#fff]">{item.cityIataCode}</p>
                           </div>
                         )}
                       </div>
@@ -365,7 +366,7 @@ function Main() {
                         {airlinesDataTo.map((item, index) =>
                           <div key={index} onClick={() => { setMyAirlinesTo(item.cityName); setMyAirlinesCodeTo(item.cityIataCode); setAirlinesDataTo() }}>
                             <p>{item.cityName}</p>
-                            <p>{item.cityIataCode}</p>
+                            <p className="text-[#AEAEAE] cityCode">{item.cityIataCode}</p>
                           </div>
                         )}
                       </div>
@@ -409,27 +410,27 @@ function Main() {
                         <div className="flex items-center justify-between my-3">
                           <p className="text-lg mr-5 text-[#222] font-light">12 лет и старше</p>
                           <div className="flex items-center justify-between">
-                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketAdult(ticketAdults + 1))}>+</button>
+                            <button className={`${ticketAdults > 0  ? 'bg-[#3379CB]' : 'bg-[#AEAEAE]'} p-3 rounded-lg text-white`} style={{ lineHeight: '0.5' }} onClick={() => ticketAdults > 1 && dispatch(setTicketAdult(ticketAdults - 1))}>-</button>
                             <h1 className="mx-3">{ticketAdults}</h1>
-                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => ticketAdults > 1 && dispatch(setTicketAdult(ticketAdults - 1))}>-</button>
+                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketAdult(ticketAdults + 1))}>+</button>
                           </div>
                         </div>
 
                         <div className="flex items-center justify-between mb-3">
                           <h2 className="text-lg mr-5 text-[#222] font-light">от 2 до 12 лет</h2>
                           <div className="flex items-center justify-between">
-                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketChild(ticketChild + 1))}>+</button>
+                            <button className={`${ticketChild > 0  ? 'bg-[#3379CB]' : 'bg-[#AEAEAE]'} p-3 rounded-lg text-white`} style={{ lineHeight: '0.5' }} onClick={() => ticketChild > 0 && dispatch(setTicketChild(ticketChild - 1))}>-</button>
                             <h1 className="mx-3">{ticketChild}</h1>
-                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => ticketChild > 0 && dispatch(setTicketChild(ticketChild - 1))}>-</button>
+                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketChild(ticketChild + 1))}>+</button>
                           </div>
                         </div>
 
                         <div className="flex items-center justify-between mb-3">
                           <h2 className="text-lg mr-5 text-[#222] font-light">до 2 лет</h2>
                           <div className="flex items-center justify-between">
-                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketBabies(ticketBabies + 1))}>+</button>
+                            <button className={`${ticketBabies > 0  ? 'bg-[#3379CB]' : 'bg-[#AEAEAE]'} p-3 rounded-lg text-white`} style={{ lineHeight: '0.5' }} onClick={() => ticketBabies > 0 && dispatch(setTicketBabies(ticketBabies - 1))}>-</button>
                             <h1 className="mx-3">{ticketBabies}</h1>
-                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => ticketBabies > 0 && dispatch(setTicketBabies(ticketBabies - 1))}>-</button>
+                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketBabies(ticketBabies + 1))}>+</button>
                           </div>
                         </div>
 

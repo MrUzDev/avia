@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.6e7f339a.css",
-    "main.js": "/static/js/main.0d3643aa.js",
+    "main.css": "/static/css/main.635571f4.css",
+    "main.js": "/static/js/main.ac124571.js",
     "static/media/swiper.png": "/static/media/swiper.6c20ed585c7e3cbd3270.png",
     "static/media/kazakistan.png": "/static/media/kazakistan.6bd49d1750939430646b.png",
     "static/media/turkiya.png": "/static/media/turkiya.ab928e4831064d718422.png",
@@ -11,6 +11,7 @@
     "static/media/kitay.png": "/static/media/kitay.ec912121b0568354f190.png",
     "static/media/azarbayjan.png": "/static/media/azarbayjan.26ed6483d10869fd1d6a.png",
     "static/media/usa.png": "/static/media/usa.1ba15000eeebc3e2cbca.png",
+    "static/media/Nunito Sans ExtraBold 800.ttf": "/static/media/Nunito Sans ExtraBold 800.a6b0a24bb399df5c21b1.ttf",
     "static/media/gilroy-black.ttf": "/static/media/gilroy-black.bf3a5f799e6799d48062.ttf",
     "static/media/girl.png": "/static/media/girl.6dfcf2757959d1adc740.png",
     "static/media/logo.png": "/static/media/logo.1bb816d448442da318ea.png",
@@ -41,11 +42,11 @@
     "static/media/user.svg": "/static/media/user.211e84e0f097eadc9c9743779ed55d08.svg",
     "static/media/menu.svg": "/static/media/menu.7b3cd2e87ac1af01eea4e4b6f478bc77.svg",
     "static/media/arrow-down.svg": "/static/media/arrow-down.753524ed796ad711db68bb1f2b96e9ef.svg",
-    "main.6e7f339a.css.map": "/static/css/main.6e7f339a.css.map",
-    "main.0d3643aa.js.map": "/static/js/main.0d3643aa.js.map"
+    "main.635571f4.css.map": "/static/css/main.635571f4.css.map",
+    "main.ac124571.js.map": "/static/js/main.ac124571.js.map"
   },
   "entrypoints": [
-    "static/css/main.6e7f339a.css",
-    "static/js/main.0d3643aa.js"
+    "static/css/main.635571f4.css",
+    "static/js/main.ac124571.js"
   ]
 }

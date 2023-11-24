@@ -231,7 +231,11 @@ function Ticket(props) {
                         </div>
                       ))
                     ) : (
+<<<<<<< Updated upstream
                       <div className="container-box" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
+=======
+                      <div className="container-box" key={inx} onClick={() => window.innerWidth <= 768 && toShoppingTicket(item.id, item.price.UZS.amount)}>
+>>>>>>> Stashed changes
                         <div className="left border-r pr-5 border-[#ccc]">
                           <div className="top">
                             <h2 className="flex w-full justify-between items-center log">
@@ -264,9 +268,9 @@ function Ticket(props) {
                                 {item.segments[0].dep.time}
                               </h2>
                               <p className="font-mono tex">
-                                {moment(item.segments[0].dep.date).format("MM MMMM ")}
-                                {moment(item.segments[0].arr.date).format("dddd").slice(0, 3)}
-
+                                {moment(item.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                                {moment(item.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                                    
                               </p>
                               <p className="font-mono tex"> {item.segments[0].dep.city.title} ({item.segments[0].dep.city.code})</p>
                             </div>
@@ -316,8 +320,8 @@ function Ticket(props) {
                                 {item.segments[0].arr.time}
                               </h2>
                               <p className="font-mono tex">
-                                {moment(item.segments[0].arr.date).format("MM MMMM ")}
-                                {moment(item.segments[0].arr.date).format("dddd").slice(0, 3)}
+                                {moment(item.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                                {moment(item.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
                               </p>
                               <p className="font-mono tex"> {item.segments[0].arr.city.title} ({item.segments[0].arr.city.code})</p>
                             </div>
