@@ -19,7 +19,7 @@ import airplane from '../../Assets/icons/airplane.svg'
 import line from '../../Assets/icons/line.svg'
 import line2 from '../../Assets/icons/line2.svg'
 import moon from '../../Assets/icons/moon.svg'
-
+import Fade from '@mui/material/Fade';
 
 const style = {
   position: 'absolute',
@@ -34,7 +34,8 @@ const style = {
   borderTopLeftRadius: "8px",
   borderTopRightRadius: "8px",
   height: "95vh",
-  overflowY: "scroll"
+  overflowY: "scroll",
+  transition: '1s'
 };
 
 function Ticket(props) {
@@ -127,31 +128,43 @@ function Ticket(props) {
             {TicketData && TicketData.flights.length > 0
               ? TicketData.flights.map((item, inx) => (
                 <Grid item lg={12} sx={{ marginBottom: '20px' }}>
-                  <div className="box w-[100%]">
+                  <div className="box w-[100%] flex">
                     {item.segments.length == 2 ? (
-                      item.segments.map((twoItem, index) => (
-                        <div className="container-box" key={index}>
-                          <div className="left border border-[#ccc] w-full">
+                    <>
+                      <div className="w-full md:border-r md:pr-5 md:border-[#ccc]">
+                        {item.segments.map((twoItem, index) => (
+                          <div className="container-box container-box-2" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
+                          <div className="left w-full">
                             <div className="top">
-
-                              <h2>
-                                <p>{item.provider.supplier.title}</p>
-                                <span className="type">
-                                  {item.segments[index].class.name == "E"
-                                    ? "Ekonom"
-                                    : item.segments[index].class.name == "e"
+                              <h2 className="flex w-full justify-between items-center log">
+                               {index === 0 && (
+                                <>
+                                <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.provider.supplier.code}.png`} alt="" />
+                                <p>
+                                  <span className="type">
+                                    {item.segments[index].class.name == "E"
                                       ? "Ekonom"
-                                      : item.segments[index].class.name == "A"
-                                        ? "Istalgan"
-                                        : item.segments[index].class.name ==
-                                        "B" && "Biznes"}
-                                </span>
-                                <span className="class">
-                                  ({item.segments[index].class.name})
-                                </span>
-                                <AirlineSeatReclineNormalIcon />
+                                      : item.segments[index].class.name == "e"
+                                        ? "Ekonom"
+                                        : item.segments[index].class.name == "A"
+                                          ? "Istalgan"
+                                          : item.segments[index].class.name == "B" &&
+                                          "Biznes"}
+                                  </span>
+                                  <span className="class">
+                                    ({item.segments[index].class.name})
+                                  </span>
+                                  <span className="hidden w-max sum">
+                                    {
+                                      item.price.UZS.amount && currency(item.price.UZS.amount, 'UZS').replace("UZS", "")
+                                      .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ") + " UZS"
+                                    }
+                                  </span>
+                                </p>
+                                
+                                </>
+                                )}
                               </h2>
-
                             </div>
 
                             <div className="bottom">
@@ -159,84 +172,117 @@ function Ticket(props) {
                                 <h2 className="time">
                                   {item.segments[index].dep.time}
                                 </h2>
-                                <h2>{item.segments[index].dep.city.code}</h2>
-
-                                <p className="data">
-                                  <span>
-                                    <CalendarMonthIcon />
-                                  </span>
-                                  {item.segments[index].dep.date}
+                                <p className="font-mono text-[0.675rem] md:text-lg">
+                                  {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                                  {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                                      
                                 </p>
+                                <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[index].dep.city.title} ({item.segments[index].dep.city.code})</p>
                               </div>
-                              <div className="map">
-                                <div className="from">
-                                  <p>{item.segments[index].dep.city.code}</p>
-                                  <LocationOnIcon />
-                                  <div className="af"></div>
-                                </div>
-                                <div className="line">
-                                  <p>
-                                    {item.segments[index].duration.flight.hour}{" "}
-                                    soat{" "}
-                                    {
-                                      item.segments[index].duration.flight
-                                        .minute
-                                    }{" "}
-                                    daqiqa{" "}
-                                  </p>
-                                  <div></div>
-                                  {/* <p>Parvoz: KC 918a</p> */}
+                              <div>
+                                <div className="map w-full justify-between">
+                                  <div className="from">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                      <g clip-path="url(#clip0_865_2363)">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
+                                      </g>
+                                      <defs>
+                                        <clipPath id="clip0_865_2363">
+                                          <rect width="24" height="24" rx="4" fill="white" />
+                                        </clipPath>
+                                      </defs>
+                                    </svg>
+                                  </div>
+
+                                  <div className="to">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                      <g clip-path="url(#clip0_865_2363)">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
+                                      </g>
+                                      <defs>
+                                        <clipPath id="clip0_865_2363">
+                                          <rect width="24" height="24" rx="4" fill="white" />
+                                        </clipPath>
+                                      </defs>
+                                    </svg>
+                                  </div>
                                 </div>
 
-                                <div className="to">
-                                  <p>{item.segments[index].arr.city.code}</p>
-                                  <LocationOnIcon />
-                                  <div className="af"></div>
+                                <div className="line mt-4">
+                                  <div className="relative">
+                                    <span className="absolute block left-0 bottom-0 translate-y-1 rounded-md bg-[#FFC107] w-10 h-2"></span>
+                                    <span className="absolute block right-2/4 bottom-0 translate-y-1 translate-x-4  rounded-md bg-[#EF2323] w-6 h-2"></span>
+                                    <span className="absolute block right-0 bottom-0 translate-y-1 rounded-md bg-[#EF2323] w-10 h-2"></span>
+                                  </div>
+                                </div>
+                                <div className="namCity flex items-center justify-between mt-3">
+                                  <p className="font-mono">{item.segments[index].dep.city.code}</p>
+                                  <p className="font-mono">{item.segments[index].arr.city.code}</p>
                                 </div>
                               </div>
                               <div className="dataR">
-                                <h2>{item.segments[index].arr.city.code}</h2>
                                 <h2 className="time">
                                   {item.segments[index].arr.time}
                                 </h2>
-                                <p className="data">
-                                  <span>
-                                    <CalendarMonthIcon />
-                                  </span>
-                                  {item.segments[index].arr.date}
+                                <p className="font-mono text-[0.675rem] md:text-lg">
+                                  {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                                  {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
                                 </p>
+                                <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[index].arr.city.title} ({item.segments[index].arr.city.code})</p>
+                              </div>
+
+                              <div>
+                                <h2 className="text-[16px]">
+                                  <span >
+                                    {item.segments[index].duration.flight.hour}
+                                  </span>
+                                  <span className="mx-[3px]">
+                                    ч
+                                  </span>
+                                  <span>
+                                    {item.segments[index].duration.flight.minute}
+                                  </span>
+                                  м
+                                </h2>
                               </div>
                             </div>
                           </div>
 
-                          <div className="right">
-                            <p
-                              className="luggage"
-                              style={{ display: "flex", alignItems: "center" }}
-                            >
-                              <LuggageIcon /> Chamadon:{" "}
-                              {item.segments[index].baggage.weight
-                                ? item.segments[index].baggage.weight
-                                : 0}{" "}
-                              kg
-                            </p>
-                            <button
-                              className="bgBlue"
-                              onClick={() => toShoppingTicket(item.id, item.price.UZS.amount)}
-                            >
-                              {item.price.UZS.amount && currency(item.price.UZS.amount, 'UZS').replace("UZS", "")
-                                .replace("soʻm", "").replace(/,/g, ".").slice(0, -3)} UZS
-                            </button>
-                          </div>
                         </div>
-                      ))
+                        ))}
+                      </div>
+
+                         <div className="right px-3">
+                          <h2 className="text-3xl w-max	">
+                            {item.price.UZS.amount && currency(item.price.UZS.amount, 'UZS').replace("UZS", "")
+                              .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ")} UZS
+                          </h2>
+                          <p className="font-mono">&nbsp;за всех пассажиров</p>
+                          <p
+                            className="luggage"
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                              <path d="M10.5801 15.5804C10.3801 15.5804 10.1901 15.5004 10.0501 15.3604L7.22006 12.5304C6.93006 12.2404 6.93006 11.7604 7.22006 11.4704C7.51006 11.1804 7.99006 11.1804 8.28006 11.4704L10.5801 13.7704L15.7201 8.6304C16.0101 8.3404 16.4901 8.3404 16.7801 8.6304C17.0701 8.9204 17.0701 9.4004 16.7801 9.6904L11.1101 15.3604C10.9701 15.5004 10.7801 15.5804 10.5801 15.5804Z" fill="#27AE60" />
+                            </svg>
+                            Багаж:{" "}
+                            {item.segments[0].baggage.weight
+                              ? item.segments[0].baggage.weight
+                              : 0}{" "}
+                            кг
+                          </p>
+                          <button
+                            className="bgBlue"
+                            onClick={() => toShoppingTicket(item.id, item.price.UZS.amount)}
+                          >
+                            купить
+                          </button>
+                        </div>
+                      </>
+                  
                     ) : (
-<<<<<<< Updated upstream
                       <div className="container-box" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
-=======
-                      <div className="container-box" key={inx} onClick={() => window.innerWidth <= 768 && toShoppingTicket(item.id, item.price.UZS.amount)}>
->>>>>>> Stashed changes
-                        <div className="left border-r pr-5 border-[#ccc]">
+                        <div className="left border-r md:pr-5 border-[#ccc]">
                           <div className="top">
                             <h2 className="flex w-full justify-between items-center log">
                               <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.provider.supplier.code}.png`} alt="" />
@@ -267,12 +313,12 @@ function Ticket(props) {
                               <h2 className="time">
                                 {item.segments[0].dep.time}
                               </h2>
-                              <p className="font-mono tex">
+                              <p className="font-mono text-[0.675rem] md:text-lg">
                                 {moment(item.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
                                 {moment(item.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
                                     
                               </p>
-                              <p className="font-mono tex"> {item.segments[0].dep.city.title} ({item.segments[0].dep.city.code})</p>
+                              <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[0].dep.city.title} ({item.segments[0].dep.city.code})</p>
                             </div>
                             <div>
                               <div className="map w-full justify-between">
@@ -319,11 +365,11 @@ function Ticket(props) {
                               <h2 className="time">
                                 {item.segments[0].arr.time}
                               </h2>
-                              <p className="font-mono tex">
+                              <p className="font-mono text-[0.675rem] md:text-lg">
                                 {moment(item.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
                                 {moment(item.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
                               </p>
-                              <p className="font-mono tex"> {item.segments[0].arr.city.title} ({item.segments[0].arr.city.code})</p>
+                              <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[0].arr.city.title} ({item.segments[0].arr.city.code})</p>
                             </div>
 
                             <div>
@@ -368,7 +414,6 @@ function Ticket(props) {
                           >
                             купить
                           </button>
-                          {/* <button className="bgWhite">Tarif haqida</button> */}
                         </div>
                       </div>
                     )}
@@ -388,112 +433,119 @@ function Ticket(props) {
           <Modal
             open={open}
             onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            closeAfterTransition
+            BackdropProps={{
+              timeout: 1500,
+            }}
+          
           >
-            <Box sx={style}>
-              <div className="flex items-center justify-between mb-[20px] sticky top-0 bg-white z-50 h-[60px]">
-                <h1 className="text-[18px] font-semibold">Подробнее о маршруте</h1>
-                <img onClick={() => handleClose()} src={cirClose} alt="" />
-              </div>
-              <div className="mb-[10px]">
-                <h1 className="text-[20px] font-bold">Ташкент - Париж</h1>
-                <p className="text-[14px] font-normal text-[#222222]" >21ч 40 мин в пути, 2 пересадки</p>
-              </div>
-              <div className="flex justify-between mb-[15px]">
-                <div>
-                  <h1 className="text-[18px] font-semibold flex">Uzbekistan Airways <img className="ml-[8px]" src={airplane} alt="" /></h1>
-                  <p className="text-[14px] font-normal text-[#222222]">5ч 20 мин в пути, Airbus A330, рейс HH-437</p>
+            <Fade in={open}>
+              <Box sx={style}>
+                <div className="flex items-center justify-between mb-[20px] sticky top-0 bg-white z-50 h-[60px]">
+                  <h1 className="text-[18px] font-semibold">Подробнее о маршруте</h1>
+                  <img onClick={() => handleClose()} src={cirClose} alt="" />
                 </div>
-                <img src={uzbAirwaysLogo} alt="" />
-              </div>
-              <div className="flex justify-between w-[60%] mb-[15px]">
-                <div>
-                  <h1 className="text-[18px] font-semibold mb-[20px]"> 13:20
-                    <p className="text-[14px] font-normal text-[#222222]">13 ноя, ср</p>
-                  </h1>
-                  <h1 className="text-[18px] font-semibold"> 17:20
-                    <p className="text-[14px] font-normal text-[#222222]"> 13 ноя, ср</p>
-                  </h1>
+                <div className="mb-[10px]">
+                  <h1 className="text-[20px] font-bold">Ташкент - Париж</h1>
+                  <p className="text-[14px] font-normal text-[#222222]" >21ч 40 мин в пути, 2 пересадки</p>
                 </div>
-                <img src={line} alt="" />
-                <div>
-                  <h1 className="text-[18px] font-semibold mb-[20px]"> Ташкент
-                    <p className="text-[14px] font-normal text-[#222222]">Ташкент (TAS)</p>
-                  </h1>
-                  <h1 className="text-[18px] font-semibold"> Москва
-                    <p className="text-[14px] font-normal text-[#222222]"> Москва (MOS)</p>
-                  </h1>
+                <div className="flex justify-between mb-[15px]">
+                  <div>
+                    <h1 className="text-[18px] font-semibold flex">Uzbekistan Airways <img className="ml-[8px]" src={airplane} alt="" /></h1>
+                    <p className="text-[14px] font-normal text-[#222222]">5ч 20 мин в пути, Airbus A330, рейс HH-437</p>
+                  </div>
+                  <img src={uzbAirwaysLogo} alt="" />
                 </div>
-              </div>
-              <div className="bg-[#F7F7F7] rounded-lg p-[25px] flex justify-between items-start">
-                <h1 className="text-[18px] font-semibold">Пересадка
-                  <p className="text-[14px] font-normal text-[#222222] mt-[15px]">9ч 40 мин, ночная пересадка </p>
-                </h1>
-                <img src={moon} alt="" />
-              </div>
+                <div className="flex justify-between w-[60%] mb-[15px]">
+                  <div>
+                    <h1 className="text-[18px] font-semibold mb-[20px]"> 13:20
+                      <p className="text-[14px] font-normal text-[#222222]">13 ноя, ср</p>
+                    </h1>
+                    <h1 className="text-[18px] font-semibold"> 17:20
+                      <p className="text-[14px] font-normal text-[#222222]"> 13 ноя, ср</p>
+                    </h1>
+                  </div>
+                  <img src={line} alt="" />
+                  <div>
+                    <h1 className="text-[18px] font-semibold mb-[20px]"> Ташкент
+                      <p className="text-[14px] font-normal text-[#222222]">Ташкент (TAS)</p>
+                    </h1>
+                    <h1 className="text-[18px] font-semibold"> Москва
+                      <p className="text-[14px] font-normal text-[#222222]"> Москва (MOS)</p>
+                    </h1>
+                  </div>
+                </div>
+                <div className="bg-[#F7F7F7] rounded-lg p-[25px] flex justify-between items-start">
+                  <h1 className="text-[18px] font-semibold">Пересадка
+                    <p className="text-[14px] font-normal text-[#222222] mt-[15px]">9ч 40 мин, ночная пересадка </p>
+                  </h1>
+                  <img src={moon} alt="" />
+                </div>
 
 
-              <div className="flex justify-between my-[15px]">
-                <div>
-                  <h1 className="text-[18px] font-semibold flex">Turkish Airlines <img className="ml-[8px]" src={airplane} alt="" /></h1>
-                  <p className="text-[14px] font-normal text-[#222222]">3ч 30 мин в пути, Airbus A170,  рейс IPA-105</p>
+                <div className="flex justify-between my-[15px]">
+                  <div>
+                    <h1 className="text-[18px] font-semibold flex">Turkish Airlines <img className="ml-[8px]" src={airplane} alt="" /></h1>
+                    <p className="text-[14px] font-normal text-[#222222]">3ч 30 мин в пути, Airbus A170,  рейс IPA-105</p>
+                  </div>
+                  <img src={uzbAirwaysLogo} alt="" />
                 </div>
-                <img src={uzbAirwaysLogo} alt="" />
-              </div>
-              <div className="flex justify-between w-[60%] mb-[15px]">
-                <div>
-                  <h1 className="text-[18px] font-semibold mb-[20px]"> 06:40
-                    <p className="text-[14px] font-normal text-[#222222]">14 ноя, ср</p>
-                  </h1>
-                  <h1 className="text-[18px] font-semibold"> 10:10
-                    <p className="text-[14px] font-normal text-[#222222]"> 14 ноя, ср</p>
+                <div className="flex justify-between w-[60%] mb-[15px]">
+                  <div>
+                    <h1 className="text-[18px] font-semibold mb-[20px]"> 06:40
+                      <p className="text-[14px] font-normal text-[#222222]">14 ноя, ср</p>
+                    </h1>
+                    <h1 className="text-[18px] font-semibold"> 10:10
+                      <p className="text-[14px] font-normal text-[#222222]"> 14 ноя, ср</p>
+                    </h1>
+                  </div>
+                  <img src={line2} alt="" />
+                  <div>
+                    <h1 className="text-[18px] font-semibold mb-[20px]"> Москва
+                      <p className="text-[14px] font-normal text-[#222222]">Москва (MOS)</p>
+                    </h1>
+                    <h1 className="text-[18px] font-semibold">Стамбул
+                      <p className="text-[14px] font-normal text-[#222222]"> Стамбул (IST)</p>
+                    </h1>
+                  </div>
+                </div>
+                <div className="bg-[#F7F7F7] rounded-lg p-[25px]">
+                  <h1 className="text-[18px] font-semibold">Пересадка
+                    <p className="text-[14px] font-normal text-[#222222] mt-[15px]">3ч 10 мин </p>
                   </h1>
                 </div>
-                <img src={line2} alt="" />
-                <div>
-                  <h1 className="text-[18px] font-semibold mb-[20px]"> Москва
-                    <p className="text-[14px] font-normal text-[#222222]">Москва (MOS)</p>
-                  </h1>
-                  <h1 className="text-[18px] font-semibold">Стамбул
-                    <p className="text-[14px] font-normal text-[#222222]"> Стамбул (IST)</p>
-                  </h1>
-                </div>
-              </div>
-              <div className="bg-[#F7F7F7] rounded-lg p-[25px]">
-                <h1 className="text-[18px] font-semibold">Пересадка
-                  <p className="text-[14px] font-normal text-[#222222] mt-[15px]">3ч 10 мин </p>
-                </h1>
-              </div>
 
-              <div className="flex justify-between my-[15px]">
-                <div>
-                  <h1 className="text-[18px] font-semibold flex">Turkish Airlines <img className="ml-[8px]" src={airplane} alt="" /></h1>
-                  <p className="text-[14px] font-normal text-[#222222]">3ч 30 мин в пути, Airbus A170,  рейс IPA-105</p>
+                <div className="flex justify-between my-[15px]">
+                  <div>
+                    <h1 className="text-[18px] font-semibold flex">Turkish Airlines <img className="ml-[8px]" src={airplane} alt="" /></h1>
+                    <p className="text-[14px] font-normal text-[#222222]">3ч 30 мин в пути, Airbus A170,  рейс IPA-105</p>
+                  </div>
+                  <img src={uzbAirwaysLogo} alt="" />
                 </div>
-                <img src={uzbAirwaysLogo} alt="" />
-              </div>
-              <div className="flex justify-between w-[60%] mb-[15px]">
-                <div>
-                  <h1 className="text-[18px] font-semibold mb-[20px]"> 06:40
-                    <p className="text-[14px] font-normal text-[#222222]">14 ноя, ср</p>
-                  </h1>
-                  <h1 className="text-[18px] font-semibold"> 10:10
-                    <p className="text-[14px] font-normal text-[#222222]"> 14 ноя, ср</p>
-                  </h1>
+                <div className="flex justify-between w-[60%] mb-[15px]">
+                  <div>
+                    <h1 className="text-[18px] font-semibold mb-[20px]"> 06:40
+                      <p className="text-[14px] font-normal text-[#222222]">14 ноя, ср</p>
+                    </h1>
+                    <h1 className="text-[18px] font-semibold"> 10:10
+                      <p className="text-[14px] font-normal text-[#222222]"> 14 ноя, ср</p>
+                    </h1>
+                  </div>
+                  <img src={line2} alt="" />
+                  <div>
+                    <h1 className="text-[18px] font-semibold mb-[20px]"> Москва
+                      <p className="text-[14px] font-normal text-[#222222]">Москва (MOS)</p>
+                    </h1>
+                    <h1 className="text-[18px] font-semibold">Стамбул
+                      <p className="text-[14px] font-normal text-[#222222]"> Стамбул (IST)</p>
+                    </h1>
+                  </div>
                 </div>
-                <img src={line2} alt="" />
-                <div>
-                  <h1 className="text-[18px] font-semibold mb-[20px]"> Москва
-                    <p className="text-[14px] font-normal text-[#222222]">Москва (MOS)</p>
-                  </h1>
-                  <h1 className="text-[18px] font-semibold">Стамбул
-                    <p className="text-[14px] font-normal text-[#222222]"> Стамбул (IST)</p>
-                  </h1>
-                </div>
-              </div>
-              <button className="mt-[20px] bg-[#0064FA] w-full p-[16px] text-white text-[16px] font-thin rounded-lg">Купить</button>
-            </Box>
+                <button className="mt-[20px] bg-[#0064FA] w-full p-[16px] text-white text-[16px] font-thin rounded-lg">Купить</button>
+              </Box>
+            </Fade>
           </Modal>
         </div>
       </div>

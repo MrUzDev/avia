@@ -98,7 +98,6 @@ export default function TicketSkeleton(props) {
                 <Skeleton loading={props.isLoading}>
                   <button className="bgBlue">100000 UZS</button>
                 </Skeleton>
-                {/* <button className="bgWhite">Tarif haqida</button> */}
               </div>
             </div>
           </div>
