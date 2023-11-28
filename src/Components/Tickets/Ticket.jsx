@@ -27,14 +27,14 @@ const style = {
   left: '0',
   width: '100%',
   bgcolor: 'background.paper',
-  boxShadow: 24,
+  boxShadow: '0px -24px 24px rgba(0, 0, 0, 0.2)',
   paddingLeft: "20px",
   paddingRight: "20px",
   paddingBottom: "20px",
   borderTopLeftRadius: "8px",
   borderTopRightRadius: "8px",
   height: "95vh",
-  overflowY: "scroll"
+  overflowY: "scroll",
 };
 
 function Ticket(props) {
@@ -398,7 +398,7 @@ function Ticket(props) {
               </div>
               <div className="flex justify-between mb-[15px]">
                 <div>
-                  <h1 className="text-[18px] font-semibold flex">Uzbekistan Airways <img className="ml-[8px]" src={airplane} alt="" /></h1>
+                  <h1 className="text-[18px] font-semibold flex">Uzbekistan Airways<img className="ml-[8px]" src={airplane} alt="" /></h1>
                   <p className="text-[14px] font-normal text-[#222222]">5ч 20 мин в пути, Airbus A330, рейс HH-437</p>
                 </div>
                 <img src={uzbAirwaysLogo} alt="" />
