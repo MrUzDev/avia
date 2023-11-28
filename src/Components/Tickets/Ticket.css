@@ -82,12 +82,15 @@
 
 .Ticket .box .container-box:nth-child(2) {
   margin-top: 20px;
-  border-top: 2px solid gray;
-  padding-top: 20px;
+  border-top: 1px solid #ccc;
 }
 
 .Ticket .box .left {
   width: 80%;
+}
+
+.Ticket .container-box-2 .left {
+  width: 100%;
 }
 
 .Ticket .box .left .top {
@@ -251,6 +254,13 @@
   .Ticket .box .left .top .sum{
     display: block;
     font-size: 18px;
+  }
+  
+}
+
+@media screen and (max-width: 568px) {
+  .Ticket .box {
+    padding: 15px 10px;
   }
 }
 

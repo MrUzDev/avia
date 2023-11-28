@@ -359,7 +359,7 @@ export default function BasicModal(props) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style2}>
+        <Box sx={style}>
           <Typography
             sx={{ textAlign: "center", fontSize: "28px" }}
             id="modal-modal-title"
@@ -385,7 +385,7 @@ export default function BasicModal(props) {
             id="modal-modal-description"
             sx={{ mt: 2, textAlign: "center", fontSize: "18px" }}
           >
-            <div style={{ width: "100%", padding: "0 20px", }}>
+            <div style={{ width: "100%",}}>
               <MuiTelInput
                 sx={{ width: "100%", marginRight: "10px", marginBottom:"20px" }}
                 value={phoneNum}
