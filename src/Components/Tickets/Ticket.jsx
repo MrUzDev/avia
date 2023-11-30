@@ -27,7 +27,7 @@ const style = {
   left: '0',
   width: '100%',
   bgcolor: 'background.paper',
-  boxShadow: 24,
+  boxShadow: '0px -24px 24px rgba(0, 0, 0, 0.2)',
   paddingLeft: "20px",
   paddingRight: "20px",
   paddingBottom: "20px",
@@ -40,6 +40,7 @@ const style = {
 
 function Ticket(props) {
   const [open, setOpen] = React.useState(false);
+  const [ticketDetail, setTicketDetail] = useState([])
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const TicketData = useSelector((state) => state.loginSlice.ticketData);
@@ -48,6 +49,8 @@ function Ticket(props) {
   const [ticketFilterShow, setTicketFilterShow] = useState(false)
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  console.log(ticketDetail.segments)
+
 
   const toShoppingTicket = (id, price) => {
     if (id) {
@@ -128,131 +131,130 @@ function Ticket(props) {
             {TicketData && TicketData.flights.length > 0
               ? TicketData.flights.map((item, inx) => (
                 <Grid item lg={12} sx={{ marginBottom: '20px' }}>
-                  <div className="box w-[100%] flex">
+                  <div onClick={() => setTicketDetail(item)} className="box w-[100%] flex ">
                     {item.segments.length == 2 ? (
-                    <>
-                      <div className="w-full md:border-r md:pr-5 md:border-[#ccc]">
-                        {item.segments.map((twoItem, index) => (
-                          <div className="container-box container-box-2" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
-                          <div className="left w-full">
-                            <div className="top">
-                              <h2 className="flex w-full justify-between items-center log">
-                               {index === 0 && (
-                                <>
-                                <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.provider.supplier.code}.png`} alt="" />
-                                <p>
-                                  <span className="type">
-                                    {item.segments[index].class.name == "E"
-                                      ? "Ekonom"
-                                      : item.segments[index].class.name == "e"
-                                        ? "Ekonom"
-                                        : item.segments[index].class.name == "A"
-                                          ? "Istalgan"
-                                          : item.segments[index].class.name == "B" &&
-                                          "Biznes"}
-                                  </span>
-                                  <span className="class">
-                                    ({item.segments[index].class.name})
-                                  </span>
-                                  <span className="hidden w-max sum">
-                                    {
-                                      item.price.UZS.amount && currency(item.price.UZS.amount, 'UZS').replace("UZS", "")
-                                      .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ") + " UZS"
-                                    }
-                                  </span>
-                                </p>
-                                
-                                </>
-                                )}
-                              </h2>
+                      <>
+                        <div className="w-full md:border-r md:pr-5 md:border-[#ccc]">
+                          {item.segments.map((twoItem, index) => (
+                            <div className="container-box container-box-2" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
+                              <div className="left w-full">
+                                <div className="top">
+                                  <h2 className="flex w-full justify-between items-center log">
+                                    {index === 0 && (
+                                      <>
+                                        <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.provider.supplier.code}.png`} alt="" />
+                                        <p>
+                                          <span className="type">
+                                            {item.segments[index].class.name == "E"
+                                              ? "Ekonom"
+                                              : item.segments[index].class.name == "e"
+                                                ? "Ekonom"
+                                                : item.segments[index].class.name == "A"
+                                                  ? "Istalgan"
+                                                  : item.segments[index].class.name == "B" &&
+                                                  "Biznes"}
+                                          </span>
+                                          <span className="class">
+                                            ({item.segments[index].class.name})
+                                          </span>
+                                          <span className="hidden w-max sum">
+                                            {
+                                              item.price.UZS.amount && currency(item.price.UZS.amount, 'UZS').replace("UZS", "")
+                                                .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ") + " UZS"
+                                            }
+                                          </span>
+                                        </p>
+
+                                      </>
+                                    )}
+                                  </h2>
+                                </div>
+
+                                <div className="bottom">
+                                  <div className="dataL">
+                                    <h2 className="time">
+                                      {item.segments[index].dep.time}
+                                    </h2>
+                                    <p className="font-mono text-[0.675rem] md:text-lg">
+                                      {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                                      {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                                    </p>
+                                    <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[index].dep.city.titl} ({item.segments[index].dep.city.code})</p>
+                                  </div>
+                                  <div>
+                                    <div className="map w-full justify-between">
+                                      <div className="from">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                          <g clip-path="url(#clip0_865_2363)">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
+                                          </g>
+                                          <defs>
+                                            <clipPath id="clip0_865_2363">
+                                              <rect width="24" height="24" rx="4" fill="white" />
+                                            </clipPath>
+                                          </defs>
+                                        </svg>
+                                      </div>
+
+                                      <div className="to">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                          <g clip-path="url(#clip0_865_2363)">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
+                                          </g>
+                                          <defs>
+                                            <clipPath id="clip0_865_2363">
+                                              <rect width="24" height="24" rx="4" fill="white" />
+                                            </clipPath>
+                                          </defs>
+                                        </svg>
+                                      </div>
+                                    </div>
+
+                                    <div className="line mt-4">
+                                      <div className="relative">
+                                        <span className="absolute block left-0 bottom-0 translate-y-1 rounded-md bg-[#FFC107] w-10 h-2"></span>
+                                        <span className="absolute block right-2/4 bottom-0 translate-y-1 translate-x-4  rounded-md bg-[#EF2323] w-6 h-2"></span>
+                                        <span className="absolute block right-0 bottom-0 translate-y-1 rounded-md bg-[#EF2323] w-10 h-2"></span>
+                                      </div>
+                                    </div>
+                                    <div className="namCity flex items-center justify-between mt-3">
+                                      <p className="font-mono">{item.segments[index].dep.city.code}</p>
+                                      <p className="font-mono">{item.segments[index].arr.city.code}</p>
+                                    </div>
+                                  </div>
+                                  <div className="dataR">
+                                    <h2 className="time">
+                                      {item.segments[index].arr.time}
+                                    </h2>
+                                    <p className="font-mono text-[0.675rem] md:text-lg">
+                                      {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                                      {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                                    </p>
+                                    <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[index].arr.city.title} ({item.segments[index].arr.city.code})</p>
+                                  </div>
+
+                                  <div>
+                                    <h2 className="text-[16px]">
+                                      <span >
+                                        {item.segments[index].duration.flight.hour}
+                                      </span>
+                                      <span className="mx-[3px]">
+                                        ч
+                                      </span>
+                                      <span>
+                                        {item.segments[index].duration.flight.minute}
+                                      </span>
+                                      м
+                                    </h2>
+                                  </div>
+                                </div>
+                              </div>
+
                             </div>
-
-                            <div className="bottom">
-                              <div className="dataL">
-                                <h2 className="time">
-                                  {item.segments[index].dep.time}
-                                </h2>
-                                <p className="font-mono text-[0.675rem] md:text-lg">
-                                  {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
-                                  {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
-                                      
-                                </p>
-                                <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[index].dep.city.title} ({item.segments[index].dep.city.code})</p>
-                              </div>
-                              <div>
-                                <div className="map w-full justify-between">
-                                  <div className="from">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                      <g clip-path="url(#clip0_865_2363)">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
-                                      </g>
-                                      <defs>
-                                        <clipPath id="clip0_865_2363">
-                                          <rect width="24" height="24" rx="4" fill="white" />
-                                        </clipPath>
-                                      </defs>
-                                    </svg>
-                                  </div>
-
-                                  <div className="to">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                      <g clip-path="url(#clip0_865_2363)">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
-                                      </g>
-                                      <defs>
-                                        <clipPath id="clip0_865_2363">
-                                          <rect width="24" height="24" rx="4" fill="white" />
-                                        </clipPath>
-                                      </defs>
-                                    </svg>
-                                  </div>
-                                </div>
-
-                                <div className="line mt-4">
-                                  <div className="relative">
-                                    <span className="absolute block left-0 bottom-0 translate-y-1 rounded-md bg-[#FFC107] w-10 h-2"></span>
-                                    <span className="absolute block right-2/4 bottom-0 translate-y-1 translate-x-4  rounded-md bg-[#EF2323] w-6 h-2"></span>
-                                    <span className="absolute block right-0 bottom-0 translate-y-1 rounded-md bg-[#EF2323] w-10 h-2"></span>
-                                  </div>
-                                </div>
-                                <div className="namCity flex items-center justify-between mt-3">
-                                  <p className="font-mono">{item.segments[index].dep.city.code}</p>
-                                  <p className="font-mono">{item.segments[index].arr.city.code}</p>
-                                </div>
-                              </div>
-                              <div className="dataR">
-                                <h2 className="time">
-                                  {item.segments[index].arr.time}
-                                </h2>
-                                <p className="font-mono text-[0.675rem] md:text-lg">
-                                  {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
-                                  {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
-                                </p>
-                                <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[index].arr.city.title} ({item.segments[index].arr.city.code})</p>
-                              </div>
-
-                              <div>
-                                <h2 className="text-[16px]">
-                                  <span >
-                                    {item.segments[index].duration.flight.hour}
-                                  </span>
-                                  <span className="mx-[3px]">
-                                    ч
-                                  </span>
-                                  <span>
-                                    {item.segments[index].duration.flight.minute}
-                                  </span>
-                                  м
-                                </h2>
-                              </div>
-                            </div>
-                          </div>
-
+                          ))}
                         </div>
-                        ))}
-                      </div>
 
-                         <div className="right px-3">
+                        <div className="right px-3">
                           <h2 className="text-3xl w-max	">
                             {item.price.UZS.amount && currency(item.price.UZS.amount, 'UZS').replace("UZS", "")
                               .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ")} UZS
@@ -279,7 +281,7 @@ function Ticket(props) {
                           </button>
                         </div>
                       </>
-                  
+
                     ) : (
                       <div className="container-box" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
                         <div className="left border-r md:pr-5 border-[#ccc]">
@@ -316,7 +318,7 @@ function Ticket(props) {
                               <p className="font-mono text-[0.675rem] md:text-lg">
                                 {moment(item.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
                                 {moment(item.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
-                                    
+
                               </p>
                               <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[0].dep.city.title} ({item.segments[0].dep.city.code})</p>
                             </div>
@@ -439,7 +441,7 @@ function Ticket(props) {
             BackdropProps={{
               timeout: 1500,
             }}
-          
+
           >
             <Fade in={open}>
               <Box sx={style}>
@@ -447,7 +449,52 @@ function Ticket(props) {
                   <h1 className="text-[18px] font-semibold">Подробнее о маршруте</h1>
                   <img onClick={() => handleClose()} src={cirClose} alt="" />
                 </div>
-                <div className="mb-[10px]">
+                {
+                  ticketDetail && ticketDetail.segments_count > 0 ?
+                    ticketDetail.segments.map((item, index) => (
+                      <div key={index}>
+                        <div className="mb-[10px]">
+                          <h1 className="text-[20px] font-bold">{item.dep.city.title} - {item.arr.city.title}</h1>
+                          <p className="text-[14px] font-normal text-[#222222]" >{item.duration.flight.hour}ч {item.duration.flight.minute} мин в пути,{ticketDetail.segments_count} пересадки</p>
+                        </div>
+                        <div className="flex justify-between mb-[15px]">
+                          <div>
+                            <h1 className="text-[18px] font-semibold flex">
+                              {item.carrier.title} <img className="ml-[8px]" src={airplane} alt="" /></h1>
+                            {/* <p className="text-[14px] font-normal text-[#222222]">5ч 20 мин в пути, Airbus A330, рейс HH-437</p> */}
+                          </div>
+                          <img className="w-[40px] h-[40px] rounded-[50%]" src={`https://mpics.avs.io/al_square/240/240/${ticketDetail.provider.supplier.code}.png`} alt="" />
+                        </div>
+                        <div className="flex justify-between w-[60%] mb-[15px]">
+                          <div>
+                            <h1 className="text-[18px] font-semibold mb-[20px]"> {item.dep.time}
+                              <p className="text-[14px] font-normal text-[#222222] md:text-lg">
+                                {moment(item.dep.date, 'DD.MM.YYYY').format("DD MMMM")},
+                                {moment(item.dep.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                              </p>
+                            </h1>
+                            <h1 className="text-[18px] font-semibold"> {item.arr.time}
+                              <p className="text-[14px] font-normal text-[#222222] md:text-lg">
+                                {moment(item.arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                                {moment(item.arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                              </p>
+                            </h1>
+                          </div>
+                          <img src={line} alt="" />
+                          <div>
+                            <h1 className="text-[18px] font-semibold mb-[20px]"> {item.dep.city.title}
+                              <p className="text-[14px] font-normal text-[#222222]">{item.dep.city.title} ({item.dep.city.code})</p>
+                            </h1>
+                            <h1 className="text-[18px] font-semibold"> {item.arr.city.title}
+                              <p className="text-[14px] font-normal text-[#222222]"> {item.arr.city.title} ({item.arr.city.code})</p>
+                            </h1>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                    : ""
+                }
+                {/* <div className="mb-[10px]">
                   <h1 className="text-[20px] font-bold">Ташкент - Париж</h1>
                   <p className="text-[14px] font-normal text-[#222222]" >21ч 40 мин в пути, 2 пересадки</p>
                 </div>
@@ -542,7 +589,7 @@ function Ticket(props) {
                       <p className="text-[14px] font-normal text-[#222222]"> Стамбул (IST)</p>
                     </h1>
                   </div>
-                </div>
+                </div> */}
                 <button className="mt-[20px] bg-[#0064FA] w-full p-[16px] text-white text-[16px] font-thin rounded-lg">Купить</button>
               </Box>
             </Fade>
