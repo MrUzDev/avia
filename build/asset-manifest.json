@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.7c485f17.css",
-    "main.js": "/static/js/main.3252eb27.js",
+    "main.css": "/static/css/main.a327a33c.css",
+    "main.js": "/static/js/main.08ed59c3.js",
     "static/media/swiper.png": "/static/media/swiper.6c20ed585c7e3cbd3270.png",
     "static/media/kazakistan.png": "/static/media/kazakistan.6bd49d1750939430646b.png",
     "static/media/turkiya.png": "/static/media/turkiya.ab928e4831064d718422.png",
@@ -48,11 +48,11 @@
     "static/media/line.svg": "/static/media/line.35067416aaf0c9261c1984ef885f034b.svg",
     "static/media/line2.svg": "/static/media/line2.372c75b24cc7575d315fe1c1f8b8f0e1.svg",
     "static/media/arrow-down.svg": "/static/media/arrow-down.753524ed796ad711db68bb1f2b96e9ef.svg",
-    "main.7c485f17.css.map": "/static/css/main.7c485f17.css.map",
-    "main.3252eb27.js.map": "/static/js/main.3252eb27.js.map"
+    "main.a327a33c.css.map": "/static/css/main.a327a33c.css.map",
+    "main.08ed59c3.js.map": "/static/js/main.08ed59c3.js.map"
   },
   "entrypoints": [
-    "static/css/main.7c485f17.css",
-    "static/js/main.3252eb27.js"
+    "static/css/main.a327a33c.css",
+    "static/js/main.08ed59c3.js"
   ]
 }

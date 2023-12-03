@@ -384,6 +384,7 @@ function Main() {
                         numberOfMonths={2}
                         portal={true}
                         range
+                        value={myAirlinesDate}
                         ref={datePickerRef}
                         style={{ display: 'none' }}
                       />
