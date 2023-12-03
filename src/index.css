@@ -26,7 +26,14 @@
   font-family: GilroyBlack;
 }
 
+.MuiTabs-indicator.css-1aquho2-MuiTabs-indicator {
+  display: none;
+}
+
+.MuiBox-root.css-1gsv261 {
+  border: none;
+}
 
 input::placeholder {
   font-family: aviaFont;
-} 
+}

@@ -30,6 +30,7 @@ import girlImg from "../../Assets/images/girl.png"
 import Switch from '@mui/material/Switch';
 import { setTicketAdult, setTicketChild, setTicketBabies, setTicketTarif } from "../../Slice/AllSlice";
 
+
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -84,7 +85,7 @@ function Main() {
   const [checkedBiznes, setCheckedBiznes] = useState(false);
   const [ticketLoad, setTicketLoad] = useState(false)
 
-  
+
   const ticketAdults = useSelector((state) => state.loginSlice.ticketAdults);
   const ticketChild = useSelector((state) => state.loginSlice.ticketChild);
   const ticketBabies = useSelector((state) => state.loginSlice.ticketBabies);
@@ -125,7 +126,7 @@ function Main() {
         lang: 'ru',
         part: e
       }
-     
+
       searchAirports(searchData)
     } else {
       setMyAirlinesCode()
@@ -159,7 +160,7 @@ function Main() {
         part: e
       }
       searchAirportsto(searchData)
-    }else {
+    } else {
       setMyAirlinesCodeTo()
     }
   }
@@ -262,7 +263,7 @@ function Main() {
   useEffect(() => {
     console.log(myAirlinesTo);
   }, [myAirlinesTo]);
-  
+
   // reverse Airport Name end
 
   useEffect(() => {
@@ -306,7 +307,7 @@ function Main() {
   }, [classModalShow])
 
   useEffect(() => {
-    
+
   }, [myAirlinesCode])
 
 
@@ -328,7 +329,7 @@ function Main() {
 
       <div className='mt-[5%] mb-11 main'>
         <div className="container mx-auto">
-          <h1 className='hidden lg:block text-center text-[64px] text-[#0057BE] mb-[2%] font-bold' style={{fontFamily: 'GilroyBlack'}}> Самый правильный путь к путешествиям</h1>
+          <h1 className='hidden lg:block text-center text-[64px] text-[#0057BE] mb-[2%] font-bold' style={{ fontFamily: 'GilroyBlack' }}> Самый правильный путь к путешествиям</h1>
           <Box sx={{ width: '100%' }}>
             <Box>
               <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -410,7 +411,7 @@ function Main() {
                         <div className="flex items-center justify-between my-3">
                           <p className="text-lg mr-5 text-[#222] font-light">12 лет и старше</p>
                           <div className="flex items-center justify-between">
-                            <button className={`${ticketAdults > 0  ? 'bg-[#3379CB]' : 'bg-[#AEAEAE]'} p-3 rounded-lg text-white`} style={{ lineHeight: '0.5' }} onClick={() => ticketAdults > 1 && dispatch(setTicketAdult(ticketAdults - 1))}>-</button>
+                            <button className={`${ticketAdults > 0 ? 'bg-[#3379CB]' : 'bg-[#AEAEAE]'} p-3 rounded-lg text-white`} style={{ lineHeight: '0.5' }} onClick={() => ticketAdults > 1 && dispatch(setTicketAdult(ticketAdults - 1))}>-</button>
                             <h1 className="mx-3">{ticketAdults}</h1>
                             <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketAdult(ticketAdults + 1))}>+</button>
                           </div>
@@ -419,7 +420,7 @@ function Main() {
                         <div className="flex items-center justify-between mb-3">
                           <h2 className="text-lg mr-5 text-[#222] font-light">от 2 до 12 лет</h2>
                           <div className="flex items-center justify-between">
-                            <button className={`${ticketChild > 0  ? 'bg-[#3379CB]' : 'bg-[#AEAEAE]'} p-3 rounded-lg text-white`} style={{ lineHeight: '0.5' }} onClick={() => ticketChild > 0 && dispatch(setTicketChild(ticketChild - 1))}>-</button>
+                            <button className={`${ticketChild > 0 ? 'bg-[#3379CB]' : 'bg-[#AEAEAE]'} p-3 rounded-lg text-white`} style={{ lineHeight: '0.5' }} onClick={() => ticketChild > 0 && dispatch(setTicketChild(ticketChild - 1))}>-</button>
                             <h1 className="mx-3">{ticketChild}</h1>
                             <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketChild(ticketChild + 1))}>+</button>
                           </div>
@@ -428,7 +429,7 @@ function Main() {
                         <div className="flex items-center justify-between mb-3">
                           <h2 className="text-lg mr-5 text-[#222] font-light">до 2 лет</h2>
                           <div className="flex items-center justify-between">
-                            <button className={`${ticketBabies > 0  ? 'bg-[#3379CB]' : 'bg-[#AEAEAE]'} p-3 rounded-lg text-white`} style={{ lineHeight: '0.5' }} onClick={() => ticketBabies > 0 && dispatch(setTicketBabies(ticketBabies - 1))}>-</button>
+                            <button className={`${ticketBabies > 0 ? 'bg-[#3379CB]' : 'bg-[#AEAEAE]'} p-3 rounded-lg text-white`} style={{ lineHeight: '0.5' }} onClick={() => ticketBabies > 0 && dispatch(setTicketBabies(ticketBabies - 1))}>-</button>
                             <h1 className="mx-3">{ticketBabies}</h1>
                             <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketBabies(ticketBabies + 1))}>+</button>
                           </div>
@@ -463,48 +464,48 @@ function Main() {
 
               <div className='flex lg:hidden flex-col'>
                 <div className='p-[15px] relative flex flex-col border border-[#c0bfbf] rounded-lg'>
-                  <input className='outline-none px-[10px]' type="text" placeholder='Откуда' value={myAirlines || ''} onChange={(e) => { setMyAirlines(e.target.value); searchAirportsFnc(e.target.value) }}/>
+                  <input className='outline-none px-[10px]' type="text" placeholder='Откуда' value={myAirlines || ''} onChange={(e) => { setMyAirlines(e.target.value); searchAirportsFnc(e.target.value) }} />
 
-                     {airlinesDataFrom && (
-                      <div className="searchDataList z-10">
-                        {airlinesDataFrom.map((item, index) =>
-                          <div key={index} onClick={() => { setMyAirlines(item.cityName); setMyAirlinesCode(item.cityIataCode); setAirlinesDataFrom() }}>
-                            <p>{item.cityName}</p>
-                            <p>{item.cityIataCode}</p>
-                          </div>
-                        )}
-                      </div>
-                    )} 
+                  {airlinesDataFrom && (
+                    <div className="searchDataList z-10">
+                      {airlinesDataFrom.map((item, index) =>
+                        <div key={index} onClick={() => { setMyAirlines(item.cityName); setMyAirlinesCode(item.cityIataCode); setAirlinesDataFrom() }}>
+                          <p>{item.cityName}</p>
+                          <p>{item.cityIataCode}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   <div className='flex w-full items-center relative'>
                     <div className='border border-[#c0bfbf] w-full'></div>
                     <div className='h-[40px] w-[50px] flex items-center justify-center rounded-[50%] bg-[#AEAEAE]'>
-                      <img className='' src={arrowSwap2} alt="" onClick={() => reverseAirportName()}/>
+                      <img className='' src={arrowSwap2} alt="" onClick={() => reverseAirportName()} />
                     </div>
                   </div>
-                  <input className='outline-none px-[10px]' type="text" placeholder='Куда' value={myAirlinesTo || ''} onChange={(e) => { setMyAirlinesTo(e.target.value); searchAirportsToFnc(e.target.value) }}/>
-                    
+                  <input className='outline-none px-[10px]' type="text" placeholder='Куда' value={myAirlinesTo || ''} onChange={(e) => { setMyAirlinesTo(e.target.value); searchAirportsToFnc(e.target.value) }} />
+
                   {airlinesDataTo && (
-                      <div className="searchDataList2 z-10">
-                        {airlinesDataTo.map((item, index) =>
-                          <div key={index} onClick={() => { setMyAirlinesTo(item.cityName); setMyAirlinesCodeTo(item.cityIataCode); setAirlinesDataTo() }}>
-                            <p>{item.cityName}</p>
-                            <p>{item.cityIataCode}</p>
-                          </div>
-                        )}
-                      </div>
+                    <div className="searchDataList2 z-10">
+                      {airlinesDataTo.map((item, index) =>
+                        <div key={index} onClick={() => { setMyAirlinesTo(item.cityName); setMyAirlinesCodeTo(item.cityIataCode); setAirlinesDataTo() }}>
+                          <p>{item.cityName}</p>
+                          <p>{item.cityIataCode}</p>
+                        </div>
+                      )}
+                    </div>
                   )}
-               
+
                 </div>
                 <div className='flex items-center justify-between mt-[15px] gap-3'>
                   <div className='h-[60px] bg-white w-full flex items-center justify-between rounded-lg'>
-                  <label htmlFor="" className="h-full w-full ">
-                    
+                    <label htmlFor="" className="h-full w-full ">
+
                       <input type="text" placeholder="Когда" className='h-full w-full border rounded-lg border-[#c0bfbf] outline-none px-[10px]' value={myAirlinesDate[0] ? myAirlinesDate[0].format?.("DD-MM-YYYY") : ''} onClick={() => datePickerRef.current.openCalendar()} />
 
                     </label>
                   </div>
-                  <input className='h-[60px] border border-[#c0bfbf] outline-none px-[10px] w-full rounded-lg' type="text" placeholder='Обратно' value={myAirlinesDate[1] ? myAirlinesDate[1].format?.("DD-MM-YYYY") : ''} onClick={() => datePickerRef.current.openCalendar()}/>
+                  <input className='h-[60px] border border-[#c0bfbf] outline-none px-[10px] w-full rounded-lg' type="text" placeholder='Обратно' value={myAirlinesDate[1] ? myAirlinesDate[1].format?.("DD-MM-YYYY") : ''} onClick={() => datePickerRef.current.openCalendar()} />
                 </div>
                 <div className='h-[60px] mt-[15px] rounded-lg border border-[#c0bfbf] outline-none px-[10px] bg-white w-full  flex items-center justify-between' onClick={() => setClassModalShow(!classModalShow)}>
                   <div>
@@ -515,54 +516,54 @@ function Main() {
                 </div>
 
                 {classModalShow && (
-                      <div className="absolute p-5 min-w-full right-0 bg-[white] z-10 shadow-2xl rounded-lg" style={{ top: 'calc(100% + 10px)', width: '100%'}}>
-                        <div><h3>{ticketAdults + ticketChild + ticketBabies} пассажир</h3></div>
-                        <div className="flex items-center justify-between my-3">
-                          <p className="text-lg mr-5 text-[#222] font-light ">12 лет и старше</p>
-                          <div className="flex items-center justify-between">
-                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketAdult(ticketAdults + 1))}>+</button>
-                            <h1 className="mx-3">{ticketAdults}</h1>
-                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => ticketAdults > 1 && dispatch(setTicketAdult(ticketAdults - 1))}>-</button>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between mb-3">
-                          <h2 className="text-lg mr-5 text-[#222] font-light">от 2 до 12 лет</h2>
-                          <div className="flex items-center justify-between">
-                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketChild(ticketChild + 1))}>+</button>
-                            <h1 className="mx-3">{ticketChild}</h1>
-                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => ticketChild > 0 && dispatch(setTicketChild(ticketChild - 1))}>-</button>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between mb-3">
-                          <h2 className="text-lg mr-5 text-[#222] font-light">до 2 лет</h2>
-                          <div className="flex items-center justify-between">
-                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketBabies(ticketBabies + 1))}>+</button>
-                            <h1 className="mx-3">{ticketBabies}</h1>
-                            <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => ticketBabies > 0 && dispatch(setTicketBabies(ticketBabies - 1))}>-</button>
-                          </div>
-                        </div>
-
-                        <div className="border-b-4 pb-4 pt-2">
-                          <p className="text-sm">Укажите возраст на момент отправления</p>
-                        </div>
-
-                        <div>
-                          <Switch
-                            checked={checkedBiznes}
-                            onChange={(e) => { setCheckedBiznes(e.target.checked); e.target.checked ? dispatch(setTicketTarif('b')) : dispatch(setTicketTarif('a')) }}
-                            inputProps={{ 'aria-label': 'controlled' }}
-                          />
-                          <label htmlFor="">Бизнес класс</label>
-                        </div>
+                  <div className="absolute p-5 min-w-full right-0 bg-[white] z-10 shadow-2xl rounded-lg" style={{ top: 'calc(100% + 10px)', width: '100%' }}>
+                    <div><h3>{ticketAdults + ticketChild + ticketBabies} пассажир</h3></div>
+                    <div className="flex items-center justify-between my-3">
+                      <p className="text-lg mr-5 text-[#222] font-light ">12 лет и старше</p>
+                      <div className="flex items-center justify-between">
+                        <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketAdult(ticketAdults + 1))}>+</button>
+                        <h1 className="mx-3">{ticketAdults}</h1>
+                        <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => ticketAdults > 1 && dispatch(setTicketAdult(ticketAdults - 1))}>-</button>
                       </div>
-                    )}
+                    </div>
+
+                    <div className="flex items-center justify-between mb-3">
+                      <h2 className="text-lg mr-5 text-[#222] font-light">от 2 до 12 лет</h2>
+                      <div className="flex items-center justify-between">
+                        <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketChild(ticketChild + 1))}>+</button>
+                        <h1 className="mx-3">{ticketChild}</h1>
+                        <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => ticketChild > 0 && dispatch(setTicketChild(ticketChild - 1))}>-</button>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between mb-3">
+                      <h2 className="text-lg mr-5 text-[#222] font-light">до 2 лет</h2>
+                      <div className="flex items-center justify-between">
+                        <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => dispatch(setTicketBabies(ticketBabies + 1))}>+</button>
+                        <h1 className="mx-3">{ticketBabies}</h1>
+                        <button className="bg-[#3379CB] p-3 rounded-lg text-white" style={{ lineHeight: '0.5' }} onClick={() => ticketBabies > 0 && dispatch(setTicketBabies(ticketBabies - 1))}>-</button>
+                      </div>
+                    </div>
+
+                    <div className="border-b-4 pb-4 pt-2">
+                      <p className="text-sm">Укажите возраст на момент отправления</p>
+                    </div>
+
+                    <div>
+                      <Switch
+                        checked={checkedBiznes}
+                        onChange={(e) => { setCheckedBiznes(e.target.checked); e.target.checked ? dispatch(setTicketTarif('b')) : dispatch(setTicketTarif('a')) }}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                      />
+                      <label htmlFor="">Бизнес класс</label>
+                    </div>
+                  </div>
+                )}
 
                 <div>
-                <button className='bg-[#0057BE] rounded-lg mt-3 mr-3 text-white h-[66px] w-full' onClick={(e) => getRecommendationFnc('for_btn')}>
-                      Найти
-                </button>
+                  <button className='bg-[#0057BE] rounded-lg mt-3 mr-3 text-white h-[66px] w-full' onClick={(e) => getRecommendationFnc('for_btn')}>
+                    Найти
+                  </button>
                 </div>
               </div>
 
@@ -639,7 +640,7 @@ function Main() {
 
 
                     {classModalShow && (
-                      <div className="absolute p-5 min-w-full right-0 bg-[white] z-10 text-[#222] shadow-2xl rounded-lg" style={{ top: 'calc(100% + 10px)', width: '100%'}}>
+                      <div className="absolute p-5 min-w-full right-0 bg-[white] z-10 text-[#222] shadow-2xl rounded-lg" style={{ top: 'calc(100% + 10px)', width: '100%' }}>
                         <div><h3>{ticketAdults + ticketChild + ticketBabies} пассажир</h3></div>
                         <div className="flex items-center justify-between my-3">
                           <p className="text-lg mr-5 text-[#222] font-light">12 лет и старше</p>
@@ -694,7 +695,7 @@ function Main() {
                 </div>
               </div>
 
-              
+
               <div className='flex lg:hidden flex-col'>
                 <div className='p-[15px] flex relative flex-col border border-[#c0bfbf] rounded-lg'>
                   <input className=' outline-none px-[10px]' type="text" placeholder='Откуда' />
@@ -707,8 +708,8 @@ function Main() {
                   <input className=' outline-none px-[10px]' type="text" placeholder='Куда' />
                 </div>
 
-                
-             <div className='flex items-center justify-between mt-[15px] gap-3'>
+
+                <div className='flex items-center justify-between mt-[15px] gap-3'>
                   <div className=' h-[60px] border border-[#c0bfbf] outline-none px-[10px] bg-white w-full flex items-center justify-between rounded-lg'>
                     <p className='text-[#AEAEAE]'>Когда</p>
                     <img src={kalendar} alt="" />

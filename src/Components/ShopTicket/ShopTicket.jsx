@@ -1,5 +1,8 @@
 import { Button, Container, Grid } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
 import "./ShopTicket.css";
 import {
   useBookingCreateMutation,
@@ -10,7 +13,7 @@ import {
 } from "../../RTKQueryApi/AllApi";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
+import PropTypes from "prop-types";
 import CloseIcon from "@mui/icons-material/Close";
 import TextField from "@mui/material/TextField";
 import OTPInput from "otp-input-react";
@@ -26,9 +29,52 @@ import DatePicker from "react-multi-date-picker";
 import moment from "moment";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import arrowLeft from "../../Assets/icons/arrow-left.svg"
+import arrowSwap from "../../Assets/icons/arrow-swap-horizontal — black.svg"
+import airplane from "../../Assets/icons/airplane.svg"
+import arrowUp from "../../Assets/icons/arrow-up.png"
+import arrLeft from "../../Assets/icons/arrow-leftBalck.svg"
+import lineReys from "../../Assets/icons/Rectangle 40.svg"
 import jwt_decode from "jwt-decode";
 import { useRegisterApiMutation } from "../../RTKQueryApi/AllApi";
-import {GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { ReactComponent as Bilet } from '../../Assets/icons/biletLine.svg'
+import { ReactComponent as Bilet2 } from '../../Assets/icons/biletLine2.svg'
+import { ReactComponent as Coin } from '../../Assets/icons/coinLine.svg'
+import { ReactComponent as Coin2 } from '../../Assets/icons/coinLine2.svg'
+import { ReactComponent as CalendarTick } from '../../Assets/icons/calendar-tick.svg'
+import { ReactComponent as CalendarTick2 } from '../../Assets/icons/calendar-tick2.svg'
+
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <div>{children}</div>
+        </Box>
+      )}
+    </div>
+  );
+}
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
 function ShopTicket() {
 
@@ -60,6 +106,8 @@ function ShopTicket() {
 
   const [name, setName] = useState();
   const [lastName, setLastName] = useState();
+  const [citizen, setCitizen] = useState("Uzbekistan");
+  const [value, setValue] = useState(0);
   const [gmail, setGmail] = useState();
   const [phoneNum, setPhoneNum] = useState();
   const [middleName, setMiddleName] = useState();
@@ -77,6 +125,8 @@ function ShopTicket() {
   const [loader, setLoader] = useState(false);
   const [ticketPrice, setTicketPrice] = useState(0)
   const [paymentType, setPaymentType] = useState()
+  const [tabIndex, setTabIndex] = useState(0)
+  const [movePay, setMovePay] = useState(false)
 
   const loggedIn = useSelector((state) => state.loginSlice.loggedIn);
 
@@ -85,7 +135,7 @@ function ShopTicket() {
 
   const clientId = "428493911231-e8ipsql0crd7loti8t96cun9u397valg.apps.googleusercontent.com";
 
-  const [registerApi, {data: registerApiData, isSuccess: registerApiSuc}] = useRegisterApiMutation()
+  const [registerApi, { data: registerApiData, isSuccess: registerApiSuc }] = useRegisterApiMutation()
 
   const style = {
     position: "absolute",
@@ -106,22 +156,22 @@ function ShopTicket() {
 
   useEffect(() => {
     try {
-      if(params.id) {
+      if (params.id) {
         setLoader(true)
         const flighId = {
           lang: "ru",
           tid: params.id,
         };
-  
+
         flightInfo(flighId)
       }
-    } catch (error) {}
+    } catch (error) { }
   }, [params.id, registerApiData]);
 
   const bookingCreateFnc = (e) => {
     e.preventDefault();
 
-    if(birthdatePic, passportExp, name, phoneNum, lastName, passportNum, gmail, gender) {
+    if (birthdatePic, passportExp, name, phoneNum, lastName, passportNum, gmail, gender) {
       const day =
         birthdatePic.day && birthdatePic.day > 9
           ? String(birthdatePic.day)
@@ -132,7 +182,7 @@ function ShopTicket() {
           : "0" + birthdatePic.month;
       const year = birthdatePic.year && String(birthdatePic.year);
       const birthdate = day + "." + mounth + "." + year;
-  
+
       const dayPass =
         passportExp.day && passportExp.day > 9
           ? String(passportExp.day)
@@ -143,7 +193,7 @@ function ShopTicket() {
           : "0" + passportExp.month;
       const yearPass = passportExp.year && String(passportExp.year);
       const birthdatePass = dayPass + "." + mounthPass + "." + yearPass;
-  
+
       setLoader(true);
 
       try {
@@ -174,17 +224,17 @@ function ShopTicket() {
           bonus_card: "",
           is_health_declaration_checked: 0,
         };
-  
+
         bookingCreate(bookingCreatee);
-      } catch (error) {}
-    }else {
+      } catch (error) { }
+    } else {
       dataError()
     }
 
   };
 
   useEffect(() => {
-    if(bookingCreateErr && bookingCreateErr.status === 401) {
+    if (bookingCreateErr && bookingCreateErr.status === 401) {
       setOpen(true)
     }
   }, [bookingCreateErr])
@@ -235,9 +285,9 @@ function ShopTicket() {
     if (bookingCreateSuc) {
       setLoader(false);
       console.log(bookingCreateData, 'data');
-      if(bookingCreateData.data && bookingCreateData.data.message === "Дубль бронирования") {
+      if (bookingCreateData.data && bookingCreateData.data.message === "Дубль бронирования") {
         dublBron()
-      }else if(bookingCreateData.success == false) {
+      } else if (bookingCreateData.success == false) {
         dataFake()
       }
       bookingCreateData.tr_id && setConfirmModal(true);
@@ -245,20 +295,20 @@ function ShopTicket() {
       setTr_id(bookingCreateData.tr_id);
     }
     if (bookingConfirmSuc) {
-      if(paymentType == "MTS") {
-        if(bookingConfirmData.result) {
+      if (paymentType == "MTS") {
+        if (bookingConfirmData.result) {
           window.location.href = bookingConfirmData.result.payment.debit.form_url
         }
-      }else {
+      } else {
         const confirmModalContainer = document.querySelector(
           ".confirmModalContainer"
         );
         confirmModalContainer && confirmModalContainer.classList.add("active");
-  
+
         setInterval(() => {
           changeTimer();
         }, 1000);
-  
+
         setOtp_token(bookingConfirmData.otp_token);
       }
       console.log(bookingConfirmData);
@@ -285,7 +335,7 @@ function ShopTicket() {
   }, [bookingCreateData, bookingConfirmData, paymentConfirmData, refreshData]);
 
   useEffect(() => {
-    if(flightInfoSuc) {
+    if (flightInfoSuc) {
       setLoader(false)
       setTicketPrice(flightInfoData.data.flight.price.UZS.amount);
     }
@@ -294,18 +344,18 @@ function ShopTicket() {
   const login = (response) => {
     console.log(response);
     var token = jwt_decode(response.credential)
-  
+
     const registerData = {
-        email: token.email,
-        token: response.credential,
-        type: "web" 
+      email: token.email,
+      token: response.credential,
+      type: "web"
     }
-    registerApi(registerData) 
+    registerApi(registerData)
   }
 
 
   React.useEffect(() => {
-    if(registerApiSuc) {
+    if (registerApiSuc) {
       localStorage.setItem('access', registerApiData.jwt_token.access)
       localStorage.setItem('refresh', registerApiData.jwt_token.refresh)
       window.location.reload()
@@ -316,6 +366,16 @@ function ShopTicket() {
   const currency = (number, currency, lang = undefined) =>
     Intl.NumberFormat(lang, { style: "currency", currency }).format(number);
 
+  const handleChange = (event, newValue) => {
+    if (movePay) {
+      setValue(newValue);
+    }
+  };
+
+  useEffect(() => {
+    console.log(tabIndex);
+  }, [tabIndex])
+
   return (
     <>
       <Container className="ShopTicket">
@@ -324,234 +384,416 @@ function ShopTicket() {
           sx={{ justifyContent: "space-between", alignItems: "flex-start" }}
         >
           <Grid item lg={12}>
-            <form onSubmit={(e) => {bookingCreateFnc(e); setPaymentType("UZCARD/HUMO")}}>
-              <h2>Сабиха Гокчен (Стамбул)-GYD-Ташкент</h2>
-              <div className="contact">
-                <div className="conTitle">
-                  <h2>Контактная информация</h2>
-                  <p>
-                    На почту мы отправим электронный билет, на телефон мы
-                    позвоним, если будут изменения в рейсе или в случае других
-                    ситуаций
-                  </p>
-                </div>
-                <div className="line"></div>
-                <div className="for1">
-                  <label htmlFor="">
-                    <p>
-                      {" "}
-                      Ism <span>*</span>
-                    </p>
-                    <input
-                      onChange={(e) => setName(e.target.value)}
-                      required
-                      type="text"
-                      autoFocus
-                    />
-                  </label>
-                  <label htmlFor="">
-                    <p>Электронная почта (E-mail)</p>
-                    <input
-                      onChange={(e) => setGmail(e.target.value)}
-                      type="email"
-                      required
-                    />
-                  </label>
-                  <label htmlFor="">
-                    <p>
-                      Telefon <span>*</span>
-                    </p>
-
-                    <TextField
-                      className="inputs invisibleBg"
-                      sx={{
-                        width: "100%",
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderRadius: "15px",
-                          border: "none",
-                        },
-                      }}
-                      type="number"
-                      variant="outlined"
-                      required
-                      autoComplete="false"
-                      defaultValue={+998}
-                      onInput={(e) => {
-                        e.target.value = Math.max(0, parseInt(e.target.value))
-                          .toString()
-                          .slice(0, 12);
-                      }}
-                      onChange={(e) => {
-                        setPhoneNum(e.target.value);
-                      }}
-                    />
-                  </label>
-                </div>
+            <div className="mb-[2%] ">
+              <div className="flex w-[100%]">
+                <h2 className="flex text-[16px] whitespace-nowrap items-center font-medium text-[#0064FA] cursor-pointer mr-[10%]"> <img src={arrowLeft} alt="" /> Поиск билетов</h2>
+                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                  <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    aria-label="basic tabs example"
+                  >
+                    <Tab iconPosition="start" icon={tabIndex >= 0 ? <CalendarTick /> : <CalendarTick2 />} label={
+                      <span style={tabIndex >= 0 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Бронирование</span>
+                    } {...a11yProps(0)} onClick={() => movePay && setTabIndex(0)} />
+                    <Tab iconPosition="start" icon={tabIndex >= 1 ? <Coin2 /> : <Coin />} label={
+                      <span style={tabIndex >= 1 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Оплата</span>
+                    } {...a11yProps(1)} onClick={() => movePay && setTabIndex(1)} />
+                    <Tab iconPosition="start" icon={tabIndex >= 2 ? <Bilet2 /> : <Bilet />} label={
+                      <span style={tabIndex >= 2 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Получение билета</span>
+                    } {...a11yProps(2)} onClick={() => movePay && setTabIndex(2)} />
+                  </Tabs>
+                </Box>
               </div>
-              <div className="info">
-                <div className="inTitle">
-                  <h2>Информация о пассажирах</h2>
-                  <p>
-                    Введите личные данные пассажиров, как указано в документе
-                    (паспорте), по которому они полетят. Поля нужно заполнять
-                    латинскими буквами.
-                  </p>
-                </div>
-                <div className="line"></div>
-                <div className="for2">
-                  {/* <div className="young">
-                  <h3>Взрослый</h3>
-                  <button> из файла</button>
-                </div> */}
-                  <div className="threeInp">
-                    <label htmlFor="">
-                      Фамилия
-                      <input
-                        required
-                        type="text"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                      />
-                    </label>
-                    <label htmlFor="">
-                      Имя
-                      <input
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        type="text"
-                        required
-                      />
-                    </label>
-                    <label htmlFor="">
-                      имя твоего отца
-                      <input
-                        onChange={(e) => setMiddleName(e.target.value)}
-                        type="text"
-                        required
-                      />
-                    </label>
+              <TabPanel value={value} index={0}>
+                <form onSubmit={(e) => { bookingCreateFnc(e); setPaymentType("UZCARD/HUMO") }}>
+                  <div>
+                    <h2 className="text-[16px] font-semibold ">Бронирование билета</h2>
+                    <div className="flex items-center">
+                      <h1 className="font-bold text-[28px]">Ташкент</h1>
+                      <img className="mx-[1%] cursor-pointer" src={arrowSwap} alt="" />
+                      <h1 className="font-bold text-[28px]">Париж</h1>
+                    </div>
+                    <p className="text-[18px] font-normal text-[#222222]">30 декабря,сб—16 января,вт,1 взрослый</p>
                   </div>
-                  <div className="fourInp">
-                    <label htmlFor="">
-                      Пол
-                      <FormControl sx={{ m: 1 }} size="small" required>
-                        <InputLabel id="demo-select-small-label">
-                          Пол
-                        </InputLabel>
-                        <Select
-                          labelId="demo-select-small-label"
-                          id="demo-select-small"
-                          value={gender}
-                          label="Age"
-                          onChange={(e) => setGender(e.target.value)}
-                          sx={{
-                            borderRadius: "1rem",
-                            padding: "0px !important",
-                            height: "100%",
-                            marginTop: "2px",
-                            ".css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input":
-                              {
-                                border: "none !important",
-                                padding: "6px 15px !important",
-                              },
-                            ".css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
-                              borderColor: "#3392ff",
-                              marginTop: "1px",
-                            },
+                  <div className="border-[1px] p-[32px] rounded-lg border-[#CCCCCC] w-full mt-[2%]">
+                    <div className="flex items-center justify-between">
+                      <h1 className="font-[24px]">
+                        Детали маршрута
+                        <p className="text-[#AEAEAE] text-[16px] font-normal">Местное время отправления и прибытия</p>
+                      </h1>
+                      <p className="flex items-center text-[16px] font-normal text-[#AEAEAE]">
+                        Свернуть
+                        <img className="ml-[7px]" src={arrowUp} alt="" />
+                      </p>
+                    </div>
+                    <h1 className="text-[20px] my-[2%]">
+                      Ташкент - Париж
+                      <p className="text-[#AEAEAE] text-[13px] font-normal">Местное время отправления и прибытия</p>
+                    </h1>
+                    <div className="flex items-center justify-between">
+                      <div className="flex">
+                        <div>
+                          <h1 className="font-bold">13:20</h1>
+                          <p>13 ноября, пн</p>
+                          <p>Ташкент (TAS)</p>
+                        </div>
+                        <div>
+                          <h2 className="flex items-center ">
+                            Uzbekistan Airways <img src={airplane} alt="" />
+                          </h2>
+                          <img src={lineReys} alt="" />
+                        </div>
+                        <div>
+                          <h1>17:20</h1>
+                          <p>13 ноября, пн</p>
+                          <p>Москва (MOS)</p>
+                        </div>
+                      </div>
+                      <div>
+                        <h1>
+                          6ч 40м
+                        </h1>
+                        <p>Рейс HH-437</p>
+                        <p>Airbus A330</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="border-[1px] border-[#CCCCCC] rounded-lg my-[1%] p-[32px] flex flex-col">
+                    <div>
+                      <h2 className="font-bold text-[24px]">Контактная информация</h2>
+                      <p className="font-normal text-[16px] text-[#AEAEAE]">
+                        На почту мы отправим электронный билет, на телефон мы
+                        позвоним, если будут изменения в рейсе или в случае других
+                        ситуаций
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-[20px] w-[70%] mt-[2%]">
+                      <label className="w-full" htmlFor="">
+                        <p>Электронная почта (E-mail)</p>
+                        <input
+                          className="border-[1px] rounded-lg p-[12px] h-[48px] w-[100%] mt-[8px]"
+                          onChange={(e) => setGmail(e.target.value)}
+                          type="email"
+                          placeholder="Электронная почта"
+                          required
+                        />
+                      </label>
+                      <label className="w-full" htmlFor="">
+                        <p>
+                          Telefon <span>*</span>
+                        </p>
+                        <input
+                          className="border-[1px] rounded-lg p-[12px] h-[48px] w-[100%] mt-[8px]"
+                          onChange={(e) => {
+                            let res = e.target.value
+                              .slice(0, 12);
+                            setPhoneNum(res)
                           }}
-                        >
-                          <MenuItem value={"M"}>мужской</MenuItem>
-                          <MenuItem value={"F"}>Женский</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </label>
-                    <label htmlFor="" style={{ marginRight: "10px" }}>
-                      Дата рождения
-                      <DatePicker
-                        required
-                        style={{ width: "100%" }}
-                        value={birthdatePic}
-                        onChange={setBirthdatePic}
-                        format="DD/MM/YYYY"
-                      />
-                    </label>
-                    <label htmlFor="">
-                      Серия и № паспорта
-                      <input
-                        onChange={(e) => setPassportNum(e.target.value)}
-                        type="text"
-                        required
-                      />
-                    </label>
-                    <label htmlFor="">
-                      Срок действия
-                   
-                      <DatePicker
-                        required
-                        style={{ width: "100%" }}
-                        value={passportExp}
-                        onChange={setPassportExp}
-                        format="DD/MM/YYYY"
-                      />
-                    </label>
+                          type="phone"
+                          placeholder=""
+                          defaultValue={+998}
+                          required
+                        />
+                      </label>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="weight">
-                <h2> Ваш перелёт включает 1 PC кг багажа и 1 PC кг Обратно</h2>
-              </div>
 
-              <div className="bron">
-                <p className="time">20.09.2023 21:15 по Ташкентскому времени</p>
-                <p className="money">
-                  Итого:{" "}
-                  <span>
-                    {" "}
-                    {currency(ticketPrice, "UZS")
-                      .replace("UZS", "")
-                      .replace("soʻm", "")
-                      .replace(/,/g, ".")
-                      .slice(0, -3)}{" "}
-                    UZS{" "}
-                  </span>
-                </p>
-                <button
-                  // onClick={() => bookingCreateFnc()}
-                  type="submit"
-                >
-                  Забронировать
-                </button>
-              </div>
 
-            </form>
+                  <div className="border-[1px] border-[#CCCCCC] rounded-lg my-[1%] p-[32px]">
+                    <div>
+                      <h2 className="text-[24px] font-bold">Введите данные пассажиров</h2>
+                      <h1 className="font-bold text-[20px] my-[1%]">Пассажир 1 (12 лет и старше)</h1>
+                    </div>
+                    <div>
+                      <label htmlFor="">
+                        <p>Гражданство</p>
+                        <input
+                          required
+                          type="text"
+                          className="border-[1px] rounded-lg p-[12px] h-[48px] w-[30%] mt-[8px]"
 
-              <div className="bron" style={{justifyContent: 'end'}}>
-               
-                <button
-                  onClick={(e) => {bookingCreateFnc(e); setPaymentType("MTS")}}
-                  type="submit"
-                >
-                  оплатить российской картой
-                </button>
-              </div>
+                          value={citizen}
+                          onChange={(e) => setCitizen(e.target.value)}
+                        />
+                      </label>
+                      <div className="my-[1%] flex items-center  gap-[20px] w-[62%]">
+                        <label className="w-[100%]" htmlFor="">
+                          <p>Данные пасспорта или ID карты</p>
+                          <input
+                            className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
+                            onChange={(e) => setPassportNum(e.target.value)}
+                            type="text"
+                            placeholder="AA 000000"
+                            required
+                          />
+                        </label>
+                        <label className="w-[100%]" htmlFor="">
+                          Срок действительности пасспорта
+                          <input
+                            required
+                            className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
+                            style={{ width: "100%" }}
+                            placeholder="DD/MM/YYYY"
+                            onChange={setPassportExp}
+                            format="DD/MM/YYYY"
+                          />
+                        </label>
+                      </div>
+
+                      <div className="my-[1%] flex items-center  gap-[20px] w-[62%]">
+                        <label className="w-full" htmlFor="">
+                          Имя
+                          <input
+                            value={name}
+                            className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
+                            onChange={(e) => setName(e.target.value)}
+                            type="text"
+                            placeholder="Asad"
+                            required
+                          />
+                        </label>
+                        <label className="w-full" htmlFor="">
+                          Фамилия
+                          <input
+                            required
+                            className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
+                            type="text"
+                            value={lastName}
+                            placeholder="Asadov"
+                            onChange={(e) => setLastName(e.target.value)}
+                          />
+                        </label>
+                      </div>
+                      <div className="my-[1%] flex items-center  gap-[20px] w-[62%]">
+                        <label className="w-[100%]" htmlFor="">
+                          Срок действительности пасспорта
+                          <input
+                            required
+                            className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
+                            style={{ width: "100%" }}
+                            placeholder="DD/MM/YYYY"
+                            onChange={setBirthdatePic}
+                            format="DD/MM/YYYY"
+                          />
+                        </label>
+                        <label className="w-full" htmlFor="">
+                          Пол
+                          <FormControl sx={{ width: "100%", m: 1 }} size="small" required>
+                            <InputLabel id="demo-select-small-label">
+                              Пол
+                            </InputLabel>
+                            <Select
+                              labelId="demo-select-small-label"
+                              id="demo-select-small"
+                              value={gender}
+                              label="Age"
+                              onChange={(e) => setGender(e.target.value)}
+                              sx={{
+                                borderRadius: "10px",
+                                padding: "0px !important",
+                                height: "100%",
+                                marginTop: "2px",
+                                width: "100%",
+                                ".css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input":
+                                {
+                                  border: "none !important",
+                                  padding: "15px 15px !important",
+                                },
+                                ".css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
+                                  borderColor: "#e5e7eb",
+                                  marginTop: "1px",
+                                },
+                              }}
+                            >
+                              <MenuItem value={"M"}>мужской</MenuItem>
+                              <MenuItem value={"F"}>Женский</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items center justify-between border rounded-lg p-[32px]">
+                    <p className="font-bold text-[20px]">
+                      Стоимость:
+                      <span className="text-[#0064FA] ml-[6px]">
+                        29 487 942 UZS
+                      </span>
+                    </p>
+                    <button
+                      onClick={() => setValue(1)}
+                      type="submit"
+                      className="bg-[#0057BE] text-[16px] font-normal text-[#FFF] py-[8px] px-[25px] rounded-lg"
+                    >
+                      Продолжить
+                    </button>
+                  </div>
+                </form>
+
+                {/* <div className="bron" style={{ justifyContent: 'end' }}>
+
+                  <button
+                    onClick={(e) => { bookingCreateFnc(e); setPaymentType("MTS") }}
+                    type="submit"
+                  >
+                    оплатить российской картой
+                  </button>
+                </div> */}
+              </TabPanel>
+              <TabPanel value={value} index={1}>
+                <form action="">
+                  <div>
+                    <h2 className="text-[16px] font-semibold ">Бронирование билета</h2>
+                    <div className="flex items-center">
+                      <h1 className="font-bold text-[28px]">Ташкент</h1>
+                      <img className="mx-[1%] cursor-pointer" src={arrowSwap} alt="" />
+                      <h1 className="font-bold text-[28px]">Париж</h1>
+                    </div>
+                    <p className="text-[18px] font-normal text-[#222222]">30 декабря,сб—16 января,вт,1 взрослый</p>
+                  </div>
+                  <div className="flex items-center justify-between border rounded-lg p-[32px] my-[2%]">
+                    <h1 className="font-[24px]">
+                      Детали маршрута
+                      <p className="text-[#AEAEAE] text-[16px] font-normal">Местное время отправления и прибытия</p>
+                    </h1>
+                    <p className="flex items-center text-[16px] font-normal text-[#AEAEAE] cursor-pointer">
+                      Развернуть
+                      <img className="ml-[7px] rotate-180" src={arrowUp} alt="" />
+                    </p>
+                  </div>
+                  <div className="border rounded-lg my-[1%] p-[32px]">
+                    <h1 className="text-[24px] mb-[1%]">
+                      Введите данные для оплаты
+                    </h1>
+                    <div className="bg-[#F7F7F7] py-[64px]  px-[24px] rounded-lg">
+                      <h1 className="text-[24px] mb-[1%]">Банковская карта</h1>
+                      <div style={{ width: "50%", marginRight: "40px" }}>
+                        <label htmlFor="">
+                          <TextField
+                            fullWidth
+                            type="text"
+                            value={cardNum}
+                            label="Karta raqamingiz"
+                            id="fullWidth"
+                            InputProps={{
+                              style: {
+                                borderRadius: "10px",
+                                marginBottom: "20px",
+                              },
+                            }}
+                            onChange={(e) => {
+                              let res = e.target.value
+                                .replace(/[^\dA-Z]/g, "")
+                                .replace(/(.{4})/g, "$1 ")
+                                .trim();
+                              res.length > 20 ? e.preventDefault() : setCardNum(res);
+                            }}
+                          />
+                        </label>
+                        <label htmlFor="">
+                          <TextField
+                            fullWidth
+                            type="text"
+                            value={cardExp}
+                            label="Amal qilish muddati"
+                            id="fullWidth"
+                            InputProps={{
+                              style: {
+                                borderRadius: "10px",
+                              },
+                            }}
+                            onChange={(e) => {
+                              let res = e.target.value
+                                .replace(/[^0-9]/g, "")
+                                .replace(/^([2-9])$/g, "0$1")
+                                .replace(/^(1{1})([3-9]{1})$/g, "0$1/$2")
+                                .replace(/^([0-1]{1}[0-9]{1})([0-9]{1,2}).*/g, "$1/$2");
+                              setCardExp(res);
+                            }}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                    <p className="text-[18px] mt-[2%]">
+                      Данные паспорта и банковской карты под защитой!
+                    </p>
+                  </div>
+                  <div className="border rounded-lg p-[32px] my-[2%]">
+                    <h2 className="text-[24px]">Детали заказа</h2>
+                    <div className="flex items-center justify-between mt-[3%]">
+                      <h1 className="text-[20px]">
+                        Данные пассажиров
+                      </h1>
+                      <img className="rotate-[270deg] cursor-pointer" src={arrLeft} alt="" />
+                    </div>
+                    <div className="bg-[#F7F7F7] py-[8px]  px-[16px] rounded-lg mt-[1%]">
+                      <h1 className="text-[18px]">Контакты для связи</h1>
+                      <p className="text-[18px] font-normal">+998 97 123 45 67, example@mail.com</p>
+                    </div>
+                    <div className="mt-[1%]">
+                      <h1 className="text-[20px]">
+                        Asad Asadov
+                      </h1>
+                      <p className="text-[18px] mt-[1%]">Дата рождение: 12.05.1999</p>
+                      <p className="text-[18px]">Данные пасспорта или ID карты: AD 000000</p>
+                    </div>
+                    <div className="border border-[#CCCCCC] my-[3%]">
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <h1 className="flex gap-[5px] text-[20px]"> <img className="rotate-[270deg]" src={airplane} alt="" />Ташкент - Париж</h1>
+                      <h2 className="flex gap-[5px] text-[20px] text-[#0064FA] cursor-pointer">
+                        29 999 999 UZS
+                        <img className="rotate-[270deg]" src={arrLeft} alt="" />
+                      </h2>
+                    </div>
+                    <h1 className="text-[20px] mt-[1%]">Asad Asadov</h1>
+                    <p className="text-[18px] ">Тариф: Бизнес</p>
+                    <p className="text-[18px] my-[1%] ">Базовый тариф: 25 000 000 UZS</p>
+                    <p className="text-[18px] my-[1%]">Налоги и сборы: 4 000 000 UZS</p>
+                    <p className="text-[18px] ">Сервисный сбор AVIA: 1 900 000 UZS</p>
+                  </div>
+                  <div className="flex items center justify-between border rounded-lg p-[32px]">
+                    <p className="font-bold text-[20px]">
+                      Итоговая стоимость:
+                      <span className="text-[#0064FA] ml-[6px]">
+                        29 487 942 UZS
+                      </span>
+                    </p>
+                    <button
+                      onClick={() => setValue(2)}
+                      type="submit"
+                      className="bg-[#0057BE] text-[16px] font-normal text-[#FFF] py-[8px] px-[25px] rounded-lg"
+                    >
+                      Купить билет
+                    </button>
+                  </div>
+                </form>
+              </TabPanel>
+              <TabPanel value={value} index={2}>
+              </TabPanel>
+            </div>
           </Grid>
         </Grid>
-      </Container>
-      <ToastContainer/>
+      </Container >
+      <ToastContainer />
 
-      {!loggedIn && (
-        <GoogleOAuthProvider clientId={clientId}>
-        <GoogleLogin
-          onSuccess={credentialResponse => {
-            login(credentialResponse)
-          }}
-          onError={() => {
-            console.log('Login Failed');
-          }}
-          useOneTap
-        />
-        </GoogleOAuthProvider>
-      )}
+      {
+        !loggedIn && (
+          <GoogleOAuthProvider clientId={clientId}>
+            <GoogleLogin
+              onSuccess={credentialResponse => {
+                login(credentialResponse)
+              }}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+              useOneTap
+            />
+          </GoogleOAuthProvider>
+        )
+      }
 
 
       <Modal
@@ -679,7 +921,7 @@ function ShopTicket() {
         </Box>
       </Modal>
 
-      {loader && <Loader />}
+      {/* {loader && <Loader />} */}
     </>
   );
 }
