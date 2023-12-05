@@ -66,10 +66,9 @@
 .Ticket .box {
   width: 100%;
   height: auto;
-  border: 1px solid white;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 20px;
-  padding: 20px 25px;
+  padding: 0px 25px;
 }
 
 .Ticket .box .container-box {
@@ -79,14 +78,20 @@
   width: 100%;
 }
 
-
-.Ticket .box .container-box:nth-child(2) {
-  margin-top: 20px;
-  border-top: 1px solid #ccc;
-}
-
 .Ticket .box .left {
   width: 80%;
+}
+.Ticket .css-sh22l5-MuiButtonBase-root-MuiAccordionSummary-root,
+.Ticket .css-15v22id-MuiAccordionDetails-root {
+  padding: 0;
+}
+
+.Ticket .css-1elwnq4-MuiPaper-root-MuiAccordion-root {
+  box-shadow: none;
+}
+
+.Ticket .css-1elwnq4-MuiPaper-root-MuiAccordion-root:before {
+  display: none;
 }
 
 .Ticket .container-box-2 .left {

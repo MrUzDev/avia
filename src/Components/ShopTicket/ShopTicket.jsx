@@ -130,8 +130,9 @@ function ShopTicket() {
 
   const loggedIn = useSelector((state) => state.loginSlice.loggedIn);
 
-  const { setOpen } = useContext(Contexts);
+  const { setOpen, open, loginModal, setLoginModal } = useContext(Contexts);
   const params = useParams();
+  const navigate = useNavigate()
 
   const clientId = "428493911231-e8ipsql0crd7loti8t96cun9u397valg.apps.googleusercontent.com";
 
@@ -234,10 +235,18 @@ function ShopTicket() {
   };
 
   useEffect(() => {
-    if (bookingCreateErr && bookingCreateErr.status === 401) {
+    if (bookingCreateErr && bookingCreateErr.status === 401 || flightInfoError && flightInfoError.status === 401) {
       setOpen(true)
     }
-  }, [bookingCreateErr])
+  }, [bookingCreateErr, flightInfoError])
+
+  useEffect(() => {
+    if(!localStorage.getItem('access')) {
+      setOpen(true)
+    } if (loginModal) {
+      setOpen(false)
+    }
+  }, [open, loginModal])
 
   const confirmBooking = () => {
     const ChangeCardExp = cardExp.split("/").reverse("").join("");
@@ -337,7 +346,7 @@ function ShopTicket() {
   useEffect(() => {
     if (flightInfoSuc) {
       setLoader(false)
-      setTicketPrice(flightInfoData.data.flight.price.UZS.amount);
+      flightInfoData.data.flight && setTicketPrice(flightInfoData.data.flight.price.UZS.amount);
     }
   }, [flightInfoSuc])
 
@@ -386,7 +395,7 @@ function ShopTicket() {
           <Grid item lg={12}>
             <div className="mb-[2%] ">
               <div className="flex w-[100%]">
-                <h2 className="flex text-[16px] whitespace-nowrap items-center font-medium text-[#0064FA] cursor-pointer mr-[10%]"> <img src={arrowLeft} alt="" /> Поиск билетов</h2>
+                <h2 className="flex text-[16px] whitespace-nowrap items-center font-medium text-[#0064FA] cursor-pointer mr-[10%]" onClick={() => navigate('/')}> <img src={arrowLeft} alt="" /> Поиск билетов</h2>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                   <Tabs
                     value={value}
@@ -398,7 +407,7 @@ function ShopTicket() {
                     } {...a11yProps(0)} onClick={() => movePay && setTabIndex(0)} />
                     <Tab iconPosition="start" icon={tabIndex >= 1 ? <Coin2 /> : <Coin />} label={
                       <span style={tabIndex >= 1 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Оплата</span>
-                    } {...a11yProps(1)} onClick={() => movePay && setTabIndex(1)} />
+                    } {...a11yProps(1)} onClick={() =>  setTabIndex(1)} />
                     <Tab iconPosition="start" icon={tabIndex >= 2 ? <Bilet2 /> : <Bilet />} label={
                       <span style={tabIndex >= 2 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Получение билета</span>
                     } {...a11yProps(2)} onClick={() => movePay && setTabIndex(2)} />
@@ -921,7 +930,7 @@ function ShopTicket() {
         </Box>
       </Modal>
 
-      {/* {loader && <Loader />} */}
+      {true && <Loader />}
     </>
   );
 }
