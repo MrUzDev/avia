@@ -345,6 +345,10 @@
   border-bottom: 2px solid #000;
 }
 
+.ShopTicket .rmdp-container {
+  width: 100%
+}
+
 .btn {
   background-color: #605dec;
   width: 100%;
@@ -352,6 +356,12 @@
   border-radius: 10px;
   margin-top: 20px;
   padding: 10px 0;
+}
+
+.ShopTicket .MuiFormLabel-root.MuiInputLabel-root.MuiInputLabel-formControl.MuiInputLabel-animated.MuiInputLabel-sizeSmall.MuiInputLabel-outlined.MuiFormLabel-colorPrimary.Mui-required.MuiInputLabel-root.MuiInputLabel-formControl.MuiInputLabel-animated.MuiInputLabel-sizeSmall.MuiInputLabel-outlined.css-1pysi21-MuiFormLabel-root-MuiInputLabel-root {
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
 }
 
 @media (max-width: 1000px) {

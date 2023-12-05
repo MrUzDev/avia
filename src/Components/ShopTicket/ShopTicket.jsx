@@ -44,6 +44,7 @@ import { ReactComponent as Coin } from '../../Assets/icons/coinLine.svg'
 import { ReactComponent as Coin2 } from '../../Assets/icons/coinLine2.svg'
 import { ReactComponent as CalendarTick } from '../../Assets/icons/calendar-tick.svg'
 import { ReactComponent as CalendarTick2 } from '../../Assets/icons/calendar-tick2.svg'
+import { Email } from "@mui/icons-material";
 
 
 function TabPanel(props) {
@@ -106,7 +107,7 @@ function ShopTicket() {
 
   const [name, setName] = useState();
   const [lastName, setLastName] = useState();
-  const [citizen, setCitizen] = useState("Uzbekistan");
+  const [citizen, setCitizen] = useState("Uz");
   const [value, setValue] = useState(0);
   const [gmail, setGmail] = useState();
   const [phoneNum, setPhoneNum] = useState();
@@ -118,11 +119,14 @@ function ShopTicket() {
   const [confirmModal, setConfirmModal] = useState(false);
   const [cardNum, setCardNum] = useState();
   const [cardExp, setCardExp] = useState();
+  const [flyData, setFlyData] = useState([])
+  const [disableOtp, setDisableOtp] = useState(true);
+
   const [timer, setTimer] = useState(90);
   const [OTP, setOTP] = useState("");
   const [otp_token, setOtp_token] = useState();
   const [tr_id, setTr_id] = useState();
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState(true);
   const [ticketPrice, setTicketPrice] = useState(0)
   const [paymentType, setPaymentType] = useState()
   const [tabIndex, setTabIndex] = useState(0)
@@ -170,8 +174,7 @@ function ShopTicket() {
 
   const bookingCreateFnc = (e) => {
     e.preventDefault();
-
-    if (birthdatePic, passportExp, name, phoneNum, lastName, passportNum, gmail, gender) {
+    if (birthdatePic, passportExp, name, phoneNum, lastName, passportNum, gmail, gender, citizen) {
       const day =
         birthdatePic.day && birthdatePic.day > 9
           ? String(birthdatePic.day)
@@ -195,7 +198,6 @@ function ShopTicket() {
       const birthdatePass = dayPass + "." + mounthPass + "." + yearPass;
 
       setLoader(true);
-
       try {
         const bookingCreatee = {
           lang: "ru",
@@ -214,7 +216,7 @@ function ShopTicket() {
               docnum: passportNum,
               docexp: birthdatePass,
               gender: gender,
-              citizen: "UZ",
+              citizen: citizen,
               phone: "+" + phoneNum,
               email: gmail,
               send_email: 1,
@@ -226,7 +228,8 @@ function ShopTicket() {
         };
 
         bookingCreate(bookingCreatee);
-      } catch (error) { }
+      }
+      catch (error) { }
     } else {
       dataError()
     }
@@ -239,7 +242,8 @@ function ShopTicket() {
     }
   }, [bookingCreateErr])
 
-  const confirmBooking = () => {
+  const confirmBooking = (e) => {
+    e.preventDefault()
     const ChangeCardExp = cardExp.split("/").reverse("").join("");
     const conBookingg = {
       transaction_type: paymentType,
@@ -247,7 +251,6 @@ function ShopTicket() {
       card_number: cardNum.replace(/ /g, ""),
       expire: ChangeCardExp,
     };
-
     bookingConfirm(conBookingg);
   };
 
@@ -255,13 +258,13 @@ function ShopTicket() {
     setTimer((timerr) => (timerr > 0 ? timerr - 1 : timerr));
   };
 
-  const paymentConfirmFnc = () => {
+  const paymentConfirmFnc = (e) => {
+    e.preventDefault();
     const paymentConff = {
       otp: OTP,
       otp_token: otp_token,
       tr_id: tr_id,
     };
-
     paymentConfirm(paymentConff);
   };
 
@@ -284,17 +287,18 @@ function ShopTicket() {
   useEffect(() => {
     if (bookingCreateSuc) {
       setLoader(false);
+      setValue(1)
       console.log(bookingCreateData, 'data');
       if (bookingCreateData.data && bookingCreateData.data.message === "Дубль бронирования") {
         dublBron()
       } else if (bookingCreateData.success == false) {
         dataFake()
       }
-      bookingCreateData.tr_id && setConfirmModal(true);
       localStorage.setItem("trId", bookingCreateData.tr_id);
       setTr_id(bookingCreateData.tr_id);
     }
     if (bookingConfirmSuc) {
+      setDisableOtp(false)
       if (paymentType == "MTS") {
         if (bookingConfirmData.result) {
           window.location.href = bookingConfirmData.result.payment.debit.form_url
@@ -337,7 +341,9 @@ function ShopTicket() {
   useEffect(() => {
     if (flightInfoSuc) {
       setLoader(false)
-      setTicketPrice(flightInfoData.data.flight.price.UZS.amount);
+      flightInfoData.data.flight.price && setTicketPrice(flightInfoData.data.flight.price.UZS.amount);
+      setFlyData(flightInfoData.data.search)
+      console.log(flightInfoData.data.search);
     }
   }, [flightInfoSuc])
 
@@ -376,6 +382,14 @@ function ShopTicket() {
     console.log(tabIndex);
   }, [tabIndex])
 
+  const handlePasInputChange = (e) => {
+    const inputValue = e.target.value.toUpperCase()
+    const cleanedValue = inputValue.replace(/[^A-Z0-9]/g, '').substring(0, 9);
+    const formattedValue = cleanedValue.slice(0, 2).replace(/[^a-zA-Z]/g, '')
+    const formattedValue2 = cleanedValue.slice(2).replace(/[^0-9]/g, '')
+    setPassportNum(`${formattedValue} ${formattedValue2}`);
+  };
+
   return (
     <>
       <Container className="ShopTicket">
@@ -408,28 +422,31 @@ function ShopTicket() {
               <TabPanel value={value} index={0}>
                 <form onSubmit={(e) => { bookingCreateFnc(e); setPaymentType("UZCARD/HUMO") }}>
                   <div>
-                    <h2 className="text-[16px] font-semibold ">Бронирование билета</h2>
+                    <h2 className="text-[16px] font-semibold font-mono">Бронирование билета</h2>
                     <div className="flex items-center">
-                      <h1 className="font-bold text-[28px]">Ташкент</h1>
+                      {console.log(flightInfoData && flightInfoData)}
+                      <h1 className="font-bold text-[28px] ">{flightInfoData && flightInfoData.data.search.segments.map((itemm ) => 
+                        <p>{itemm.from.name}</p>
+                        )}</h1>
                       <img className="mx-[1%] cursor-pointer" src={arrowSwap} alt="" />
-                      <h1 className="font-bold text-[28px]">Париж</h1>
+                      <h1 className="font-bold text-[28px]"></h1>
                     </div>
-                    <p className="text-[18px] font-normal text-[#222222]">30 декабря,сб—16 января,вт,1 взрослый</p>
+                    <p className="text-[18px] font-normal text-[#222222] font-mono">30 декабря,сб—16 января,вт,1 взрослый</p>
                   </div>
                   <div className="border-[1px] p-[32px] rounded-lg border-[#CCCCCC] w-full mt-[2%]">
                     <div className="flex items-center justify-between">
-                      <h1 className="font-[24px]">
+                      <h1 className="text-[24px] font-bold">
                         Детали маршрута
-                        <p className="text-[#AEAEAE] text-[16px] font-normal">Местное время отправления и прибытия</p>
+                        <p className="text-[#AEAEAE] text-[16px] font-normal font-mono">Местное время отправления и прибытия</p>
                       </h1>
-                      <p className="flex items-center text-[16px] font-normal text-[#AEAEAE]">
+                      <p className="flex items-center text-[16px] font-normal text-[#AEAEAE] font-mono">
                         Свернуть
                         <img className="ml-[7px]" src={arrowUp} alt="" />
                       </p>
                     </div>
-                    <h1 className="text-[20px] my-[2%]">
+                    <h1 className="text-[20px] my-[2%] font-bold">
                       Ташкент - Париж
-                      <p className="text-[#AEAEAE] text-[13px] font-normal">Местное время отправления и прибытия</p>
+                      <p className="text-[#AEAEAE] text-[13px] font-normal font-mono">Местное время отправления и прибытия</p>
                     </h1>
                     <div className="flex items-center justify-between">
                       <div className="flex">
@@ -463,7 +480,7 @@ function ShopTicket() {
                   <div className="border-[1px] border-[#CCCCCC] rounded-lg my-[1%] p-[32px] flex flex-col">
                     <div>
                       <h2 className="font-bold text-[24px]">Контактная информация</h2>
-                      <p className="font-normal text-[16px] text-[#AEAEAE]">
+                      <p className="font-normal text-[16px] text-[#AEAEAE] font-mono">
                         На почту мы отправим электронный билет, на телефон мы
                         позвоним, если будут изменения в рейсе или в случае других
                         ситуаций
@@ -499,43 +516,54 @@ function ShopTicket() {
                       </label>
                     </div>
                   </div>
-
-
                   <div className="border-[1px] border-[#CCCCCC] rounded-lg my-[1%] p-[32px]">
                     <div>
                       <h2 className="text-[24px] font-bold">Введите данные пассажиров</h2>
                       <h1 className="font-bold text-[20px] my-[1%]">Пассажир 1 (12 лет и старше)</h1>
                     </div>
-                    <div>
-                      <label htmlFor="">
-                        <p>Гражданство</p>
-                        <input
-                          required
-                          type="text"
-                          className="border-[1px] rounded-lg p-[12px] h-[48px] w-[30%] mt-[8px]"
-
-                          value={citizen}
-                          onChange={(e) => setCitizen(e.target.value)}
-                        />
-                      </label>
+                    <div >
+                      <div className="flex gap-[20px] w-[62%]">
+                        <label className="w-full" htmlFor="">
+                          <p>Гражданство</p>
+                          <input
+                            required
+                            type="text"
+                            className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
+                            value={citizen}
+                            onChange={(e) => setCitizen(e.target.value)}
+                          />
+                        </label>
+                        <label className="w-full" htmlFor="">
+                          Отчество
+                          <input
+                            value={middleName}
+                            className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
+                            onChange={(e) => setMiddleName(e.target.value)}
+                            type="text"
+                            placeholder="Asadov"
+                            required
+                          />
+                        </label>
+                      </div>
                       <div className="my-[1%] flex items-center  gap-[20px] w-[62%]">
                         <label className="w-[100%]" htmlFor="">
                           <p>Данные пасспорта или ID карты</p>
                           <input
                             className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
-                            onChange={(e) => setPassportNum(e.target.value)}
+                            onChange={(e) => handlePasInputChange(e)}
                             type="text"
+                            value={passportNum}
                             placeholder="AA 000000"
                             required
                           />
                         </label>
                         <label className="w-[100%]" htmlFor="">
                           Срок действительности пасспорта
-                          <input
+                          <DatePicker
                             required
-                            className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
+                            inputClass="border-[1px] rounded-lg p-[12px]  h-[48px] w-full mt-[8px]"
                             style={{ width: "100%" }}
-                            placeholder="DD/MM/YYYY"
+                            value={passportExp}
                             onChange={setPassportExp}
                             format="DD/MM/YYYY"
                           />
@@ -568,12 +596,12 @@ function ShopTicket() {
                       </div>
                       <div className="my-[1%] flex items-center  gap-[20px] w-[62%]">
                         <label className="w-[100%]" htmlFor="">
-                          Срок действительности пасспорта
-                          <input
+                          Дата рождение
+                          <DatePicker
                             required
-                            className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
+                            inputClass="border-[1px] rounded-lg p-[12px]  h-[48px] w-full mt-[8px]"
                             style={{ width: "100%" }}
-                            placeholder="DD/MM/YYYY"
+                            value={birthdatePic}
                             onChange={setBirthdatePic}
                             format="DD/MM/YYYY"
                           />
@@ -596,8 +624,7 @@ function ShopTicket() {
                                 height: "100%",
                                 marginTop: "2px",
                                 width: "100%",
-                                ".css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input":
-                                {
+                                ".css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input": {
                                   border: "none !important",
                                   padding: "15px 15px !important",
                                 },
@@ -619,11 +646,13 @@ function ShopTicket() {
                     <p className="font-bold text-[20px]">
                       Стоимость:
                       <span className="text-[#0064FA] ml-[6px]">
-                        29 487 942 UZS
+                        {
+                          ticketPrice && currency(ticketPrice, 'UZS').replace("UZS", "")
+                            .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ") + " UZS"
+                        }
                       </span>
                     </p>
                     <button
-                      onClick={() => setValue(1)}
                       type="submit"
                       className="bg-[#0057BE] text-[16px] font-normal text-[#FFF] py-[8px] px-[25px] rounded-lg"
                     >
@@ -669,51 +698,71 @@ function ShopTicket() {
                     </h1>
                     <div className="bg-[#F7F7F7] py-[64px]  px-[24px] rounded-lg">
                       <h1 className="text-[24px] mb-[1%]">Банковская карта</h1>
-                      <div style={{ width: "50%", marginRight: "40px" }}>
-                        <label htmlFor="">
-                          <TextField
-                            fullWidth
-                            type="text"
-                            value={cardNum}
-                            label="Karta raqamingiz"
-                            id="fullWidth"
-                            InputProps={{
-                              style: {
-                                borderRadius: "10px",
-                                marginBottom: "20px",
-                              },
-                            }}
-                            onChange={(e) => {
-                              let res = e.target.value
-                                .replace(/[^\dA-Z]/g, "")
-                                .replace(/(.{4})/g, "$1 ")
-                                .trim();
-                              res.length > 20 ? e.preventDefault() : setCardNum(res);
-                            }}
+                      <div>
+                        <div style={{ width: "50%", marginRight: "40px" }}>
+                          <label htmlFor="">
+                            <TextField
+                              fullWidth
+                              type="text"
+                              value={cardNum}
+                              label="Karta raqamingiz"
+                              id="fullWidth"
+                              InputProps={{
+                                style: {
+                                  borderRadius: "10px",
+                                  marginBottom: "20px",
+                                },
+                              }}
+                              onChange={(e) => {
+                                let res = e.target.value
+                                  .replace(/[^\dA-Z]/g, "")
+                                  .replace(/(.{4})/g, "$1 ")
+                                  .trim();
+                                res.length > 20 ? e.preventDefault() : setCardNum(res);
+                              }}
+                            />
+                          </label>
+                        </div>
+                        <div className="flex items-center ">
+                          <label className="w-[50%] mr-[20px]" htmlFor="">
+                            <TextField
+                              fullWidth
+                              type="text"
+                              value={cardExp}
+                              label="Amal qilish muddati"
+                              id="fullWidth"
+                              InputProps={{
+                                style: {
+                                  borderRadius: "10px",
+                                },
+                              }}
+                              onChange={(e) => {
+                                let res = e.target.value
+                                  .replace(/[^0-9]/g, "")
+                                  .replace(/^([2-9])$/g, "0$1")
+                                  .replace(/^(1{1})([3-9]{1})$/g, "0$1/$2")
+                                  .replace(/^([0-1]{1}[0-9]{1})([0-9]{1,2}).*/g, "$1/$2");
+                                setCardExp(res);
+                              }}
+                            />
+                          </label>
+                          <button onClick={(e) => confirmBooking(e)} type="submit" className="bg-[#0057BE] text-[16px] font-normal text-[#FFF] w-[40%] py-[16px] px-[25px]  rounded-lg">
+                            SMS kodni olish
+                          </button>
+                        </div>
+                        <div
+                          style={{ width: "50%", marginBottom: "30px" }}
+                          className="border p-[10px] rounded-lg "
+                        >
+                          <OTPInput
+                            value={OTP}
+                            onChange={setOTP}
+                            OTPLength={5}
+                            otpType="number"
+                            disabled={disableOtp}
+                            type="number"
                           />
-                        </label>
-                        <label htmlFor="">
-                          <TextField
-                            fullWidth
-                            type="text"
-                            value={cardExp}
-                            label="Amal qilish muddati"
-                            id="fullWidth"
-                            InputProps={{
-                              style: {
-                                borderRadius: "10px",
-                              },
-                            }}
-                            onChange={(e) => {
-                              let res = e.target.value
-                                .replace(/[^0-9]/g, "")
-                                .replace(/^([2-9])$/g, "0$1")
-                                .replace(/^(1{1})([3-9]{1})$/g, "0$1/$2")
-                                .replace(/^([0-1]{1}[0-9]{1})([0-9]{1,2}).*/g, "$1/$2");
-                              setCardExp(res);
-                            }}
-                          />
-                        </label>
+                        </div>
                       </div>
                     </div>
                     <p className="text-[18px] mt-[2%]">
@@ -730,25 +779,28 @@ function ShopTicket() {
                     </div>
                     <div className="bg-[#F7F7F7] py-[8px]  px-[16px] rounded-lg mt-[1%]">
                       <h1 className="text-[18px]">Контакты для связи</h1>
-                      <p className="text-[18px] font-normal">+998 97 123 45 67, example@mail.com</p>
+                      <p className="text-[18px] font-normal">{phoneNum}, {gmail}</p>
                     </div>
                     <div className="mt-[1%]">
                       <h1 className="text-[20px]">
                         Asad Asadov
                       </h1>
-                      <p className="text-[18px] mt-[1%]">Дата рождение: 12.05.1999</p>
-                      <p className="text-[18px]">Данные пасспорта или ID карты: AD 000000</p>
+                      <p className="text-[18px] mt-[1%]">Дата рождение: {birthdatePic}</p>
+                      <p className="text-[18px]">Данные пасспорта или ID карты: {passportNum}</p>
                     </div>
                     <div className="border border-[#CCCCCC] my-[3%]">
                     </div>
                     <div className="flex justify-between items-center">
                       <h1 className="flex gap-[5px] text-[20px]"> <img className="rotate-[270deg]" src={airplane} alt="" />Ташкент - Париж</h1>
                       <h2 className="flex gap-[5px] text-[20px] text-[#0064FA] cursor-pointer">
-                        29 999 999 UZS
+                        {
+                          ticketPrice && currency(ticketPrice, 'UZS').replace("UZS", "")
+                            .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ") + " UZS"
+                        }
                         <img className="rotate-[270deg]" src={arrLeft} alt="" />
                       </h2>
                     </div>
-                    <h1 className="text-[20px] mt-[1%]">Asad Asadov</h1>
+                    <h1 className="text-[20px] mt-[1%]">{name} {lastName}</h1>
                     <p className="text-[18px] ">Тариф: Бизнес</p>
                     <p className="text-[18px] my-[1%] ">Базовый тариф: 25 000 000 UZS</p>
                     <p className="text-[18px] my-[1%]">Налоги и сборы: 4 000 000 UZS</p>
@@ -762,7 +814,7 @@ function ShopTicket() {
                       </span>
                     </p>
                     <button
-                      onClick={() => setValue(2)}
+                      onClick={(e) => paymentConfirmFnc(e)}
                       type="submit"
                       className="bg-[#0057BE] text-[16px] font-normal text-[#FFF] py-[8px] px-[25px] rounded-lg"
                     >
@@ -794,134 +846,7 @@ function ShopTicket() {
           </GoogleOAuthProvider>
         )
       }
-
-
-      <Modal
-        open={confirmModal}
-        onClose={() => setConfirmModal(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography
-            sx={{ textAlign: "center", fontSize: "28px" }}
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-          >
-            Tasdiqlash
-          </Typography>
-          <CloseIcon
-            sx={{
-              fontSize: "30px",
-              position: "absolute",
-              top: "15px",
-              right: "20px",
-              cursor: "pointer",
-              borderRadius: "50%",
-              border: "1px solid black",
-              padding: "3px",
-            }}
-            onClick={() => setConfirmModal(false)}
-          />
-          <Typography
-            id="modal-modal-description"
-            sx={{ mt: 2, textAlign: "center", fontSize: "18px" }}
-          >
-            <div className="confirmModalContainer">
-              <div style={{ width: "50%", marginRight: "40px" }}>
-                <TextField
-                  fullWidth
-                  type="text"
-                  value={cardNum}
-                  label="Karta raqamingiz"
-                  id="fullWidth"
-                  InputProps={{
-                    style: {
-                      borderRadius: "10px",
-                      marginBottom: "20px",
-                    },
-                  }}
-                  onChange={(e) => {
-                    let res = e.target.value
-                      .replace(/[^\dA-Z]/g, "")
-                      .replace(/(.{4})/g, "$1 ")
-                      .trim();
-                    res.length > 20 ? e.preventDefault() : setCardNum(res);
-                  }}
-                />
-
-                <TextField
-                  fullWidth
-                  type="text"
-                  value={cardExp}
-                  label="Amal qilish muddati"
-                  id="fullWidth"
-                  InputProps={{
-                    style: {
-                      borderRadius: "10px",
-                    },
-                  }}
-                  onChange={(e) => {
-                    let res = e.target.value
-                      .replace(/[^0-9]/g, "")
-                      .replace(/^([2-9])$/g, "0$1")
-                      .replace(/^(1{1})([3-9]{1})$/g, "0$1/$2")
-                      .replace(/^([0-1]{1}[0-9]{1})([0-9]{1,2}).*/g, "$1/$2");
-                    setCardExp(res);
-                  }}
-                />
-              </div>
-
-              <div style={{ width: "50%" }}>
-                <div
-                  style={{ width: "100%", marginBottom: "30px" }}
-                  className="otpContainer"
-                >
-                  <OTPInput
-                    value={OTP}
-                    onChange={setOTP}
-                    OTPLength={5}
-                    otpType="number"
-                    disabled={false}
-                    type="number"
-                  />
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <p>Tasdiqlash kodi yuborildi.</p> <p>{timer} s</p>
-                </div>
-              </div>
-            </div>
-
-            <div style={{ padding: "0 20px" }}>
-              <Button
-                className="btn"
-                style={{
-                  background: "#605dec",
-                  color: "#fff",
-                  borderRadius: "10px",
-                  marginTop: "20px",
-                  padding: "10px 0",
-                }}
-                onClick={() =>
-                  bookingConfirmSuc ? paymentConfirmFnc() : confirmBooking()
-                }
-              >
-                Tasdiqlash
-              </Button>
-            </div>
-          </Typography>
-        </Box>
-      </Modal>
-
-      {/* {loader && <Loader />} */}
+      {loader && <Loader />}
     </>
   );
 }
