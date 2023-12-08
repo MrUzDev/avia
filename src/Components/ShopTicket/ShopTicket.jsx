@@ -12,6 +12,7 @@ import {
   useFlightInfoMutation,
 } from "../../RTKQueryApi/AllApi";
 import Typography from "@mui/material/Typography";
+import TicketSkeleton from "../TicketSkeleton/TicketSkeleton";
 import Modal from "@mui/material/Modal";
 import PropTypes from "prop-types";
 import CloseIcon from "@mui/icons-material/Close";
@@ -34,6 +35,9 @@ import arrowSwap from "../../Assets/icons/arrow-swap-horizontal — black.svg"
 import airplane from "../../Assets/icons/airplane.svg"
 import arrowUp from "../../Assets/icons/arrow-up.png"
 import arrLeft from "../../Assets/icons/arrow-leftBalck.svg"
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
 import lineReys from "../../Assets/icons/Rectangle 40.svg"
 import jwt_decode from "jwt-decode";
 import { useRegisterApiMutation } from "../../RTKQueryApi/AllApi";
@@ -120,6 +124,8 @@ function ShopTicket() {
   const [cardNum, setCardNum] = useState();
   const [cardExp, setCardExp] = useState();
   const [flyData, setFlyData] = useState([])
+  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+  const [ticketDetail, setTicketDetail] = useState([])
   const [disableOtp, setDisableOtp] = useState(true);
 
   const [timer, setTimer] = useState(90);
@@ -134,8 +140,11 @@ function ShopTicket() {
 
   const loggedIn = useSelector((state) => state.loginSlice.loggedIn);
 
-  const { setOpen } = useContext(Contexts);
+  const { setOpen, open, loginModal, setLoginModal } = useContext(Contexts);
   const params = useParams();
+  const navigate = useNavigate()
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const clientId = "428493911231-e8ipsql0crd7loti8t96cun9u397valg.apps.googleusercontent.com";
 
@@ -237,10 +246,18 @@ function ShopTicket() {
   };
 
   useEffect(() => {
-    if (bookingCreateErr && bookingCreateErr.status === 401) {
+    if (bookingCreateErr && bookingCreateErr.status === 401 || flightInfoError && flightInfoError.status === 401) {
       setOpen(true)
     }
-  }, [bookingCreateErr])
+  }, [bookingCreateErr, flightInfoError])
+
+  useEffect(() => {
+    if (!localStorage.getItem('access')) {
+      setOpen(true)
+    } if (loginModal) {
+      setOpen(false)
+    }
+  }, [open, loginModal])
 
   const confirmBooking = (e) => {
     e.preventDefault()
@@ -343,14 +360,12 @@ function ShopTicket() {
       setLoader(false)
       flightInfoData.data.flight.price && setTicketPrice(flightInfoData.data.flight.price.UZS.amount);
       setFlyData(flightInfoData.data.search)
-      console.log(flightInfoData.data.search);
     }
   }, [flightInfoSuc])
 
   const login = (response) => {
     console.log(response);
     var token = jwt_decode(response.credential)
-
     const registerData = {
       email: token.email,
       token: response.credential,
@@ -400,7 +415,7 @@ function ShopTicket() {
           <Grid item lg={12}>
             <div className="mb-[2%] ">
               <div className="flex w-[100%]">
-                <h2 className="flex text-[16px] whitespace-nowrap items-center font-medium text-[#0064FA] cursor-pointer mr-[10%]"> <img src={arrowLeft} alt="" /> Поиск билетов</h2>
+                <h2 className="flex text-[16px] whitespace-nowrap items-center font-medium text-[#0064FA] cursor-pointer mr-[10%]" onClick={() => navigate('/')}> <img src={arrowLeft} alt="" /> Поиск билетов</h2>
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                   <Tabs
                     value={value}
@@ -412,7 +427,7 @@ function ShopTicket() {
                     } {...a11yProps(0)} onClick={() => movePay && setTabIndex(0)} />
                     <Tab iconPosition="start" icon={tabIndex >= 1 ? <Coin2 /> : <Coin />} label={
                       <span style={tabIndex >= 1 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Оплата</span>
-                    } {...a11yProps(1)} onClick={() => movePay && setTabIndex(1)} />
+                    } {...a11yProps(1)} onClick={() => setTabIndex(1)} />
                     <Tab iconPosition="start" icon={tabIndex >= 2 ? <Bilet2 /> : <Bilet />} label={
                       <span style={tabIndex >= 2 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Получение билета</span>
                     } {...a11yProps(2)} onClick={() => movePay && setTabIndex(2)} />
@@ -424,57 +439,233 @@ function ShopTicket() {
                   <div>
                     <h2 className="text-[16px] font-semibold font-mono">Бронирование билета</h2>
                     <div className="flex items-center">
-                      {console.log(flightInfoData && flightInfoData)}
-                      <h1 className="font-bold text-[28px] ">{flightInfoData && flightInfoData.data.search.segments.map((itemm ) => 
-                        <p>{itemm.from.name}</p>
-                        )}</h1>
+                      {flightInfoData && flightInfoData.data.search.segments.map((item) => (
+                        <h1 className="font-bold text-[28px]">{item.from.name}</h1>
+                      ))}
                       <img className="mx-[1%] cursor-pointer" src={arrowSwap} alt="" />
-                      <h1 className="font-bold text-[28px]"></h1>
+                      {flightInfoData && flightInfoData.data.search.segments.map(item => (
+                        <h1 className="font-bold text-[28px]">{item.to.name}</h1>
+                      ))}
                     </div>
-                    <p className="text-[18px] font-normal text-[#222222] font-mono">30 декабря,сб—16 января,вт,1 взрослый</p>
+                    <p className="text-[18px] font-normal text-[#222222] font-mono">
+                      {moment(flightInfoData?.flights.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                      {moment(flightInfoData?.flights.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                    </p>
                   </div>
                   <div className="border-[1px] p-[32px] rounded-lg border-[#CCCCCC] w-full mt-[2%]">
-                    <div className="flex items-center justify-between">
-                      <h1 className="text-[24px] font-bold">
-                        Детали маршрута
-                        <p className="text-[#AEAEAE] text-[16px] font-normal font-mono">Местное время отправления и прибытия</p>
-                      </h1>
-                      <p className="flex items-center text-[16px] font-normal text-[#AEAEAE] font-mono">
-                        Свернуть
-                        <img className="ml-[7px]" src={arrowUp} alt="" />
-                      </p>
-                    </div>
-                    <h1 className="text-[20px] my-[2%] font-bold">
-                      Ташкент - Париж
-                      <p className="text-[#AEAEAE] text-[13px] font-normal font-mono">Местное время отправления и прибытия</p>
-                    </h1>
-                    <div className="flex items-center justify-between">
-                      <div className="flex">
-                        <div>
-                          <h1 className="font-bold">13:20</h1>
-                          <p>13 ноября, пн</p>
-                          <p>Ташкент (TAS)</p>
-                        </div>
-                        <div>
-                          <h2 className="flex items-center ">
-                            Uzbekistan Airways <img src={airplane} alt="" />
-                          </h2>
-                          <img src={lineReys} alt="" />
-                        </div>
-                        <div>
-                          <h1>17:20</h1>
-                          <p>13 ноября, пн</p>
-                          <p>Москва (MOS)</p>
-                        </div>
-                      </div>
-                      <div>
-                        <h1>
-                          6ч 40м
-                        </h1>
-                        <p>Рейс HH-437</p>
-                        <p>Airbus A330</p>
-                      </div>
-                    </div>
+                    {flightInfoData && flightInfoData.data.flights.length > 0
+                      ? flightInfoData.data.flights.map((item, inx) => (
+                        <Grid item lg={12} sx={{ marginBottom: '20px' }} key={inx}>
+                          <div onClick={() => setTicketDetail(item)} className="box w-[100%] flex">
+                            <>
+                              <div className="w-full md:border-r-4 border-dashed md:border-[#ccc] relative">
+                                <div className="container-box py-2 md:py-5 pb-3 container-box-2" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
+                                  <div className="left w-full md:pr-5">
+                                    <div className="top">
+                                      <h2 className="flex w-full justify-between items-center log">
+                                        <>
+                                          <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.segments[0].provider.supplier.code}.png`} alt="" />
+                                          <p>
+
+                                            <span className="hidden w-max sum">
+                                              {
+                                                item.price.UZS.amount && currency(item.price.UZS.amount, 'UZS').replace("UZS", "")
+                                                  .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ") + " UZS"
+                                              }
+                                            </span>
+                                          </p>
+                                        </>
+                                      </h2>
+                                    </div>
+
+                                    <div className="bottom flex items-end">
+                                      <div className="dataL">
+                                        <h2 className="font-mono text-[0.675rem] md:text-lg">
+                                          {item.segments[0].dep.time}
+                                        </h2>
+
+                                        <p className="font-mono text-[0.675rem] md:text-lg">
+                                          {moment(item.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                                          {moment(item.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                                        </p>
+                                        <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[0].dep.city.title} ({item.segments[0].dep.city.code})</p>
+
+                                      </div>
+                                      <div>
+                                        <div className="flex justify-center">
+                                          <p className="font-mono text-[0.675rem] md:text-lg">
+                                            {moment.utc().startOf('day').add(item.duration, 'minutes').format('hh ч mm мин')}
+                                          </p>
+                                        </div>
+                                        <div className="map w-full justify-between">
+                                          <div className="from">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                              <g clip-path="url(#clip0_865_2363)">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
+                                              </g>
+                                              <defs>
+                                                <clipPath id="clip0_865_2363">
+                                                  <rect width="24" height="24" rx="4" fill="white" />
+                                                </clipPath>
+                                              </defs>
+                                            </svg>
+                                          </div>
+
+                                          <div className="to">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                              <g clip-path="url(#clip0_865_2363)">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
+                                              </g>
+                                              <defs>
+                                                <clipPath id="clip0_865_2363">
+                                                  <rect width="24" height="24" rx="4" fill="white" />
+                                                </clipPath>
+                                              </defs>
+                                            </svg>
+                                          </div>
+                                        </div>
+
+                                        <div className="line mt-4">
+                                          <div className="relative">
+                                            <span className="absolute block left-0 bottom-0 translate-y-1 rounded-md bg-[#FFC107] w-10 h-2"></span>
+                                            <span className="absolute block right-2/4 bottom-0 translate-y-1 translate-x-4  rounded-md bg-[#EF2323] w-6 h-2"></span>
+                                            <span className="absolute block right-0 bottom-0 translate-y-1 rounded-md bg-[#EF2323] w-10 h-2"></span>
+                                          </div>
+                                        </div>
+                                        <div className="namCity flex items-center justify-between mt-3">
+                                          <p className="font-mono">{item.segments[0].dep.city.code}</p>
+                                          <p className="font-mono">{item.segments[item.segments.length - 1].arr.city.code}</p>
+                                        </div>
+                                      </div>
+                                      <div className="dataR">
+                                        <h2 className="font-mono text-[0.675rem] md:text-lg">
+                                          {item.segments[item.segments.length - 1].arr.time}
+                                        </h2>
+                                        <p className="font-mono text-[0.675rem] md:text-lg">
+                                          {moment(item.segments[item.segments.length - 1].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                                          {moment(item.segments[item.segments.length - 1].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                                        </p>
+                                        <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[item.segments.length - 1].arr.city.title} ({item.segments[item.segments.length - 1].arr.city.code})</p>
+                                      </div>
+
+                                    </div>
+
+                                  </div>
+                                </div>
+                                <Accordion className="flex" style={{ flexDirection: 'column-reverse' }} TransitionProps={{ timeout: 800 }} onChange={() => setIsAccordionOpen(!isAccordionOpen)}>
+
+                                  <AccordionSummary
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"
+                                  >
+                                    <Typography>{isAccordionOpen ? 'Скрыть детали' : 'Дали маршрута'}.</Typography>
+                                  </AccordionSummary>
+                                  <AccordionDetails>
+                                    <Typography>
+                                      {item.segments.map((twoItem, index) => (
+
+                                        <>
+
+                                          <div className="container-box py-2 md:py-5 pb-3 container-box-2" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
+                                            <div className="left w-full md:pr-5">
+
+                                              <div className="">
+                                                <div className="flex items-center	justify-between w-full">
+                                                  <div className="from flex">
+                                                    <div>
+                                                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                        <g clip-path="url(#clip0_865_2363)">
+                                                          <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
+                                                        </g>
+                                                        <defs>
+                                                          <clipPath id="clip0_865_2363">
+                                                            <rect width="24" height="24" rx="4" fill="white" />
+                                                          </clipPath>
+                                                        </defs>
+                                                      </svg>
+                                                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                        <g clip-path="url(#clip0_865_2363)">
+                                                          <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
+                                                        </g>
+                                                        <defs>
+                                                          <clipPath id="clip0_865_2363">
+                                                            <rect width="24" height="24" rx="4" fill="white" />
+                                                          </clipPath>
+                                                        </defs>
+                                                      </svg>
+                                                    </div>
+                                                    <p>
+                                                      <p className="font-mono text-[0.675rem] md:text-lg ml-3">{item.segments[index].dep.time}</p>
+                                                      <p className="font-mono text-[0.675rem] md:text-lg ml-3">{item.segments[index].arr.time}</p>
+                                                    </p>
+                                                  </div>
+                                                  <div>
+                                                    <p className="font-mono text-[0.675rem] md:text-lg">{item.segments[index].dep.city.title}</p>
+                                                    <p className="font-mono text-[0.675rem] md:text-lg">{item.segments[index].arr.city.title}</p>
+                                                  </div>
+
+                                                  <div>
+                                                    <p className="font-mono text-[0.675rem] md:text-lg ml-3">
+                                                      {moment(item.segments[index].dep.date, 'DD.MM.YYYY').format("DD MMMM")}
+                                                    </p>
+                                                    <p className="font-mono text-[0.675rem] md:text-lg ml-3">
+                                                      {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format("DD MMMM")}
+                                                    </p>
+
+                                                  </div>
+
+                                                  <p className="font-mono text-[0.675rem] md:text-lg">{moment.utc().startOf('day').add(item.segments[index].dep.data, 'minutes').format('hhч mmмин')}</p>
+                                                  <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.segments[index].provider.supplier.code}.png`} alt="" />
+
+                                                </div>
+
+                                              </div>
+
+                                              <div className="flex justify-between">
+                                                <div>
+
+                                                  <p className="font-mono text-[0.675rem] mt-3 md:text-lg">Рейс: {item.segments[index].fare_code}</p>
+                                                  <p className="font-mono text-[0.675rem] md:text-lg">Самолет: {item.segments[index].provider.supplier.title}</p>
+                                                  {item.segments[index].aircraft.title && <p className="font-mono text-[0.675rem] md:text-lg">Самолет: {item.segments[index].aircraft.title}</p>}
+                                                </div>
+
+                                                <div>
+                                                  {item.segments[index].dep.terminal && <p className="font-mono text-[0.675rem] md:text-lg mt-5">Терминал: {item.segments[index].dep.terminal}</p>}
+                                                  {item.segments[index].cbaggage.weight && <p className="font-mono text-[0.675rem] md:text-lg">Багаж: {item.segments[index].cbaggage.weight} </p>}
+                                                  <p className="font-mono text-[0.675rem] md:text-lg">
+                                                    Класс: {item.segments[index].class.name.toUpperCase() === "E" ? "Ekonom" :
+                                                      item.segments[index].class.name.toUpperCase() === "B" &&
+                                                      "Biznes"}
+                                                  </p>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+
+
+                                          <div className="pr-3">
+                                            {index !== item.segments.length - 1 && (
+                                              <span className="w-full h-0.5 block bg-[#ccc]"></span>
+                                            )}
+                                          </div>
+                                        </>
+                                      ))}
+                                    </Typography>
+                                  </AccordionDetails>
+                                </Accordion>
+                                <span className="block absolute top-0 h-3 w-5 bg-[#E8E8E8] right-[-0.747rem] rounded-b-lg"></span>
+                                <span className="block absolute bottom-0 h-3 w-5 bg-[#E8E8E8] right-[-0.747rem] rounded-t-lg"></span>
+                              </div>
+                            </>
+
+                          </div>
+                        </Grid>
+                      ))
+                      : flightInfoData && (
+                        <h2 style={{ textAlign: "center" }}>Chipta topilmadi</h2>
+                      )}
+
+                    {!flightInfoSuc && <TicketSkeleton loading={!flightInfoSuc} />}
                   </div>
 
                   <div className="border-[1px] border-[#CCCCCC] rounded-lg my-[1%] p-[32px] flex flex-col">

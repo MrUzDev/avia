@@ -14,10 +14,12 @@ import BasicModal from "./Components/Modal/Modal";
 function App() {
   const [open, setOpen] = useState(false);
   const [show, setShow] = React.useState(false);
+  const [loginModal, setLoginModal] = useState(false);
+
 
   return (
     <>
-      <Contexts.Provider value={{ open, setOpen, show, setShow }}>
+      <Contexts.Provider value={{ open, setOpen, show, setShow, loginModal, setLoginModal }}>
         <Navbar />
 
           <Routes>

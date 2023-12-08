@@ -44,13 +44,12 @@ const style2 = {
 };
 
 export default function BasicModal(props) {
-  const { open, setOpen } = React.useContext(Contexts);
+  const { open, setOpen, loginModal, setLoginModal } = React.useContext(Contexts);
   const [phoneNum, setPhoneNum] = useState("+998");
   const [timer, setTimer] = useState(90);
   const [OTP, setOTP] = useState();
   const [otpToken, setOtpToken] = useState();
   const [registerModal, setRegisterModal] = useState(false);
-  const [loginModal, setLoginModal] = useState(false);
   const [sendSms, setSendSms] = useState(false);
   const [password, setPassword] = useState();
   const [verifyPassword, setVerifyPassword] = useState();

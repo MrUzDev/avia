@@ -218,7 +218,7 @@ function Main() {
           date: myAirlinesDate[0].format?.("DD-MM-YYYY")
         }],
         filter_airlines: filterAirlines,
-        is_direct_only: 1,
+        is_direct_only: 0,
         gds_white_list: [],
         gds_black_list: [],
         class_: ticketTarif,
