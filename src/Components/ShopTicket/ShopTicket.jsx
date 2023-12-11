@@ -49,7 +49,7 @@ import { ReactComponent as Coin2 } from '../../Assets/icons/coinLine2.svg'
 import { ReactComponent as CalendarTick } from '../../Assets/icons/calendar-tick.svg'
 import { ReactComponent as CalendarTick2 } from '../../Assets/icons/calendar-tick2.svg'
 import { Email } from "@mui/icons-material";
-
+import "../Tickets/Ticket.css";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -98,7 +98,7 @@ function ShopTicket() {
     { data: bookingConfirmData, isSuccess: bookingConfirmSuc },
   ] = useBookingConfirmMutation();
 
-  const [refresh, { data: refreshData, isSuccess: refreshSuc }] =
+  const [refresh, { data: refreshData, isSuccess: refreshSuc, isError: refreshError }] =
     useRefreshMutation();
 
   const [
@@ -110,12 +110,12 @@ function ShopTicket() {
 
   const [name, setName] = useState();
   const [lastName, setLastName] = useState();
-  const [citizen, setCitizen] = useState("Uz");
+  const [citizen, setCitizen] = useState("UZ");
   const [value, setValue] = useState(0);
   const [gmail, setGmail] = useState();
   const [phoneNum, setPhoneNum] = useState();
   const [middleName, setMiddleName] = useState();
-  const [gender, setGender] = useState();
+  const [gender, setGender] = useState("");
   const [birthdatePic, setBirthdatePic] = useState(moment().format("DD.MM.YYYY"));
   const [passportNum, setPassportNum] = useState();
   const [passportExp, setPassportExp] = useState(moment().format("DD.MM.YYYY"));
@@ -136,6 +136,7 @@ function ShopTicket() {
   const [paymentType, setPaymentType] = useState()
   const [tabIndex, setTabIndex] = useState(0)
   const [movePay, setMovePay] = useState(false)
+  const [errorMsg, setErrorMsg] = useState(false)
 
   const loggedIn = useSelector((state) => state.loginSlice.loggedIn);
 
@@ -143,7 +144,6 @@ function ShopTicket() {
   const params = useParams();
   const navigate = useNavigate()
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   const clientId = "428493911231-e8ipsql0crd7loti8t96cun9u397valg.apps.googleusercontent.com";
 
@@ -162,9 +162,7 @@ function ShopTicket() {
     overflow: "hidden",
   };
 
-  const dataError = () => toast.error("Ma'lumotlar to'liq kiritilmadi!");
-  const dataFake = () => toast.error("Ma'lumotlar noto'g'ri kiritildi!");
-  const dublBron = () => toast.error("Ikkinchi martta buyutma qilinmoqda!");
+  const dataError = () => toast.error(errorMsg);
 
   useEffect(() => {
     try {
@@ -180,9 +178,12 @@ function ShopTicket() {
     } catch (error) { }
   }, [params.id, registerApiData]);
 
+
   const bookingCreateFnc = (e) => {
     e.preventDefault();
-    if (birthdatePic, passportExp, name, phoneNum, lastName, passportNum, gmail, gender, citizen) {
+    setLoader(true);
+
+    if (birthdatePic && passportExp && name && phoneNum && lastName && passportNum && gmail && gender && citizen) {
       const day =
         birthdatePic.day && birthdatePic.day > 9
           ? String(birthdatePic.day)
@@ -205,7 +206,6 @@ function ShopTicket() {
       const yearPass = passportExp.year && String(passportExp.year);
       const birthdatePass = dayPass + "." + mounthPass + "." + yearPass;
 
-      setLoader(true);
       try {
         const bookingCreatee = {
           lang: "ru",
@@ -221,7 +221,7 @@ function ShopTicket() {
               age: "adt",
               birthdate: birthdate,
               doctype: "P",
-              docnum: passportNum,
+              docnum: passportNum.replace(' ', ''),
               docexp: birthdatePass,
               gender: gender,
               citizen: citizen,
@@ -284,39 +284,18 @@ function ShopTicket() {
     paymentConfirm(paymentConff);
   };
 
-  useEffect(() => {
-    if (flightInfoError) {
-
-      if (localStorage.getItem("refresh")) {
-        console.log(flightInfoError);
-        if (flightInfoError && flightInfoError.status === 401) {
-          const getAccessData = {
-            refresh: localStorage.getItem("refresh"),
-          };
-          refresh(getAccessData);
-        }
-        if (flightInfoError && flightInfoError.status == 'FETCH_ERROR') {
-          const getAccessData = {
-            refresh: localStorage.getItem("refresh"),
-          };
-          refresh(getAccessData);
-        }
-      }
-    }
-  }, [flightInfoError]);
 
   useEffect(() => {
     if (bookingCreateSuc) {
-      setLoader(false);
-      setValue(1)
-      console.log(bookingCreateData, 'data');
-      if (bookingCreateData.data && bookingCreateData.data.message === "Дубль бронирования") {
-        dublBron()
-      } else if (bookingCreateData.success == false) {
-        dataFake()
+      setLoader(false)
+      if(bookingCreateData.tr_id) {
+        localStorage.setItem("trId", bookingCreateData.tr_id);
+        setTr_id(bookingCreateData.tr_id);
+        handleChange(1, 1);
       }
-      localStorage.setItem("trId", bookingCreateData.tr_id);
-      setTr_id(bookingCreateData.tr_id);
+      if (bookingCreateData.data && bookingCreateData.data.message) {
+        setErrorMsg(bookingCreateData.data.message)
+      } 
     }
     if (bookingConfirmSuc) {
       setDisableOtp(false)
@@ -360,10 +339,22 @@ function ShopTicket() {
   }, [bookingCreateData, bookingConfirmData, paymentConfirmData, refreshData]);
 
   useEffect(() => {
+    if(refreshError) {
+      localStorage.removeItem("access", refreshData.access);
+      localStorage.removeItem("refresh", refreshData.access);
+    }
+  }, [refreshError])
+
+  useEffect(() => {
     if (flightInfoSuc) {
-      setLoader(false)
-      flightInfoData.data.flight.price && setTicketPrice(flightInfoData.data.flight.price.UZS.amount);
-      setFlyData(flightInfoData.data.search)
+      if(flightInfoData.data.search) {
+        setLoader(false)
+        flightInfoData.data.flight.price && setTicketPrice(flightInfoData.data.flight.price.UZS.amount);
+        setFlyData(flightInfoData.data.search)
+      }else if(flightInfoData.data.message) {
+        setErrorMsg(flightInfoData.data.message)
+      }
+
     }
   }, [flightInfoSuc])
 
@@ -377,6 +368,13 @@ function ShopTicket() {
     }
     registerApi(registerData)
   }
+
+  useEffect(() => {
+    if(errorMsg) {
+      dataError()
+      setErrorMsg(false)
+    }
+  }, [errorMsg])
 
 
   React.useEffect(() => {
@@ -392,14 +390,8 @@ function ShopTicket() {
     Intl.NumberFormat(lang, { style: "currency", currency }).format(number);
 
   const handleChange = (event, newValue) => {
-    if (movePay) {
       setValue(newValue);
-    }
   };
-
-  useEffect(() => {
-    // console.log(tabIndex);
-  }, [tabIndex])
 
   const handlePasInputChange = (e) => {
     const inputValue = e.target.value.toUpperCase()
@@ -411,6 +403,8 @@ function ShopTicket() {
 
   return (
     <>
+     {flightInfoData?.data.search && 
+     <>
       <Container className="ShopTicket">
         <Grid
           container
@@ -428,77 +422,65 @@ function ShopTicket() {
                   >
                     <Tab iconPosition="start" icon={tabIndex >= 0 ? <CalendarTick /> : <CalendarTick2 />} label={
                       <span style={tabIndex >= 0 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Бронирование</span>
-                    } {...a11yProps(0)} onClick={() => movePay && setTabIndex(0)} />
+                    } {...a11yProps(0)}  />
                     <Tab iconPosition="start" icon={tabIndex >= 1 ? <Coin2 /> : <Coin />} label={
                       <span style={tabIndex >= 1 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Оплата</span>
-                    } {...a11yProps(1)} onClick={() => setTabIndex(1)} />
+                    } {...a11yProps(1)} />
                     <Tab iconPosition="start" icon={tabIndex >= 2 ? <Bilet2 /> : <Bilet />} label={
                       <span style={tabIndex >= 2 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Получение билета</span>
-                    } {...a11yProps(2)} onClick={() => movePay && setTabIndex(2)} />
+                    } {...a11yProps(2)} />
                   </Tabs>
                 </Box>
               </div>
               <TabPanel value={value} index={0}>
-                <form onSubmit={(e) => { bookingCreateFnc(e); setPaymentType("UZCARD/HUMO") }}>
+                <form onSubmit={(e) => { bookingCreateFnc(e); setPaymentType("UZCARD/HUMO");}}>
                   <div>
                     <h2 className="text-[16px] font-semibold font-mono">Бронирование билета</h2>
                     <div className="flex items-center">
-                      {flightInfoData && flightInfoData.data.search.segments.map((item) => (
+                      {flightInfoData && flightInfoData.data.search?.segments.map((item) => (
                         <h1 className="font-bold text-[28px]">{item.from.name}</h1>
                       ))}
                       <img className="mx-[1%] cursor-pointer" src={arrowSwap} alt="" />
-                      {flightInfoData && flightInfoData.data.search.segments.map(item => (
+                      {flightInfoData && flightInfoData.data.search?.segments.map(item => (
                         <h1 className="font-bold text-[28px]">{item.to.name}</h1>
                       ))}
                     </div>
                     <p className="text-[18px] font-normal text-[#222222] font-mono">
-                      {moment(flightInfoData?.flights.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
-                      {moment(flightInfoData?.flights.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                      {moment(flightInfoData?.data.flight?.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                      {moment(flightInfoData?.data.flight?.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
                     </p>
                   </div>
+                  
                   <div className="border-[1px] p-[32px] rounded-lg border-[#CCCCCC] w-full mt-[2%]">
-                    {flightInfoData && flightInfoData.data.flights.length > 0
-                      ? flightInfoData.data.flights.map((item, inx) => (
-                        <Grid item lg={12} sx={{ marginBottom: '20px' }} key={inx}>
-                          <div onClick={() => setTicketDetail(item)} className="box w-[100%] flex">
+                    {flightInfoData ? (
+                          <div className="box w-full flex">
                             <>
-                              <div className="w-full md:border-r-4 border-dashed md:border-[#ccc] relative">
-                                <div className="container-box py-2 md:py-5 pb-3 container-box-2" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
+                              <div className="w-full relative">
+                                <div className="container-box pb-3 container-box-2">
                                   <div className="left w-full md:pr-5">
-                                    <div className="top">
+                                    <div className="top flex">
                                       <h2 className="flex w-full justify-between items-center log">
-                                        <>
-                                          <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.segments[0].provider.supplier.code}.png`} alt="" />
-                                          <p>
-
-                                            <span className="hidden w-max sum">
-                                              {
-                                                item.price.UZS.amount && currency(item.price.UZS.amount, 'UZS').replace("UZS", "")
-                                                  .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ") + " UZS"
-                                              }
-                                            </span>
-                                          </p>
-                                        </>
+                                          <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${flightInfoData?.data.flight.segments[0].provider.supplier.code}.png`} alt="" />
                                       </h2>
                                     </div>
 
-                                    <div className="bottom flex items-end">
+                                    <div className="bottom flex items-end justify-between">
                                       <div className="dataL">
                                         <h2 className="font-mono text-[0.675rem] md:text-lg">
-                                          {item.segments[0].dep.time}
+                                          {flightInfoData?.data.flight.segments[0].dep.time}
                                         </h2>
 
                                         <p className="font-mono text-[0.675rem] md:text-lg">
-                                          {moment(item.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
-                                          {moment(item.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                                          {moment(flightInfoData?.data.flight.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                                          {moment(flightInfoData?.data.flight.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
                                         </p>
-                                        <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[0].dep.city.title} ({item.segments[0].dep.city.code})</p>
+                                        <p className="font-mono text-[0.675rem] md:text-lg"> {flightInfoData?.data.flight.segments[0].dep.city.title} ({flightInfoData?.data.flight.segments[0].dep.city.code})</p>
 
                                       </div>
                                       <div>
                                         <div className="flex justify-center">
                                           <p className="font-mono text-[0.675rem] md:text-lg">
-                                            {moment.utc().startOf('day').add(item.duration, 'minutes').format('hh ч mm мин')}
+                                            {moment.utc().startOf('day').add(flightInfoData?.data.flight.duration, 'minutes').format('hh ч mm мин')}
                                           </p>
                                         </div>
                                         <div className="map w-full justify-between">
@@ -537,19 +519,19 @@ function ShopTicket() {
                                           </div>
                                         </div>
                                         <div className="namCity flex items-center justify-between mt-3">
-                                          <p className="font-mono">{item.segments[0].dep.city.code}</p>
-                                          <p className="font-mono">{item.segments[item.segments.length - 1].arr.city.code}</p>
+                                          <p className="font-mono">{flightInfoData?.data.flight.segments[0].dep.city.code}</p>
+                                          <p className="font-mono">{flightInfoData?.data.flight.segments[flightInfoData?.data.flight.segments.length - 1].arr.city.code}</p>
                                         </div>
                                       </div>
                                       <div className="dataR">
                                         <h2 className="font-mono text-[0.675rem] md:text-lg">
-                                          {item.segments[item.segments.length - 1].arr.time}
+                                          {flightInfoData?.data.flight.segments[flightInfoData?.data.flight.segments.length - 1].arr.time}
                                         </h2>
                                         <p className="font-mono text-[0.675rem] md:text-lg">
-                                          {moment(item.segments[item.segments.length - 1].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
-                                          {moment(item.segments[item.segments.length - 1].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                                          {moment(flightInfoData?.data.flight.segments[flightInfoData?.data.flight.segments.length - 1].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                                          {moment(flightInfoData?.data.flight.segments[flightInfoData?.data.flight.segments.length - 1].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
                                         </p>
-                                        <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[item.segments.length - 1].arr.city.title} ({item.segments[item.segments.length - 1].arr.city.code})</p>
+                                        <p className="font-mono text-[0.675rem] md:text-lg"> {flightInfoData?.data.flight.segments[flightInfoData?.data.flight.segments.length - 1].arr.city.title} ({flightInfoData?.data.flight.segments[flightInfoData?.data.flight.segments.length - 1].arr.city.code})</p>
                                       </div>
 
                                     </div>
@@ -566,11 +548,11 @@ function ShopTicket() {
                                   </AccordionSummary>
                                   <AccordionDetails>
                                     <Typography>
-                                      {item.segments.map((twoItem, index) => (
+                                      {flightInfoData?.data.flight.segments.map((twoItem, index) => (
 
                                         <>
 
-                                          <div className="container-box py-2 md:py-5 pb-3 container-box-2" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
+                                          <div className="container-box py-2 md:py-5 pb-3 container-box-2" onClick={() => window.innerWidth < 768 && handleOpen()}>
                                             <div className="left w-full md:pr-5">
 
                                               <div className="">
@@ -599,27 +581,27 @@ function ShopTicket() {
                                                       </svg>
                                                     </div>
                                                     <p>
-                                                      <p className="font-mono text-[0.675rem] md:text-lg ml-3">{item.segments[index].dep.time}</p>
-                                                      <p className="font-mono text-[0.675rem] md:text-lg ml-3">{item.segments[index].arr.time}</p>
+                                                      <p className="font-mono text-[0.675rem] md:text-lg ml-3">{flightInfoData?.data.flight.segments[index].dep.time}</p>
+                                                      <p className="font-mono text-[0.675rem] md:text-lg ml-3">{flightInfoData?.data.flight.segments[index].arr.time}</p>
                                                     </p>
                                                   </div>
                                                   <div>
-                                                    <p className="font-mono text-[0.675rem] md:text-lg">{item.segments[index].dep.city.title}</p>
-                                                    <p className="font-mono text-[0.675rem] md:text-lg">{item.segments[index].arr.city.title}</p>
+                                                    <p className="font-mono text-[0.675rem] md:text-lg">{flightInfoData?.data.flight.segments[index].dep.city.title}</p>
+                                                    <p className="font-mono text-[0.675rem] md:text-lg">{flightInfoData?.data.flight.segments[index].arr.city.title}</p>
                                                   </div>
 
                                                   <div>
                                                     <p className="font-mono text-[0.675rem] md:text-lg ml-3">
-                                                      {moment(item.segments[index].dep.date, 'DD.MM.YYYY').format("DD MMMM")}
+                                                      {moment(flightInfoData?.data.flight.segments[index].dep.date, 'DD.MM.YYYY').format("DD MMMM")}
                                                     </p>
                                                     <p className="font-mono text-[0.675rem] md:text-lg ml-3">
-                                                      {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format("DD MMMM")}
+                                                      {moment(flightInfoData?.data.flight.segments[index].arr.date, 'DD.MM.YYYY').format("DD MMMM")}
                                                     </p>
 
                                                   </div>
 
-                                                  <p className="font-mono text-[0.675rem] md:text-lg">{moment.utc().startOf('day').add(item.segments[index].dep.data, 'minutes').format('hhч mmмин')}</p>
-                                                  <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.segments[index].provider.supplier.code}.png`} alt="" />
+                                                  <p className="font-mono text-[0.675rem] md:text-lg">{moment.utc().startOf('day').add(flightInfoData?.data.flight.segments[index].dep.data, 'minutes').format('hhч mmмин')}</p>
+                                                  <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${flightInfoData?.data.flight.segments[index].provider.supplier.code}.png`} alt="" />
 
                                                 </div>
 
@@ -628,17 +610,17 @@ function ShopTicket() {
                                               <div className="flex justify-between">
                                                 <div>
 
-                                                  <p className="font-mono text-[0.675rem] mt-3 md:text-lg">Рейс: {item.segments[index].fare_code}</p>
-                                                  <p className="font-mono text-[0.675rem] md:text-lg">Самолет: {item.segments[index].provider.supplier.title}</p>
-                                                  {item.segments[index].aircraft.title && <p className="font-mono text-[0.675rem] md:text-lg">Самолет: {item.segments[index].aircraft.title}</p>}
+                                                  <p className="font-mono text-[0.675rem] mt-3 md:text-lg">Рейс: {flightInfoData?.data.flight.segments[index].fare_code}</p>
+                                                  <p className="font-mono text-[0.675rem] md:text-lg">Самолет: {flightInfoData?.data.flight.segments[index].provider.supplier.title}</p>
+                                                  {flightInfoData?.data.flight.segments[index].aircraft.title && <p className="font-mono text-[0.675rem] md:text-lg">Самолет: {flightInfoData?.data.flight.segments[index].aircraft.title}</p>}
                                                 </div>
 
                                                 <div>
-                                                  {item.segments[index].dep.terminal && <p className="font-mono text-[0.675rem] md:text-lg mt-5">Терминал: {item.segments[index].dep.terminal}</p>}
-                                                  {item.segments[index].cbaggage.weight && <p className="font-mono text-[0.675rem] md:text-lg">Багаж: {item.segments[index].cbaggage.weight} </p>}
+                                                  {flightInfoData?.data.flight.segments[index].dep.terminal && <p className="font-mono text-[0.675rem] md:text-lg mt-5">Терминал: {flightInfoData?.data.flight.segments[index].dep.terminal}</p>}
+                                                  {flightInfoData?.data.flight.segments[index].cbaggage.weight && <p className="font-mono text-[0.675rem] md:text-lg">Багаж: {flightInfoData?.data.flight.segments[index].cbaggage.weight} </p>}
                                                   <p className="font-mono text-[0.675rem] md:text-lg">
-                                                    Класс: {item.segments[index].class.name.toUpperCase() === "E" ? "Ekonom" :
-                                                      item.segments[index].class.name.toUpperCase() === "B" &&
+                                                    Класс: {flightInfoData?.data.flight.segments[index].class.name.toUpperCase() === "E" ? "Ekonom" :
+                                                      flightInfoData?.data.flight.segments[index].class.name.toUpperCase() === "B" &&
                                                       "Biznes"}
                                                   </p>
                                                 </div>
@@ -648,7 +630,7 @@ function ShopTicket() {
 
 
                                           <div className="pr-3">
-                                            {index !== item.segments.length - 1 && (
+                                            {index !== flightInfoData?.data.flight.segments.length - 1 && (
                                               <span className="w-full h-0.5 block bg-[#ccc]"></span>
                                             )}
                                           </div>
@@ -657,14 +639,11 @@ function ShopTicket() {
                                     </Typography>
                                   </AccordionDetails>
                                 </Accordion>
-                                <span className="block absolute top-0 h-3 w-5 bg-[#E8E8E8] right-[-0.747rem] rounded-b-lg"></span>
-                                <span className="block absolute bottom-0 h-3 w-5 bg-[#E8E8E8] right-[-0.747rem] rounded-t-lg"></span>
                               </div>
                             </>
 
                           </div>
-                        </Grid>
-                      ))
+                      )
                       : flightInfoData && (
                         <h2 style={{ textAlign: "center" }}>Chipta topilmadi</h2>
                       )}
@@ -690,6 +669,7 @@ function ShopTicket() {
                           type="email"
                           placeholder="Электронная почта"
                           required
+                          value={gmail}
                         />
                       </label>
                       <label className="w-full" htmlFor="">
@@ -803,7 +783,9 @@ function ShopTicket() {
                         </label>
                         <label className="w-full" htmlFor="">
                           Пол
-                          <FormControl sx={{ width: "100%", m: 1 }} size="small" required>
+                          <FormControl sx={{ width: "100%", m: 1 }} size="small" 
+                          required
+                          >
                             <InputLabel id="demo-select-small-label">
                               Пол
                             </InputLabel>
@@ -829,7 +811,7 @@ function ShopTicket() {
                                 },
                               }}
                             >
-                              <MenuItem value={"M"}>мужской</MenuItem>
+                              <MenuItem value={"M"}>Mужской</MenuItem>
                               <MenuItem value={"F"}>Женский</MenuItem>
                             </Select>
                           </FormControl>
@@ -853,6 +835,7 @@ function ShopTicket() {
                     >
                       Продолжить
                     </button>
+                   
                   </div>
                 </form>
 
@@ -980,7 +963,7 @@ function ShopTicket() {
                       <h1 className="text-[20px]">
                         Asad Asadov
                       </h1>
-                      <p className="text-[18px] mt-[1%]">Дата рождение: {birthdatePic}</p>
+                      {/* <p className="text-[18px] mt-[1%]">Дата рождение: {birthdatePic}</p> */}
                       <p className="text-[18px]">Данные пасспорта или ID карты: {passportNum}</p>
                     </div>
                     <div className="border border-[#CCCCCC] my-[3%]">
@@ -1019,12 +1002,15 @@ function ShopTicket() {
                 </form>
               </TabPanel>
               <TabPanel value={value} index={2}>
-              </TabPanel>
+                </TabPanel>
+            
             </div>
           </Grid>
         </Grid>
       </Container >
       <ToastContainer />
+     </>
+     }
 
       {
         !loggedIn && (
