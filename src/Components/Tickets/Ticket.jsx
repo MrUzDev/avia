@@ -80,10 +80,6 @@ function Ticket(props) {
     }
   }, [TicketData, props.loading])
 
-  useEffect(() => {
-    console.log(TicketData);
-  }, [])
-
 
   return (
     <div className="aviaTicket container mx-auto">
@@ -140,7 +136,7 @@ function Ticket(props) {
                         <div className="container-box py-2 md:py-5 pb-3 container-box-2" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
                               <div className="left w-full md:pr-5">
                                 <div className="top">
-                                  <h2 className="flex w-full justify-between items-center log">
+                                  <h2 className="flex w-full justify-between items-center">
                                       <>
                                         <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.segments[0].provider.supplier.code}.png`} alt="" />
                                         <p>
