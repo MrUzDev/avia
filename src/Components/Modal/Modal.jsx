@@ -193,7 +193,7 @@ export default function BasicModal(props) {
             <div className=" flex-col">
               <div style={{ width: "100%", marginRight: "40px", marginBottom: "15px" }}>
                 <MuiTelInput
-                  sx={{ width: "100%",}}
+                  sx={{ width: "100%", }}
                   value={phoneNum}
                   onChange={(e) => {
                     setPhoneNum(e);
@@ -206,7 +206,7 @@ export default function BasicModal(props) {
                 />
               </div>
               <div
-                style={{ width: "100%", marginBottom: "30px", border: "1px solid #CCCCCC", display: "flex", alignItems: "center", justifyContent: "center",padding:"10px",borderRadius:"10px" }}
+                style={{ width: "100%", marginBottom: "30px", border: "1px solid #CCCCCC", display: "flex", alignItems: "center", justifyContent: "center", padding: "10px", borderRadius: "10px" }}
                 className="otpContainer"
               >
 
@@ -218,7 +218,7 @@ export default function BasicModal(props) {
                   disabled={!sendSms}
                   type="number"
                 />
-                
+
               </div>
 
               <div
@@ -384,9 +384,9 @@ export default function BasicModal(props) {
             id="modal-modal-description"
             sx={{ mt: 2, textAlign: "center", fontSize: "18px" }}
           >
-            <div style={{ width: "100%",}}>
+            <div style={{ width: "100%", }}>
               <MuiTelInput
-                sx={{ width: "100%", marginRight: "10px", marginBottom:"20px" }}
+                sx={{ width: "100%", marginRight: "10px", marginBottom: "20px" }}
                 value={phoneNum}
                 onChange={(e) => {
                   setPhoneNum(e);
@@ -415,7 +415,7 @@ export default function BasicModal(props) {
               />
             </div>
 
-            <div style={{ padding: "0 20px",marginTop:"20px" }}>
+            <div style={{ padding: "0 20px", marginTop: "20px" }}>
               <Button
                 className="btn"
                 style={{
@@ -430,11 +430,11 @@ export default function BasicModal(props) {
                 Войти
               </Button>
               <p
-               style={{ marginTop: "10px", textDecoration: "underline" }}
-               onClick={() => {
-                 setOpen(true);
-                 setLoginModal(false);
-               }}>Регистрация</p>
+                style={{ marginTop: "10px", textDecoration: "underline" }}
+                onClick={() => {
+                  setOpen(true);
+                  setLoginModal(false);
+                }}>Регистрация</p>
             </div>
           </Typography>
         </Box>

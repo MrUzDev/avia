@@ -11,6 +11,7 @@ import {
   useRefreshMutation,
   useFlightInfoMutation,
 } from "../../RTKQueryApi/AllApi";
+import { MuiTelInput } from "mui-tel-input";
 import Typography from "@mui/material/Typography";
 import TicketSkeleton from "../TicketSkeleton/TicketSkeleton";
 import Modal from "@mui/material/Modal";
@@ -113,7 +114,7 @@ function ShopTicket() {
   const [citizen, setCitizen] = useState("UZ");
   const [value, setValue] = useState(0);
   const [gmail, setGmail] = useState();
-  const [phoneNum, setPhoneNum] = useState();
+  const [phoneNum, setPhoneNum] = useState("+998");
   const [middleName, setMiddleName] = useState();
   const [gender, setGender] = useState("");
   const [birthdatePic, setBirthdatePic] = useState(moment().format("DD.MM.YYYY"));
@@ -288,14 +289,14 @@ function ShopTicket() {
   useEffect(() => {
     if (bookingCreateSuc) {
       setLoader(false)
-      if(bookingCreateData.tr_id) {
+      if (bookingCreateData.tr_id) {
         localStorage.setItem("trId", bookingCreateData.tr_id);
         setTr_id(bookingCreateData.tr_id);
         handleChange(1, 1);
       }
       if (bookingCreateData.data && bookingCreateData.data.message) {
         setErrorMsg(bookingCreateData.data.message)
-      } 
+      }
     }
     if (bookingConfirmSuc) {
       setDisableOtp(false)
@@ -339,7 +340,7 @@ function ShopTicket() {
   }, [bookingCreateData, bookingConfirmData, paymentConfirmData, refreshData]);
 
   useEffect(() => {
-    if(refreshError) {
+    if (refreshError) {
       localStorage.removeItem("access", refreshData.access);
       localStorage.removeItem("refresh", refreshData.access);
     }
@@ -347,11 +348,11 @@ function ShopTicket() {
 
   useEffect(() => {
     if (flightInfoSuc) {
-      if(flightInfoData.data.search) {
+      if (flightInfoData.data.search) {
         setLoader(false)
         flightInfoData.data.flight.price && setTicketPrice(flightInfoData.data.flight.price.UZS.amount);
         setFlyData(flightInfoData.data.search)
-      }else if(flightInfoData.data.message) {
+      } else if (flightInfoData.data.message) {
         setErrorMsg(flightInfoData.data.message)
       }
 
@@ -370,7 +371,7 @@ function ShopTicket() {
   }
 
   useEffect(() => {
-    if(errorMsg) {
+    if (errorMsg) {
       dataError()
       setErrorMsg(false)
     }
@@ -390,7 +391,7 @@ function ShopTicket() {
     Intl.NumberFormat(lang, { style: "currency", currency }).format(number);
 
   const handleChange = (event, newValue) => {
-      setValue(newValue);
+    setValue(newValue);
   };
 
   const handlePasInputChange = (e) => {
@@ -401,58 +402,64 @@ function ShopTicket() {
     setPassportNum(`${formattedValue} ${formattedValue2}`);
   };
 
+  const checkPhoneInput = (e) => {
+    if (e.length < 12) {
+      setPhoneNum(e)
+    }
+  }
+
   return (
     <>
-     {flightInfoData?.data.search && 
-     <>
-      <Container className="ShopTicket">
-        <Grid
-          container
-          sx={{ justifyContent: "space-between", alignItems: "flex-start" }}
-        >
-          <Grid item lg={12}>
-            <div className="mb-[2%] ">
-              <div className="flex w-[100%]">
-                <h2 className="flex text-[16px] whitespace-nowrap items-center font-medium text-[#0064FA] cursor-pointer mr-[10%]" onClick={() => navigate('/')}> <img src={arrowLeft} alt="" /> Поиск билетов</h2>
-                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                  <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    aria-label="basic tabs example"
-                  >
-                    <Tab iconPosition="start" icon={tabIndex >= 0 ? <CalendarTick /> : <CalendarTick2 />} label={
-                      <span style={tabIndex >= 0 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Бронирование</span>
-                    } {...a11yProps(0)}  />
-                    <Tab iconPosition="start" icon={tabIndex >= 1 ? <Coin2 /> : <Coin />} label={
-                      <span style={tabIndex >= 1 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Оплата</span>
-                    } {...a11yProps(1)} />
-                    <Tab iconPosition="start" icon={tabIndex >= 2 ? <Bilet2 /> : <Bilet />} label={
-                      <span style={tabIndex >= 2 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Получение билета</span>
-                    } {...a11yProps(2)} />
-                  </Tabs>
-                </Box>
-              </div>
-              <TabPanel value={value} index={0}>
-                <form onSubmit={(e) => { bookingCreateFnc(e); setPaymentType("UZCARD/HUMO");}}>
-                  <div>
-                    <h2 className="text-[16px] font-semibold font-mono">Бронирование билета</h2>
-                    <div className="flex items-center">
-                      {flightInfoData && flightInfoData.data.search?.segments.map((item) => (
-                        <h1 className="font-bold text-[28px]">{item.from.name}</h1>
-                      ))}
-                      <img className="mx-[1%] cursor-pointer" src={arrowSwap} alt="" />
-                      {flightInfoData && flightInfoData.data.search?.segments.map(item => (
-                        <h1 className="font-bold text-[28px]">{item.to.name}</h1>
-                      ))}
-                    </div>
-                    <p className="text-[18px] font-normal text-[#222222] font-mono">
-                      {moment(flightInfoData?.data.flight?.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
-                      {moment(flightInfoData?.data.flight?.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
-                    </p>
+      {flightInfoData?.data.search &&
+        <>
+          <Container className="ShopTicket">
+            <Grid
+              container
+              sx={{ justifyContent: "space-between", alignItems: "flex-start" }}
+            >
+              <Grid item lg={12}>
+                <div className="mb-[2%] ">
+                  <div className="flex w-[100%]">
+                    <h2 className="flex text-[16px] whitespace-nowrap items-center font-medium text-[#0064FA] cursor-pointer mr-[10%]" onClick={() => navigate('/')}> <img src={arrowLeft} alt="" /> Поиск билетов</h2>
+                    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                      <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        aria-label="basic tabs example"
+                      >
+                        <Tab iconPosition="start" icon={tabIndex >= 0 ? <CalendarTick /> : <CalendarTick2 />} label={
+                          <span style={tabIndex >= 0 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Бронирование</span>
+                        } {...a11yProps(0)} />
+                        <Tab iconPosition="start" icon={tabIndex >= 1 ? <Coin2 /> : <Coin />} label={
+                          <span style={tabIndex >= 1 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Оплата</span>
+                        } {...a11yProps(1)} />
+                        <Tab iconPosition="start" icon={tabIndex >= 2 ? <Bilet2 /> : <Bilet />} label={
+                          <span style={tabIndex >= 2 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Получение билета</span>
+                        } {...a11yProps(2)} />
+                      </Tabs>
+                    </Box>
                   </div>
-                  
-                  <div className="border-[1px] p-[32px] rounded-lg border-[#CCCCCC] w-full mt-[2%]">
-                    {flightInfoData ? (
+                  <TabPanel value={value} index={0}>
+                    <form onSubmit={(e) => { bookingCreateFnc(e); setPaymentType("UZCARD/HUMO"); }}>
+                      <div>
+                        <h2 className="text-[16px] font-semibold font-mono">Бронирование билета</h2>
+                        <div className="flex items-center">
+                          {flightInfoData && flightInfoData.data.search?.segments.map((item) => (
+                            <h1 className="font-bold text-[28px]">{item.from.name}</h1>
+                          ))}
+                          <img className="mx-[1%] cursor-pointer" src={arrowSwap} alt="" />
+                          {flightInfoData && flightInfoData.data.search?.segments.map(item => (
+                            <h1 className="font-bold text-[28px]">{item.to.name}</h1>
+                          ))}
+                        </div>
+                        <p className="text-[18px] font-normal text-[#222222] font-mono">
+                          {moment(flightInfoData?.data.flight?.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                          {moment(flightInfoData?.data.flight?.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                        </p>
+                      </div>
+
+                      <div className="border-[1px] p-[32px] rounded-lg border-[#CCCCCC] w-full mt-[2%]">
+                        {flightInfoData ? (
                           <div className="box w-full flex">
                             <>
                               <div className="w-full relative">
@@ -460,7 +467,7 @@ function ShopTicket() {
                                   <div className="left w-full md:pr-5">
                                     <div className="top flex">
                                       <h2 className="flex w-full justify-between items-center log">
-                                          <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${flightInfoData?.data.flight.segments[0].provider.supplier.code}.png`} alt="" />
+                                        <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${flightInfoData?.data.flight.segments[0].provider.supplier.code}.png`} alt="" />
                                       </h2>
                                     </div>
 
@@ -643,203 +650,211 @@ function ShopTicket() {
                             </>
 
                           </div>
-                      )
-                      : flightInfoData && (
-                        <h2 style={{ textAlign: "center" }}>Chipta topilmadi</h2>
-                      )}
+                        )
+                          : flightInfoData && (
+                            <h2 style={{ textAlign: "center" }}>Chipta topilmadi</h2>
+                          )}
 
-                    {!flightInfoSuc && <TicketSkeleton loading={!flightInfoSuc} />}
-                  </div>
-
-                  <div className="border-[1px] border-[#CCCCCC] rounded-lg my-[1%] p-[32px] flex flex-col">
-                    <div>
-                      <h2 className="font-bold text-[24px]">Контактная информация</h2>
-                      <p className="font-normal text-[16px] text-[#AEAEAE] font-mono">
-                        На почту мы отправим электронный билет, на телефон мы
-                        позвоним, если будут изменения в рейсе или в случае других
-                        ситуаций
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-[20px] w-[70%] mt-[2%]">
-                      <label className="w-full" htmlFor="">
-                        <p>Электронная почта (E-mail)</p>
-                        <input
-                          className="border-[1px] rounded-lg p-[12px] h-[48px] w-[100%] mt-[8px]"
-                          onChange={(e) => setGmail(e.target.value)}
-                          type="email"
-                          placeholder="Электронная почта"
-                          required
-                          value={gmail}
-                        />
-                      </label>
-                      <label className="w-full" htmlFor="">
-                        <p>
-                          Telefon <span>*</span>
-                        </p>
-                        <input
-                          className="border-[1px] rounded-lg p-[12px] h-[48px] w-[100%] mt-[8px]"
-                          onChange={(e) => {
-                            let res = e.target.value
-                              .slice(0, 12);
-                            setPhoneNum(res)
-                          }}
-                          type="phone"
-                          placeholder=""
-                          defaultValue={+998}
-                          required
-                        />
-                      </label>
-                    </div>
-                  </div>
-                  <div className="border-[1px] border-[#CCCCCC] rounded-lg my-[1%] p-[32px]">
-                    <div>
-                      <h2 className="text-[24px] font-bold">Введите данные пассажиров</h2>
-                      <h1 className="font-bold text-[20px] my-[1%]">Пассажир 1 (12 лет и старше)</h1>
-                    </div>
-                    <div >
-                      <div className="flex gap-[20px] w-[62%]">
-                        <label className="w-full" htmlFor="">
-                          <p>Гражданство</p>
-                          <input
-                            required
-                            type="text"
-                            className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
-                            value={citizen}
-                            onChange={(e) => setCitizen(e.target.value)}
-                          />
-                        </label>
-                        <label className="w-full" htmlFor="">
-                          Отчество
-                          <input
-                            value={middleName}
-                            className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
-                            onChange={(e) => setMiddleName(e.target.value)}
-                            type="text"
-                            placeholder="Asadov"
-                            required
-                          />
-                        </label>
-                      </div>
-                      <div className="my-[1%] flex items-center  gap-[20px] w-[62%]">
-                        <label className="w-[100%]" htmlFor="">
-                          <p>Данные пасспорта или ID карты</p>
-                          <input
-                            className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
-                            onChange={(e) => handlePasInputChange(e)}
-                            type="text"
-                            value={passportNum}
-                            placeholder="AA 000000"
-                            required
-                          />
-                        </label>
-                        <label className="w-[100%]" htmlFor="">
-                          Срок действительности пасспорта
-                          <DatePicker
-                            required
-                            inputClass="border-[1px] rounded-lg p-[12px]  h-[48px] w-full mt-[8px]"
-                            style={{ width: "100%" }}
-                            value={passportExp}
-                            onChange={setPassportExp}
-                            format="DD/MM/YYYY"
-                          />
-                        </label>
+                        {!flightInfoSuc && <TicketSkeleton loading={!flightInfoSuc} />}
                       </div>
 
-                      <div className="my-[1%] flex items-center  gap-[20px] w-[62%]">
-                        <label className="w-full" htmlFor="">
-                          Имя
-                          <input
-                            value={name}
-                            className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
-                            onChange={(e) => setName(e.target.value)}
-                            type="text"
-                            placeholder="Asad"
-                            required
-                          />
-                        </label>
-                        <label className="w-full" htmlFor="">
-                          Фамилия
-                          <input
-                            required
-                            className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
-                            type="text"
-                            value={lastName}
-                            placeholder="Asadov"
-                            onChange={(e) => setLastName(e.target.value)}
-                          />
-                        </label>
-                      </div>
-                      <div className="my-[1%] flex items-center  gap-[20px] w-[62%]">
-                        <label className="w-[100%]" htmlFor="">
-                          Дата рождение
-                          <DatePicker
-                            required
-                            inputClass="border-[1px] rounded-lg p-[12px]  h-[48px] w-full mt-[8px]"
-                            style={{ width: "100%" }}
-                            value={birthdatePic}
-                            onChange={setBirthdatePic}
-                            format="DD/MM/YYYY"
-                          />
-                        </label>
-                        <label className="w-full" htmlFor="">
-                          Пол
-                          <FormControl sx={{ width: "100%", m: 1 }} size="small" 
-                          required
-                          >
-                            <InputLabel id="demo-select-small-label">
-                              Пол
-                            </InputLabel>
-                            <Select
-                              labelId="demo-select-small-label"
-                              id="demo-select-small"
-                              value={gender}
-                              label="Age"
-                              onChange={(e) => setGender(e.target.value)}
-                              sx={{
-                                borderRadius: "10px",
-                                padding: "0px !important",
-                                height: "100%",
-                                marginTop: "2px",
-                                width: "100%",
-                                ".css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input": {
-                                  border: "none !important",
-                                  padding: "15px 15px !important",
-                                },
-                                ".css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
-                                  borderColor: "#e5e7eb",
-                                  marginTop: "1px",
+                      <div className="border-[1px] border-[#CCCCCC] rounded-lg my-[1%] p-[32px] flex flex-col">
+                        <div>
+                          <h2 className="font-bold text-[24px]">Контактная информация</h2>
+                          <p className="font-normal text-[16px] text-[#AEAEAE] font-mono">
+                            На почту мы отправим электронный билет, на телефон мы
+                            позвоним, если будут изменения в рейсе или в случае других
+                            ситуаций
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-[20px] w-[70%] mt-[2%]">
+                          <label className="w-full" htmlFor="">
+                            <p>Электронная почта (E-mail)</p>
+                            <input
+                              className="border-[1px] rounded-lg p-[12px] h-[48px] w-[100%] mt-[8px]"
+                              onChange={(e) => setGmail(e.target.value)}
+                              type="email"
+                              placeholder="Электронная почта"
+                              required
+                              value={gmail}
+                            />
+                          </label>
+                          <label className="w-full" htmlFor="">
+                            <p>
+                              Telefon <span>*</span>
+                            </p>
+                            <MuiTelInput
+                              sx={{ width: "100%", }}
+                              value={phoneNum}
+                              onInput={(e) => {
+                                e = Math.max(0, parseInt(e.target.value))
+                                  .toString()
+                                  .slice(0, 12);
+                              }}
+                              onChange={(e) => {
+                                const res = e
+
+                                setPhoneNum(res);
+                              }}
+                              InputProps={{
+                                style: {
+                                  borderRadius: "10px",
                                 },
                               }}
-                            >
-                              <MenuItem value={"M"}>Mужской</MenuItem>
-                              <MenuItem value={"F"}>Женский</MenuItem>
-                            </Select>
-                          </FormControl>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items center justify-between border rounded-lg p-[32px]">
-                    <p className="font-bold text-[20px]">
-                      Стоимость:
-                      <span className="text-[#0064FA] ml-[6px]">
-                        {
-                          ticketPrice && currency(ticketPrice, 'UZS').replace("UZS", "")
-                            .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ") + " UZS"
-                        }
-                      </span>
-                    </p>
-                    <button
-                      type="submit"
-                      className="bg-[#0057BE] text-[16px] font-normal text-[#FFF] py-[8px] px-[25px] rounded-lg"
-                    >
-                      Продолжить
-                    </button>
-                   
-                  </div>
-                </form>
 
-                {/* <div className="bron" style={{ justifyContent: 'end' }}>
+                            />
+                          </label>
+                        </div>
+                      </div>
+                      <div className="border-[1px] border-[#CCCCCC] rounded-lg my-[1%] p-[32px]">
+                        <div>
+                          <h2 className="text-[24px] font-bold">Введите данные пассажиров</h2>
+                          <h1 className="font-bold text-[20px] my-[1%]">Пассажир 1 (12 лет и старше)</h1>
+                        </div>
+                        <div >
+                          <div className="flex gap-[20px] w-[62%]">
+                            <label className="w-full" htmlFor="">
+                              <p>Гражданство</p>
+                              <input
+                                required
+                                type="text"
+                                className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
+                                value={citizen}
+                                onChange={(e) => setCitizen(e.target.value)}
+                              />
+                            </label>
+                            <label className="w-full" htmlFor="">
+                              Отчество
+                              <input
+                                value={middleName}
+                                className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
+                                onChange={(e) => setMiddleName(e.target.value)}
+                                type="text"
+                                placeholder="Asadov"
+                                required
+                              />
+                            </label>
+                          </div>
+                          <div className="my-[1%] flex items-center  gap-[20px] w-[62%]">
+                            <label className="w-[100%]" htmlFor="">
+                              <p>Данные пасспорта или ID карты</p>
+                              <input
+                                className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
+                                onChange={(e) => handlePasInputChange(e)}
+                                type="text"
+                                value={passportNum}
+                                placeholder="AA 000000"
+                                required
+                              />
+                            </label>
+                            <label className="w-[100%]" htmlFor="">
+                              Срок действительности пасспорта
+                              <DatePicker
+                                required
+                                inputClass="border-[1px] rounded-lg p-[12px]  h-[48px] w-full mt-[8px]"
+                                style={{ width: "100%" }}
+                                value={passportExp}
+                                onChange={setPassportExp}
+                                format="DD/MM/YYYY"
+                              />
+                            </label>
+                          </div>
+
+                          <div className="my-[1%] flex items-center  gap-[20px] w-[62%]">
+                            <label className="w-full" htmlFor="">
+                              Имя
+                              <input
+                                value={name}
+                                className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
+                                onChange={(e) => setName(e.target.value)}
+                                type="text"
+                                placeholder="Asad"
+                                required
+                              />
+                            </label>
+                            <label className="w-full" htmlFor="">
+                              Фамилия
+                              <input
+                                required
+                                className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
+                                type="text"
+                                value={lastName}
+                                placeholder="Asadov"
+                                onChange={(e) => setLastName(e.target.value)}
+                              />
+                            </label>
+                          </div>
+                          <div className="my-[1%] flex items-center  gap-[20px] w-[62%]">
+                            <label className="w-[100%]" htmlFor="">
+                              Дата рождение
+                              <DatePicker
+                                required
+                                inputClass="border-[1px] rounded-lg p-[12px]  h-[48px] w-full mt-[8px]"
+                                style={{ width: "100%" }}
+                                value={birthdatePic}
+                                onChange={setBirthdatePic}
+                                format="DD/MM/YYYY"
+                              />
+                            </label>
+                            <label className="w-full" htmlFor="">
+                              Пол
+                              <FormControl sx={{ width: "100%", m: 1 }} size="small"
+                                required
+                              >
+                                <InputLabel id="demo-select-small-label">
+                                  Пол
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-select-small-label"
+                                  id="demo-select-small"
+                                  value={gender}
+                                  label="Age"
+                                  onChange={(e) => setGender(e.target.value)}
+                                  sx={{
+                                    borderRadius: "10px",
+                                    padding: "0px !important",
+                                    height: "100%",
+                                    marginTop: "2px",
+                                    width: "100%",
+                                    ".css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input": {
+                                      border: "none !important",
+                                      padding: "15px 15px !important",
+                                    },
+                                    ".css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
+                                      borderColor: "#e5e7eb",
+                                      marginTop: "1px",
+                                    },
+                                  }}
+                                >
+                                  <MenuItem value={"M"}>Mужской</MenuItem>
+                                  <MenuItem value={"F"}>Женский</MenuItem>
+                                </Select>
+                              </FormControl>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items center justify-between border rounded-lg p-[32px]">
+                        <p className="font-bold text-[20px]">
+                          Стоимость:
+                          <span className="text-[#0064FA] ml-[6px]">
+                            {
+                              ticketPrice && currency(ticketPrice, 'UZS').replace("UZS", "")
+                                .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ") + " UZS"
+                            }
+                          </span>
+                        </p>
+                        <button
+                          type="submit"
+                          className="bg-[#0057BE] text-[16px] font-normal text-[#FFF] py-[8px] px-[25px] rounded-lg"
+                        >
+                          Продолжить
+                        </button>
+
+                      </div>
+                    </form>
+
+                    {/* <div className="bron" style={{ justifyContent: 'end' }}>
 
                   <button
                     onClick={(e) => { bookingCreateFnc(e); setPaymentType("MTS") }}
@@ -848,169 +863,169 @@ function ShopTicket() {
                     оплатить российской картой
                   </button>
                 </div> */}
-              </TabPanel>
-              <TabPanel value={value} index={1}>
-                <form action="">
-                  <div>
-                    <h2 className="text-[16px] font-semibold ">Бронирование билета</h2>
-                    <div className="flex items-center">
-                      <h1 className="font-bold text-[28px]">Ташкент</h1>
-                      <img className="mx-[1%] cursor-pointer" src={arrowSwap} alt="" />
-                      <h1 className="font-bold text-[28px]">Париж</h1>
-                    </div>
-                    <p className="text-[18px] font-normal text-[#222222]">30 декабря,сб—16 января,вт,1 взрослый</p>
-                  </div>
-                  <div className="flex items-center justify-between border rounded-lg p-[32px] my-[2%]">
-                    <h1 className="font-[24px]">
-                      Детали маршрута
-                      <p className="text-[#AEAEAE] text-[16px] font-normal">Местное время отправления и прибытия</p>
-                    </h1>
-                    <p className="flex items-center text-[16px] font-normal text-[#AEAEAE] cursor-pointer">
-                      Развернуть
-                      <img className="ml-[7px] rotate-180" src={arrowUp} alt="" />
-                    </p>
-                  </div>
-                  <div className="border rounded-lg my-[1%] p-[32px]">
-                    <h1 className="text-[24px] mb-[1%]">
-                      Введите данные для оплаты
-                    </h1>
-                    <div className="bg-[#F7F7F7] py-[64px]  px-[24px] rounded-lg">
-                      <h1 className="text-[24px] mb-[1%]">Банковская карта</h1>
+                  </TabPanel>
+                  <TabPanel value={value} index={1}>
+                    <form action="">
                       <div>
-                        <div style={{ width: "50%", marginRight: "40px" }}>
-                          <label htmlFor="">
-                            <TextField
-                              fullWidth
-                              type="text"
-                              value={cardNum}
-                              label="Karta raqamingiz"
-                              id="fullWidth"
-                              InputProps={{
-                                style: {
-                                  borderRadius: "10px",
-                                  marginBottom: "20px",
-                                },
-                              }}
-                              onChange={(e) => {
-                                let res = e.target.value
-                                  .replace(/[^\dA-Z]/g, "")
-                                  .replace(/(.{4})/g, "$1 ")
-                                  .trim();
-                                res.length > 20 ? e.preventDefault() : setCardNum(res);
-                              }}
-                            />
-                          </label>
+                        <h2 className="text-[16px] font-semibold ">Бронирование билета</h2>
+                        <div className="flex items-center">
+                          <h1 className="font-bold text-[28px]">Ташкент</h1>
+                          <img className="mx-[1%] cursor-pointer" src={arrowSwap} alt="" />
+                          <h1 className="font-bold text-[28px]">Париж</h1>
                         </div>
-                        <div className="flex items-center ">
-                          <label className="w-[50%] mr-[20px]" htmlFor="">
-                            <TextField
-                              fullWidth
-                              type="text"
-                              value={cardExp}
-                              label="Amal qilish muddati"
-                              id="fullWidth"
-                              InputProps={{
-                                style: {
-                                  borderRadius: "10px",
-                                },
-                              }}
-                              onChange={(e) => {
-                                let res = e.target.value
-                                  .replace(/[^0-9]/g, "")
-                                  .replace(/^([2-9])$/g, "0$1")
-                                  .replace(/^(1{1})([3-9]{1})$/g, "0$1/$2")
-                                  .replace(/^([0-1]{1}[0-9]{1})([0-9]{1,2}).*/g, "$1/$2");
-                                setCardExp(res);
-                              }}
-                            />
-                          </label>
-                          <button onClick={(e) => confirmBooking(e)} type="submit" className="bg-[#0057BE] text-[16px] font-normal text-[#FFF] w-[40%] py-[16px] px-[25px]  rounded-lg">
-                            SMS kodni olish
-                          </button>
-                        </div>
-                        <div
-                          style={{ width: "50%", marginBottom: "30px" }}
-                          className="border p-[10px] rounded-lg "
-                        >
-                          <OTPInput
-                            value={OTP}
-                            onChange={setOTP}
-                            OTPLength={5}
-                            otpType="number"
-                            disabled={disableOtp}
-                            type="number"
-                          />
-                        </div>
+                        <p className="text-[18px] font-normal text-[#222222]">30 декабря,сб—16 января,вт,1 взрослый</p>
                       </div>
-                    </div>
-                    <p className="text-[18px] mt-[2%]">
-                      Данные паспорта и банковской карты под защитой!
-                    </p>
-                  </div>
-                  <div className="border rounded-lg p-[32px] my-[2%]">
-                    <h2 className="text-[24px]">Детали заказа</h2>
-                    <div className="flex items-center justify-between mt-[3%]">
-                      <h1 className="text-[20px]">
-                        Данные пассажиров
-                      </h1>
-                      <img className="rotate-[270deg] cursor-pointer" src={arrLeft} alt="" />
-                    </div>
-                    <div className="bg-[#F7F7F7] py-[8px]  px-[16px] rounded-lg mt-[1%]">
-                      <h1 className="text-[18px]">Контакты для связи</h1>
-                      <p className="text-[18px] font-normal">{phoneNum}, {gmail}</p>
-                    </div>
-                    <div className="mt-[1%]">
-                      <h1 className="text-[20px]">
-                        Asad Asadov
-                      </h1>
-                      {/* <p className="text-[18px] mt-[1%]">Дата рождение: {birthdatePic}</p> */}
-                      <p className="text-[18px]">Данные пасспорта или ID карты: {passportNum}</p>
-                    </div>
-                    <div className="border border-[#CCCCCC] my-[3%]">
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <h1 className="flex gap-[5px] text-[20px]"> <img className="rotate-[270deg]" src={airplane} alt="" />Ташкент - Париж</h1>
-                      <h2 className="flex gap-[5px] text-[20px] text-[#0064FA] cursor-pointer">
-                        {
-                          ticketPrice && currency(ticketPrice, 'UZS').replace("UZS", "")
-                            .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ") + " UZS"
-                        }
-                        <img className="rotate-[270deg]" src={arrLeft} alt="" />
-                      </h2>
-                    </div>
-                    <h1 className="text-[20px] mt-[1%]">{name} {lastName}</h1>
-                    <p className="text-[18px] ">Тариф: Бизнес</p>
-                    <p className="text-[18px] my-[1%] ">Базовый тариф: 25 000 000 UZS</p>
-                    <p className="text-[18px] my-[1%]">Налоги и сборы: 4 000 000 UZS</p>
-                    <p className="text-[18px] ">Сервисный сбор AVIA: 1 900 000 UZS</p>
-                  </div>
-                  <div className="flex items center justify-between border rounded-lg p-[32px]">
-                    <p className="font-bold text-[20px]">
-                      Итоговая стоимость:
-                      <span className="text-[#0064FA] ml-[6px]">
-                        29 487 942 UZS
-                      </span>
-                    </p>
-                    <button
-                      onClick={(e) => paymentConfirmFnc(e)}
-                      type="submit"
-                      className="bg-[#0057BE] text-[16px] font-normal text-[#FFF] py-[8px] px-[25px] rounded-lg"
-                    >
-                      Купить билет
-                    </button>
-                  </div>
-                </form>
-              </TabPanel>
-              <TabPanel value={value} index={2}>
-                </TabPanel>
-            
-            </div>
-          </Grid>
-        </Grid>
-      </Container >
-      <ToastContainer />
-     </>
-     }
+                      <div className="flex items-center justify-between border rounded-lg p-[32px] my-[2%]">
+                        <h1 className="font-[24px]">
+                          Детали маршрута
+                          <p className="text-[#AEAEAE] text-[16px] font-normal">Местное время отправления и прибытия</p>
+                        </h1>
+                        <p className="flex items-center text-[16px] font-normal text-[#AEAEAE] cursor-pointer">
+                          Развернуть
+                          <img className="ml-[7px] rotate-180" src={arrowUp} alt="" />
+                        </p>
+                      </div>
+                      <div className="border rounded-lg my-[1%] p-[32px]">
+                        <h1 className="text-[24px] mb-[1%]">
+                          Введите данные для оплаты
+                        </h1>
+                        <div className="bg-[#F7F7F7] py-[64px]  px-[24px] rounded-lg">
+                          <h1 className="text-[24px] mb-[1%]">Банковская карта</h1>
+                          <div>
+                            <div style={{ width: "50%", marginRight: "40px" }}>
+                              <label htmlFor="">
+                                <TextField
+                                  fullWidth
+                                  type="text"
+                                  value={cardNum}
+                                  label="Karta raqamingiz"
+                                  id="fullWidth"
+                                  InputProps={{
+                                    style: {
+                                      borderRadius: "10px",
+                                      marginBottom: "20px",
+                                    },
+                                  }}
+                                  onChange={(e) => {
+                                    let res = e.target.value
+                                      .replace(/[^\dA-Z]/g, "")
+                                      .replace(/(.{4})/g, "$1 ")
+                                      .trim();
+                                    res.length > 20 ? e.preventDefault() : setCardNum(res);
+                                  }}
+                                />
+                              </label>
+                            </div>
+                            <div className="flex items-center ">
+                              <label className="w-[50%] mr-[20px]" htmlFor="">
+                                <TextField
+                                  fullWidth
+                                  type="text"
+                                  value={cardExp}
+                                  label="Amal qilish muddati"
+                                  id="fullWidth"
+                                  InputProps={{
+                                    style: {
+                                      borderRadius: "10px",
+                                    },
+                                  }}
+                                  onChange={(e) => {
+                                    let res = e.target.value
+                                      .replace(/[^0-9]/g, "")
+                                      .replace(/^([2-9])$/g, "0$1")
+                                      .replace(/^(1{1})([3-9]{1})$/g, "0$1/$2")
+                                      .replace(/^([0-1]{1}[0-9]{1})([0-9]{1,2}).*/g, "$1/$2");
+                                    setCardExp(res);
+                                  }}
+                                />
+                              </label>
+                              <button onClick={(e) => confirmBooking(e)} type="submit" className="bg-[#0057BE] text-[16px] font-normal text-[#FFF] w-[40%] py-[16px] px-[25px]  rounded-lg">
+                                SMS kodni olish
+                              </button>
+                            </div>
+                            <div
+                              style={{ width: "50%", marginBottom: "30px" }}
+                              className="border p-[10px] rounded-lg "
+                            >
+                              <OTPInput
+                                value={OTP}
+                                onChange={setOTP}
+                                OTPLength={5}
+                                otpType="number"
+                                disabled={disableOtp}
+                                type="number"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <p className="text-[18px] mt-[2%]">
+                          Данные паспорта и банковской карты под защитой!
+                        </p>
+                      </div>
+                      <div className="border rounded-lg p-[32px] my-[2%]">
+                        <h2 className="text-[24px]">Детали заказа</h2>
+                        <div className="flex items-center justify-between mt-[3%]">
+                          <h1 className="text-[20px]">
+                            Данные пассажиров
+                          </h1>
+                          <img className="rotate-[270deg] cursor-pointer" src={arrLeft} alt="" />
+                        </div>
+                        <div className="bg-[#F7F7F7] py-[8px]  px-[16px] rounded-lg mt-[1%]">
+                          <h1 className="text-[18px]">Контакты для связи</h1>
+                          <p className="text-[18px] font-normal">{phoneNum}, {gmail}</p>
+                        </div>
+                        <div className="mt-[1%]">
+                          <h1 className="text-[20px]">
+                            Asad Asadov
+                          </h1>
+                          {/* <p className="text-[18px] mt-[1%]">Дата рождение: {birthdatePic}</p> */}
+                          <p className="text-[18px]">Данные пасспорта или ID карты: {passportNum}</p>
+                        </div>
+                        <div className="border border-[#CCCCCC] my-[3%]">
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <h1 className="flex gap-[5px] text-[20px]"> <img className="rotate-[270deg]" src={airplane} alt="" />Ташкент - Париж</h1>
+                          <h2 className="flex gap-[5px] text-[20px] text-[#0064FA] cursor-pointer">
+                            {
+                              ticketPrice && currency(ticketPrice, 'UZS').replace("UZS", "")
+                                .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ") + " UZS"
+                            }
+                            <img className="rotate-[270deg]" src={arrLeft} alt="" />
+                          </h2>
+                        </div>
+                        <h1 className="text-[20px] mt-[1%]">{name} {lastName}</h1>
+                        <p className="text-[18px] ">Тариф: Бизнес</p>
+                        <p className="text-[18px] my-[1%] ">Базовый тариф: 25 000 000 UZS</p>
+                        <p className="text-[18px] my-[1%]">Налоги и сборы: 4 000 000 UZS</p>
+                        <p className="text-[18px] ">Сервисный сбор AVIA: 1 900 000 UZS</p>
+                      </div>
+                      <div className="flex items center justify-between border rounded-lg p-[32px]">
+                        <p className="font-bold text-[20px]">
+                          Итоговая стоимость:
+                          <span className="text-[#0064FA] ml-[6px]">
+                            29 487 942 UZS
+                          </span>
+                        </p>
+                        <button
+                          onClick={(e) => paymentConfirmFnc(e)}
+                          type="submit"
+                          className="bg-[#0057BE] text-[16px] font-normal text-[#FFF] py-[8px] px-[25px] rounded-lg"
+                        >
+                          Купить билет
+                        </button>
+                      </div>
+                    </form>
+                  </TabPanel>
+                  <TabPanel value={value} index={2}>
+                  </TabPanel>
+
+                </div>
+              </Grid>
+            </Grid>
+          </Container >
+          <ToastContainer />
+        </>
+      }
 
       {
         !loggedIn && (
