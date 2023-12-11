@@ -106,8 +106,7 @@ function ShopTicket() {
     { data: paymentConfirmData, isSuccess: paymentConfirmSuc },
   ] = usePaymentConfirmMutation();
 
-  const [flightInfo, { data: flightInfoData, isSuccess: flightInfoSuc, error: flightInfoError }] =
-    useFlightInfoMutation();
+  const [flightInfo, { data: flightInfoData, isSuccess: flightInfoSuc, error: flightInfoError }] = useFlightInfoMutation();
 
   const [name, setName] = useState();
   const [lastName, setLastName] = useState();
@@ -294,7 +293,12 @@ function ShopTicket() {
           const getAccessData = {
             refresh: localStorage.getItem("refresh"),
           };
-
+          refresh(getAccessData);
+        }
+        if (flightInfoError && flightInfoError.status == 'FETCH_ERROR') {
+          const getAccessData = {
+            refresh: localStorage.getItem("refresh"),
+          };
           refresh(getAccessData);
         }
       }
@@ -394,7 +398,7 @@ function ShopTicket() {
   };
 
   useEffect(() => {
-    console.log(tabIndex);
+    // console.log(tabIndex);
   }, [tabIndex])
 
   const handlePasInputChange = (e) => {
