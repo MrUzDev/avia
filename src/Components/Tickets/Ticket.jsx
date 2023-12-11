@@ -52,8 +52,9 @@ function Ticket(props) {
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
 
 
-  const toShoppingTicket = (id, price) => {
+  const toShoppingTicket = (id, price, item) => {
     if (id) {
+      console.log(item);
       navigate(`/order/${id}`);
       window.scrollTo(0, 0);
       dispatch(setTicketId(id));
@@ -340,7 +341,7 @@ function Ticket(props) {
                       
                           <button
                             className="bgBlue mt-4"
-                            onClick={() => toShoppingTicket(item.id, item.price.UZS.amount)}
+                            onClick={() => toShoppingTicket(item.id, item.price.UZS.amount, item)}
                           >
                             купить
                           </button>
