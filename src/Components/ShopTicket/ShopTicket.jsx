@@ -29,29 +29,30 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import DatePicker from "react-multi-date-picker";
 import moment from "moment";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import arrowLeft from "../../Assets/icons/arrow-left.svg"
-import arrowSwap from "../../Assets/icons/arrow-swap-horizontal — black.svg"
-import airplane from "../../Assets/icons/airplane.svg"
-import arrowUp from "../../Assets/icons/arrow-up.png"
-import arrLeft from "../../Assets/icons/arrow-leftBalck.svg"
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import lineReys from "../../Assets/icons/Rectangle 40.svg"
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import arrowLeft from "../../Assets/icons/arrow-left.svg";
+import arrowSwap from "../../Assets/icons/arrow-swap-horizontal — black.svg";
+import airplane from "../../Assets/icons/airplane.svg";
+import arrowUp from "../../Assets/icons/arrow-up.png";
+import arrLeft from "../../Assets/icons/arrow-leftBalck.svg";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import lineReys from "../../Assets/icons/Rectangle 40.svg";
 import jwt_decode from "jwt-decode";
 import { useRegisterApiMutation } from "../../RTKQueryApi/AllApi";
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import { ReactComponent as Bilet } from '../../Assets/icons/biletLine.svg'
-import { ReactComponent as Bilet2 } from '../../Assets/icons/biletLine2.svg'
-import { ReactComponent as Coin } from '../../Assets/icons/coinLine.svg'
-import { ReactComponent as Coin2 } from '../../Assets/icons/coinLine2.svg'
-import { ReactComponent as CalendarTick } from '../../Assets/icons/calendar-tick.svg'
-import { ReactComponent as CalendarTick2 } from '../../Assets/icons/calendar-tick2.svg'
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { ReactComponent as Bilet } from "../../Assets/icons/biletLine.svg";
+import { ReactComponent as Bilet2 } from "../../Assets/icons/biletLine2.svg";
+import { ReactComponent as Coin } from "../../Assets/icons/coinLine.svg";
+import { ReactComponent as Coin2 } from "../../Assets/icons/coinLine2.svg";
+import { ReactComponent as CalendarTick } from "../../Assets/icons/calendar-tick.svg";
+import { ReactComponent as CalendarTick2 } from "../../Assets/icons/calendar-tick2.svg";
 import { Email } from "@mui/icons-material";
 import "../Tickets/Ticket.css";
-
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
   return (
@@ -83,7 +84,6 @@ function a11yProps(index) {
 }
 
 function ShopTicket() {
-
   const [
     bookingCreate,
     {
@@ -99,15 +99,20 @@ function ShopTicket() {
     { data: bookingConfirmData, isSuccess: bookingConfirmSuc },
   ] = useBookingConfirmMutation();
 
-  const [refresh, { data: refreshData, isSuccess: refreshSuc, isError: refreshError }] =
-    useRefreshMutation();
+  const [
+    refresh,
+    { data: refreshData, isSuccess: refreshSuc, isError: refreshError },
+  ] = useRefreshMutation();
 
   const [
     paymentConfirm,
     { data: paymentConfirmData, isSuccess: paymentConfirmSuc },
   ] = usePaymentConfirmMutation();
 
-  const [flightInfo, { data: flightInfoData, isSuccess: flightInfoSuc, error: flightInfoError }] = useFlightInfoMutation();
+  const [
+    flightInfo,
+    { data: flightInfoData, isSuccess: flightInfoSuc, error: flightInfoError },
+  ] = useFlightInfoMutation();
 
   const [name, setName] = useState();
   const [lastName, setLastName] = useState();
@@ -117,15 +122,17 @@ function ShopTicket() {
   const [phoneNum, setPhoneNum] = useState("+998");
   const [middleName, setMiddleName] = useState();
   const [gender, setGender] = useState("");
-  const [birthdatePic, setBirthdatePic] = useState(moment().format("DD.MM.YYYY"));
+  const [birthdatePic, setBirthdatePic] = useState(
+    moment().format("DD.MM.YYYY")
+  );
   const [passportNum, setPassportNum] = useState();
   const [passportExp, setPassportExp] = useState(moment().format("DD.MM.YYYY"));
   const [confirmModal, setConfirmModal] = useState(false);
   const [cardNum, setCardNum] = useState();
   const [cardExp, setCardExp] = useState();
-  const [flyData, setFlyData] = useState([])
+  const [flyData, setFlyData] = useState([]);
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
-  const [ticketDetail, setTicketDetail] = useState([])
+  const [ticketDetail, setTicketDetail] = useState([]);
   const [disableOtp, setDisableOtp] = useState(true);
 
   const [timer, setTimer] = useState(90);
@@ -133,22 +140,25 @@ function ShopTicket() {
   const [otp_token, setOtp_token] = useState();
   const [tr_id, setTr_id] = useState();
   const [loader, setLoader] = useState(true);
-  const [ticketPrice, setTicketPrice] = useState(0)
-  const [paymentType, setPaymentType] = useState()
-  const [tabIndex, setTabIndex] = useState(0)
-  const [movePay, setMovePay] = useState(false)
-  const [errorMsg, setErrorMsg] = useState(false)
+  const [ticketPrice, setTicketPrice] = useState(0);
+  const [paymentType, setPaymentType] = useState();
+  const [tabIndex, setTabIndex] = useState(0);
+  const [movePay, setMovePay] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(false);
+  const [doxType, setDoxType] = useState('P')
 
   const loggedIn = useSelector((state) => state.loginSlice.loggedIn);
 
   const { setOpen, open, loginModal, setLoginModal } = useContext(Contexts);
   const params = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleOpen = () => setOpen(true);
 
-  const clientId = "428493911231-e8ipsql0crd7loti8t96cun9u397valg.apps.googleusercontent.com";
+  const clientId =
+    "428493911231-e8ipsql0crd7loti8t96cun9u397valg.apps.googleusercontent.com";
 
-  const [registerApi, { data: registerApiData, isSuccess: registerApiSuc }] = useRegisterApiMutation()
+  const [registerApi, { data: registerApiData, isSuccess: registerApiSuc }] =
+    useRegisterApiMutation();
 
   const style = {
     position: "absolute",
@@ -168,23 +178,32 @@ function ShopTicket() {
   useEffect(() => {
     try {
       if (params.id) {
-        setLoader(true)
+        setLoader(true);
         const flighId = {
           lang: "ru",
           tid: params.id,
         };
 
-        flightInfo(flighId)
+        flightInfo(flighId);
       }
-    } catch (error) { }
+    } catch (error) {}
   }, [params.id, registerApiData]);
-
 
   const bookingCreateFnc = (e) => {
     e.preventDefault();
     setLoader(true);
 
-    if (birthdatePic && passportExp && name && phoneNum && lastName && passportNum && gmail && gender && citizen) {
+    if (
+      birthdatePic &&
+      passportExp &&
+      name &&
+      phoneNum &&
+      lastName &&
+      passportNum &&
+      gmail &&
+      gender &&
+      citizen
+    ) {
       const day =
         birthdatePic.day && birthdatePic.day > 9
           ? String(birthdatePic.day)
@@ -212,7 +231,7 @@ function ShopTicket() {
           lang: "ru",
           tid: params.id,
           client_email: gmail,
-          client_phone: "+" + phoneNum,
+          client_phone: phoneNum,
           payer_name: name,
           passengers: [
             {
@@ -221,12 +240,12 @@ function ShopTicket() {
               middlename: middleName,
               age: "adt",
               birthdate: birthdate,
-              doctype: "P",
-              docnum: passportNum.replace(' ', ''),
+              doctype: doxType,
+              docnum: passportNum.replace(/ /g, ""),
               docexp: birthdatePass,
               gender: gender,
               citizen: citizen,
-              phone: "+" + phoneNum,
+              phone: phoneNum.replace(/ /g, ""),
               email: gmail,
               send_email: 1,
             },
@@ -237,30 +256,32 @@ function ShopTicket() {
         };
 
         bookingCreate(bookingCreatee);
-      }
-      catch (error) { }
+      } catch (error) {}
     } else {
-      dataError()
+      dataError();
     }
-
   };
 
   useEffect(() => {
-    if (bookingCreateErr && bookingCreateErr.status === 401 || flightInfoError && flightInfoError.status === 401) {
-      setOpen(true)
+    if (
+      (bookingCreateErr && bookingCreateErr.status === 401) ||
+      (flightInfoError && flightInfoError.status === 401)
+    ) {
+      setOpen(true);
     }
-  }, [bookingCreateErr, flightInfoError])
+  }, [bookingCreateErr, flightInfoError]);
 
   useEffect(() => {
-    if (!localStorage.getItem('access')) {
-      setOpen(true)
-    } if (loginModal) {
-      setOpen(false)
+    if (!localStorage.getItem("access")) {
+      setOpen(true);
     }
-  }, [open, loginModal])
+    if (loginModal) {
+      setOpen(false);
+    }
+  }, [open, loginModal]);
 
   const confirmBooking = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const ChangeCardExp = cardExp.split("/").reverse("").join("");
     const conBookingg = {
       transaction_type: paymentType,
@@ -285,24 +306,24 @@ function ShopTicket() {
     paymentConfirm(paymentConff);
   };
 
-
   useEffect(() => {
     if (bookingCreateSuc) {
-      setLoader(false)
+      setLoader(false);
       if (bookingCreateData.tr_id) {
         localStorage.setItem("trId", bookingCreateData.tr_id);
         setTr_id(bookingCreateData.tr_id);
         handleChange(1, 1);
       }
       if (bookingCreateData.data && bookingCreateData.data.message) {
-        setErrorMsg(bookingCreateData.data.message)
+        setErrorMsg(bookingCreateData.data.message);
       }
     }
     if (bookingConfirmSuc) {
-      setDisableOtp(false)
+      setDisableOtp(false);
       if (paymentType == "MTS") {
         if (bookingConfirmData.result) {
-          window.location.href = bookingConfirmData.result.payment.debit.form_url
+          window.location.href =
+            bookingConfirmData.result.payment.debit.form_url;
         }
       } else {
         const confirmModalContainer = document.querySelector(
@@ -335,7 +356,7 @@ function ShopTicket() {
     }
     if (refreshSuc) {
       localStorage.setItem("access", refreshData.access);
-      window.location.reload()
+      window.location.reload();
     }
   }, [bookingCreateData, bookingConfirmData, paymentConfirmData, refreshData]);
 
@@ -344,48 +365,47 @@ function ShopTicket() {
       localStorage.removeItem("access", refreshData.access);
       localStorage.removeItem("refresh", refreshData.access);
     }
-  }, [refreshError])
+  }, [refreshError]);
 
   useEffect(() => {
     if (flightInfoSuc) {
+      console.log(flightInfoData);
       if (flightInfoData.data.search) {
-        setLoader(false)
-        flightInfoData.data.flight.price && setTicketPrice(flightInfoData.data.flight.price.UZS.amount);
-        setFlyData(flightInfoData.data.search)
+        setLoader(false);
+        flightInfoData.data.flight.price &&
+          setTicketPrice(flightInfoData.data.flight.price.UZS.amount);
+        setFlyData(flightInfoData.data.search);
       } else if (flightInfoData.data.message) {
-        setErrorMsg(flightInfoData.data.message)
+        setErrorMsg(flightInfoData.data.message);
       }
-
     }
-  }, [flightInfoSuc])
+  }, [flightInfoSuc]);
 
   const login = (response) => {
     console.log(response);
-    var token = jwt_decode(response.credential)
+    var token = jwt_decode(response.credential);
     const registerData = {
       email: token.email,
       token: response.credential,
-      type: "web"
-    }
-    registerApi(registerData)
-  }
+      type: "web",
+    };
+    registerApi(registerData);
+  };
 
   useEffect(() => {
     if (errorMsg) {
-      dataError()
-      setErrorMsg(false)
+      dataError();
+      setErrorMsg(false);
     }
-  }, [errorMsg])
-
+  }, [errorMsg]);
 
   React.useEffect(() => {
     if (registerApiSuc) {
-      localStorage.setItem('access', registerApiData.jwt_token.access)
-      localStorage.setItem('refresh', registerApiData.jwt_token.refresh)
-      window.location.reload()
+      localStorage.setItem("access", registerApiData.jwt_token.access);
+      localStorage.setItem("refresh", registerApiData.jwt_token.refresh);
+      window.location.reload();
     }
-  }, [registerApiData])
-
+  }, [registerApiData]);
 
   const currency = (number, currency, lang = undefined) =>
     Intl.NumberFormat(lang, { style: "currency", currency }).format(number);
@@ -395,22 +415,22 @@ function ShopTicket() {
   };
 
   const handlePasInputChange = (e) => {
-    const inputValue = e.target.value.toUpperCase()
-    const cleanedValue = inputValue.replace(/[^A-Z0-9]/g, '').substring(0, 9);
-    const formattedValue = cleanedValue.slice(0, 2).replace(/[^a-zA-Z]/g, '')
-    const formattedValue2 = cleanedValue.slice(2).replace(/[^0-9]/g, '')
+    const inputValue = e.target.value.toUpperCase();
+    const cleanedValue = inputValue.replace(/[^A-Z0-9]/g, "").substring(0, 9);
+    const formattedValue = cleanedValue.slice(0, 2).replace(/[^a-zA-Z]/g, "");
+    const formattedValue2 = cleanedValue.slice(2).replace(/[^0-9]/g, "");
     setPassportNum(`${formattedValue} ${formattedValue2}`);
   };
 
   const checkPhoneInput = (e) => {
     if (e.length < 12) {
-      setPhoneNum(e)
+      setPhoneNum(e);
     }
-  }
+  };
 
   return (
     <>
-      {flightInfoData?.data.search &&
+      {flightInfoData?.data.search && (
         <>
           <Container className="ShopTicket">
             <Grid
@@ -420,41 +440,114 @@ function ShopTicket() {
               <Grid item lg={12}>
                 <div className="mb-[2%] ">
                   <div className="flex w-[100%]">
-                    <h2 className="flex text-[16px] whitespace-nowrap items-center font-medium text-[#0064FA] cursor-pointer mr-[10%]" onClick={() => navigate('/')}> <img src={arrowLeft} alt="" /> Поиск билетов</h2>
+                    <h2
+                      className="flex text-[16px] whitespace-nowrap items-center font-medium text-[#0064FA] cursor-pointer mr-[10%]"
+                      onClick={() => navigate("/")}
+                    >
+                      {" "}
+                      <img src={arrowLeft} alt="" /> Поиск билетов
+                    </h2>
                     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                       <Tabs
                         value={value}
                         onChange={handleChange}
                         aria-label="basic tabs example"
                       >
-                        <Tab iconPosition="start" icon={tabIndex >= 0 ? <CalendarTick /> : <CalendarTick2 />} label={
-                          <span className="hidden md:block" style={tabIndex >= 0 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Бронирование</span>
-                        } {...a11yProps(0)} />
-                        <Tab iconPosition="start" icon={tabIndex >= 1 ? <Coin2 /> : <Coin />} label={
-                          <span className="hidden md:block" style={tabIndex >= 1 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Оплата</span>
-                        } {...a11yProps(1)} />
-                        <Tab iconPosition="start" icon={tabIndex >= 2 ? <Bilet2 /> : <Bilet />} label={
-                          <span className="hidden md:block" style={tabIndex >= 2 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Получение билета</span>
-                        } {...a11yProps(2)} />
+                        <Tab
+                          iconPosition="start"
+                          icon={
+                            tabIndex >= 0 ? <CalendarTick /> : <CalendarTick2 />
+                          }
+                          label={
+                            <span
+                              style={
+                                tabIndex >= 0
+                                  ? { color: "#0063FA" }
+                                  : { color: "#AEAEAE" }
+                              }
+                            >
+                              Бронирование
+                            </span>
+                          }
+                          {...a11yProps(0)}
+                        />
+                        <Tab
+                          iconPosition="start"
+                          icon={tabIndex >= 1 ? <Coin2 /> : <Coin />}
+                          label={
+                            <span
+                              style={
+                                tabIndex >= 1
+                                  ? { color: "#0063FA" }
+                                  : { color: "#AEAEAE" }
+                              }
+                            >
+                              Оплата
+                            </span>
+                          }
+                          {...a11yProps(1)}
+                        />
+                        <Tab
+                          iconPosition="start"
+                          icon={tabIndex >= 2 ? <Bilet2 /> : <Bilet />}
+                          label={
+                            <span
+                              style={
+                                tabIndex >= 2
+                                  ? { color: "#0063FA" }
+                                  : { color: "#AEAEAE" }
+                              }
+                            >
+                              Получение билета
+                            </span>
+                          }
+                          {...a11yProps(2)}
+                        />
                       </Tabs>
                     </Box>
                   </div>
                   <TabPanel value={value} index={0}>
-                    <form onSubmit={(e) => { bookingCreateFnc(e); setPaymentType("UZCARD/HUMO"); }}>
+                    <form
+                      onSubmit={(e) => {
+                        bookingCreateFnc(e);
+                        setPaymentType("UZCARD/HUMO");
+                      }}
+                    >
                       <div>
-                        <h2 className="text-[16px] font-semibold font-mono">Бронирование билета</h2>
+                        <h2 className="text-[16px] font-semibold font-mono">
+                          Бронирование билета
+                        </h2>
                         <div className="flex items-center">
-                          {flightInfoData && flightInfoData.data.search?.segments.map((item) => (
-                            <h1 className="font-bold text-[28px]">{item.from.name}</h1>
-                          ))}
-                          <img className="mx-[1%] cursor-pointer" src={arrowSwap} alt="" />
-                          {flightInfoData && flightInfoData.data.search?.segments.map(item => (
-                            <h1 className="font-bold text-[28px]">{item.to.name}</h1>
-                          ))}
+                          {flightInfoData &&
+                            flightInfoData.data.search?.segments.map((item) => (
+                              <h1 className="font-bold text-[28px]">
+                                {item.from.name}
+                              </h1>
+                            ))}
+                          <img
+                            className="mx-[1%] cursor-pointer"
+                            src={arrowSwap}
+                            alt=""
+                          />
+                          {flightInfoData &&
+                            flightInfoData.data.search?.segments.map((item) => (
+                              <h1 className="font-bold text-[28px]">
+                                {item.to.name}
+                              </h1>
+                            ))}
                         </div>
                         <p className="text-[18px] font-normal text-[#222222] font-mono">
-                          {moment(flightInfoData?.data.flight?.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
-                          {moment(flightInfoData?.data.flight?.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                          {moment(
+                            flightInfoData?.data.flight?.segments[0].arr.date,
+                            "DD.MM.YYYY"
+                          ).format("DD MMMM")}
+                          ,
+                          {moment(
+                            flightInfoData?.data.flight?.segments[0].arr.date,
+                            "DD.MM.YYYY"
+                          )
+                            .format(" dddd")
+                            .slice(0, 4)}
                         </p>
                       </div>
 
@@ -467,51 +560,120 @@ function ShopTicket() {
                                   <div className="left w-full md:pr-5">
                                     <div className="top flex">
                                       <h2 className="flex w-full justify-between items-center log">
-                                        <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${flightInfoData?.data.flight.segments[0].provider.supplier.code}.png`} alt="" />
+                                        <img
+                                          className="w-10 rounded-full"
+                                          src={`https://mpics.avs.io/al_square/240/240/${flightInfoData?.data.flight.segments[0].provider.supplier.code}.png`}
+                                          alt=""
+                                        />
                                       </h2>
                                     </div>
 
                                     <div className="bottom flex md:flex-row flex-col  md:items-center md:justify-between">
                                       <div className="dataL">
                                         <h2 className="font-mono text-[0.675rem] md:text-lg">
-                                          {flightInfoData?.data.flight.segments[0].dep.time}
+                                          {
+                                            flightInfoData?.data.flight
+                                              .segments[0].dep.time
+                                          }
                                         </h2>
 
                                         <p className="font-mono text-[0.675rem] md:text-lg">
-                                          {moment(flightInfoData?.data.flight.segments[0].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
-                                          {moment(flightInfoData?.data.flight.segments[0].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                                          {moment(
+                                            flightInfoData?.data.flight
+                                              .segments[0].arr.date,
+                                            "DD.MM.YYYY"
+                                          ).format("DD MMMM")}
+                                          ,
+                                          {moment(
+                                            flightInfoData?.data.flight
+                                              .segments[0].arr.date,
+                                            "DD.MM.YYYY"
+                                          )
+                                            .format(" dddd")
+                                            .slice(0, 4)}
                                         </p>
-                                        <p className="font-mono text-[0.675rem] md:text-lg"> {flightInfoData?.data.flight.segments[0].dep.city.title} ({flightInfoData?.data.flight.segments[0].dep.city.code})</p>
-
+                                        <p className="font-mono text-[0.675rem] md:text-lg">
+                                          {" "}
+                                          {
+                                            flightInfoData?.data.flight
+                                              .segments[0].dep.city.title
+                                          }{" "}
+                                          (
+                                          {
+                                            flightInfoData?.data.flight
+                                              .segments[0].dep.city.code
+                                          }
+                                          )
+                                        </p>
                                       </div>
                                       <div className="my-[5%]">
                                         <div className="flex justify-center">
                                           <p className="font-mono text-[0.675rem] md:text-lg">
-                                            {moment.utc().startOf('day').add(flightInfoData?.data.flight.duration, 'minutes').format('hh ч mm мин')}
+                                            {moment
+                                              .utc()
+                                              .startOf("day")
+                                              .add(
+                                                flightInfoData?.data.flight
+                                                  .duration,
+                                                "minutes"
+                                              )
+                                              .format("hh ч mm мин")}
                                           </p>
                                         </div>
                                         <div className="map w-full justify-between ">
                                           <div className="from">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <svg
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="24"
+                                              height="24"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                            >
                                               <g clip-path="url(#clip0_865_2363)">
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
+                                                <path
+                                                  fill-rule="evenodd"
+                                                  clip-rule="evenodd"
+                                                  d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z"
+                                                  fill="#AEAEAE"
+                                                />
                                               </g>
                                               <defs>
                                                 <clipPath id="clip0_865_2363">
-                                                  <rect width="24" height="24" rx="4" fill="white" />
+                                                  <rect
+                                                    width="24"
+                                                    height="24"
+                                                    rx="4"
+                                                    fill="white"
+                                                  />
                                                 </clipPath>
                                               </defs>
                                             </svg>
                                           </div>
 
                                           <div className="to">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <svg
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="24"
+                                              height="24"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                            >
                                               <g clip-path="url(#clip0_865_2363)">
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
+                                                <path
+                                                  fill-rule="evenodd"
+                                                  clip-rule="evenodd"
+                                                  d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z"
+                                                  fill="#AEAEAE"
+                                                />
                                               </g>
                                               <defs>
                                                 <clipPath id="clip0_865_2363">
-                                                  <rect width="24" height="24" rx="4" fill="white" />
+                                                  <rect
+                                                    width="24"
+                                                    height="24"
+                                                    rx="4"
+                                                    fill="white"
+                                                  />
                                                 </clipPath>
                                               </defs>
                                             </svg>
@@ -526,144 +688,365 @@ function ShopTicket() {
                                           </div>
                                         </div>
                                         <div className="namCity flex items-center justify-between mt-3">
-                                          <p className="font-mono">{flightInfoData?.data.flight.segments[0].dep.city.code}</p>
-                                          <p className="font-mono">{flightInfoData?.data.flight.segments[flightInfoData?.data.flight.segments.length - 1].arr.city.code}</p>
+                                          <p className="font-mono">
+                                            {
+                                              flightInfoData?.data.flight
+                                                .segments[0].dep.city.code
+                                            }
+                                          </p>
+                                          <p className="font-mono">
+                                            {
+                                              flightInfoData?.data.flight
+                                                .segments[
+                                                flightInfoData?.data.flight
+                                                  .segments.length - 1
+                                              ].arr.city.code
+                                            }
+                                          </p>
                                         </div>
                                       </div>
                                       <div className="dataR">
                                         <h2 className="font-mono text-[0.675rem] md:text-lg">
-                                          {flightInfoData?.data.flight.segments[flightInfoData?.data.flight.segments.length - 1].arr.time}
+                                          {
+                                            flightInfoData?.data.flight
+                                              .segments[
+                                              flightInfoData?.data.flight
+                                                .segments.length - 1
+                                            ].arr.time
+                                          }
                                         </h2>
                                         <p className="font-mono text-[0.675rem] md:text-lg">
-                                          {moment(flightInfoData?.data.flight.segments[flightInfoData?.data.flight.segments.length - 1].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
-                                          {moment(flightInfoData?.data.flight.segments[flightInfoData?.data.flight.segments.length - 1].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                                          {moment(
+                                            flightInfoData?.data.flight
+                                              .segments[
+                                              flightInfoData?.data.flight
+                                                .segments.length - 1
+                                            ].arr.date,
+                                            "DD.MM.YYYY"
+                                          ).format("DD MMMM")}
+                                          ,
+                                          {moment(
+                                            flightInfoData?.data.flight
+                                              .segments[
+                                              flightInfoData?.data.flight
+                                                .segments.length - 1
+                                            ].arr.date,
+                                            "DD.MM.YYYY"
+                                          )
+                                            .format(" dddd")
+                                            .slice(0, 4)}
                                         </p>
-                                        <p className="font-mono text-[0.675rem] md:text-lg"> {flightInfoData?.data.flight.segments[flightInfoData?.data.flight.segments.length - 1].arr.city.title} ({flightInfoData?.data.flight.segments[flightInfoData?.data.flight.segments.length - 1].arr.city.code})</p>
+                                        <p className="font-mono text-[0.675rem] md:text-lg">
+                                          {" "}
+                                          {
+                                            flightInfoData?.data.flight
+                                              .segments[
+                                              flightInfoData?.data.flight
+                                                .segments.length - 1
+                                            ].arr.city.title
+                                          }{" "}
+                                          (
+                                          {
+                                            flightInfoData?.data.flight
+                                              .segments[
+                                              flightInfoData?.data.flight
+                                                .segments.length - 1
+                                            ].arr.city.code
+                                          }
+                                          )
+                                        </p>
                                       </div>
-
                                     </div>
-
                                   </div>
                                 </div>
-                                <Accordion className="flex" style={{ flexDirection: 'column-reverse' }} TransitionProps={{ timeout: 800 }} onChange={() => setIsAccordionOpen(!isAccordionOpen)}>
+                                <Accordion
+                                  className="flex"
+                                  style={{ flexDirection: "column-reverse" }}
+                                  TransitionProps={{ timeout: 800 }}
+                                  onChange={() =>
+                                    setIsAccordionOpen(!isAccordionOpen)
+                                  }
+                                >
                                   <AccordionSummary
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
                                   >
-                                    <Typography>{isAccordionOpen ? 'Скрыть детали' : 'Дали маршрута'}.</Typography>
+                                    <Typography>
+                                      {isAccordionOpen
+                                        ? "Скрыть детали"
+                                        : "Дали маршрута"}
+                                      .
+                                    </Typography>
                                   </AccordionSummary>
                                   <AccordionDetails>
                                     <Typography>
-                                      {flightInfoData?.data.flight.segments.map((twoItem, index) => (
-
-                                        <>
-
-                                          <div className="container-box py-2 md:py-5 pb-3 container-box-2" onClick={() => window.innerWidth < 768 && handleOpen()}>
-                                            <div className="left w-full md:pr-5">
-
-                                              <div className="">
-                                                <div className="flex items-center	justify-between w-full">
-                                                  <div className="from flex">
-                                                    <div>
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                        <g clip-path="url(#clip0_865_2363)">
-                                                          <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
-                                                        </g>
-                                                        <defs>
-                                                          <clipPath id="clip0_865_2363">
-                                                            <rect width="24" height="24" rx="4" fill="white" />
-                                                          </clipPath>
-                                                        </defs>
-                                                      </svg>
-                                                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                        <g clip-path="url(#clip0_865_2363)">
-                                                          <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
-                                                        </g>
-                                                        <defs>
-                                                          <clipPath id="clip0_865_2363">
-                                                            <rect width="24" height="24" rx="4" fill="white" />
-                                                          </clipPath>
-                                                        </defs>
-                                                      </svg>
+                                      {flightInfoData?.data.flight.segments.map(
+                                        (twoItem, index) => (
+                                          <>
+                                            <div
+                                              className="container-box py-2 md:py-5 pb-3 container-box-2"
+                                              onClick={() =>
+                                                window.innerWidth < 768 &&
+                                                handleOpen()
+                                              }
+                                            >
+                                              <div className="left w-full md:pr-5">
+                                                <div className="">
+                                                  <div className="flex items-center	justify-between w-full">
+                                                    <div className="from flex">
+                                                      <div>
+                                                        <svg
+                                                          xmlns="http://www.w3.org/2000/svg"
+                                                          width="24"
+                                                          height="24"
+                                                          viewBox="0 0 24 24"
+                                                          fill="none"
+                                                        >
+                                                          <g clip-path="url(#clip0_865_2363)">
+                                                            <path
+                                                              fill-rule="evenodd"
+                                                              clip-rule="evenodd"
+                                                              d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z"
+                                                              fill="#AEAEAE"
+                                                            />
+                                                          </g>
+                                                          <defs>
+                                                            <clipPath id="clip0_865_2363">
+                                                              <rect
+                                                                width="24"
+                                                                height="24"
+                                                                rx="4"
+                                                                fill="white"
+                                                              />
+                                                            </clipPath>
+                                                          </defs>
+                                                        </svg>
+                                                        <svg
+                                                          xmlns="http://www.w3.org/2000/svg"
+                                                          width="24"
+                                                          height="24"
+                                                          viewBox="0 0 24 24"
+                                                          fill="none"
+                                                        >
+                                                          <g clip-path="url(#clip0_865_2363)">
+                                                            <path
+                                                              fill-rule="evenodd"
+                                                              clip-rule="evenodd"
+                                                              d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z"
+                                                              fill="#AEAEAE"
+                                                            />
+                                                          </g>
+                                                          <defs>
+                                                            <clipPath id="clip0_865_2363">
+                                                              <rect
+                                                                width="24"
+                                                                height="24"
+                                                                rx="4"
+                                                                fill="white"
+                                                              />
+                                                            </clipPath>
+                                                          </defs>
+                                                        </svg>
+                                                      </div>
+                                                      <p>
+                                                        <p className="font-mono text-[0.675rem] md:text-lg ml-3">
+                                                          {
+                                                            flightInfoData?.data
+                                                              .flight.segments[
+                                                              index
+                                                            ].dep.time
+                                                          }
+                                                        </p>
+                                                        <p className="font-mono text-[0.675rem] md:text-lg ml-3">
+                                                          {
+                                                            flightInfoData?.data
+                                                              .flight.segments[
+                                                              index
+                                                            ].arr.time
+                                                          }
+                                                        </p>
+                                                      </p>
                                                     </div>
-                                                    <p>
-                                                      <p className="font-mono text-[0.675rem] md:text-lg ml-3">{flightInfoData?.data.flight.segments[index].dep.time}</p>
-                                                      <p className="font-mono text-[0.675rem] md:text-lg ml-3">{flightInfoData?.data.flight.segments[index].arr.time}</p>
+                                                    <div>
+                                                      <p className="font-mono text-[0.675rem] md:text-lg">
+                                                        {
+                                                          flightInfoData?.data
+                                                            .flight.segments[
+                                                            index
+                                                          ].dep.city.title
+                                                        }
+                                                      </p>
+                                                      <p className="font-mono text-[0.675rem] md:text-lg">
+                                                        {
+                                                          flightInfoData?.data
+                                                            .flight.segments[
+                                                            index
+                                                          ].arr.city.title
+                                                        }
+                                                      </p>
+                                                    </div>
+
+                                                    <div>
+                                                      <p className="font-mono text-[0.675rem] md:text-lg ml-3">
+                                                        {moment(
+                                                          flightInfoData?.data
+                                                            .flight.segments[
+                                                            index
+                                                          ].dep.date,
+                                                          "DD.MM.YYYY"
+                                                        ).format("DD MMMM")}
+                                                      </p>
+                                                      <p className="font-mono text-[0.675rem] md:text-lg ml-3">
+                                                        {moment(
+                                                          flightInfoData?.data
+                                                            .flight.segments[
+                                                            index
+                                                          ].arr.date,
+                                                          "DD.MM.YYYY"
+                                                        ).format("DD MMMM")}
+                                                      </p>
+                                                    </div>
+
+                                                    <p className="font-mono text-[0.675rem] md:text-lg">
+                                                      {moment
+                                                        .utc()
+                                                        .startOf("day")
+                                                        .add(
+                                                          flightInfoData?.data
+                                                            .flight.segments[
+                                                            index
+                                                          ].dep.data,
+                                                          "minutes"
+                                                        )
+                                                        .format("hhч mmмин")}
                                                     </p>
+                                                    <img
+                                                      className="w-10 rounded-full"
+                                                      src={`https://mpics.avs.io/al_square/240/240/${flightInfoData?.data.flight.segments[index].provider.supplier.code}.png`}
+                                                      alt=""
+                                                    />
                                                   </div>
-                                                  <div>
-                                                    <p className="font-mono text-[0.675rem] md:text-lg">{flightInfoData?.data.flight.segments[index].dep.city.title}</p>
-                                                    <p className="font-mono text-[0.675rem] md:text-lg">{flightInfoData?.data.flight.segments[index].arr.city.title}</p>
-                                                  </div>
-
-                                                  <div>
-                                                    <p className="font-mono text-[0.675rem] md:text-lg ml-3">
-                                                      {moment(flightInfoData?.data.flight.segments[index].dep.date, 'DD.MM.YYYY').format("DD MMMM")}
-                                                    </p>
-                                                    <p className="font-mono text-[0.675rem] md:text-lg ml-3">
-                                                      {moment(flightInfoData?.data.flight.segments[index].arr.date, 'DD.MM.YYYY').format("DD MMMM")}
-                                                    </p>
-
-                                                  </div>
-
-                                                  <p className="font-mono text-[0.675rem] md:text-lg">{moment.utc().startOf('day').add(flightInfoData?.data.flight.segments[index].dep.data, 'minutes').format('hhч mmмин')}</p>
-                                                  <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${flightInfoData?.data.flight.segments[index].provider.supplier.code}.png`} alt="" />
-
                                                 </div>
 
-                                              </div>
+                                                <div className="flex justify-between">
+                                                  <div>
+                                                    <p className="font-mono text-[0.675rem] mt-3 md:text-lg">
+                                                      Рейс:{" "}
+                                                      {
+                                                        flightInfoData?.data
+                                                          .flight.segments[
+                                                          index
+                                                        ].fare_code
+                                                      }
+                                                    </p>
+                                                    <p className="font-mono text-[0.675rem] md:text-lg">
+                                                      Самолет:{" "}
+                                                      {
+                                                        flightInfoData?.data
+                                                          .flight.segments[
+                                                          index
+                                                        ].provider.supplier
+                                                          .title
+                                                      }
+                                                    </p>
+                                                    {flightInfoData?.data.flight
+                                                      .segments[index].aircraft
+                                                      .title && (
+                                                      <p className="font-mono text-[0.675rem] md:text-lg">
+                                                        Самолет:{" "}
+                                                        {
+                                                          flightInfoData?.data
+                                                            .flight.segments[
+                                                            index
+                                                          ].aircraft.title
+                                                        }
+                                                      </p>
+                                                    )}
+                                                  </div>
 
-                                              <div className="flex justify-between">
-                                                <div>
-
-                                                  <p className="font-mono text-[0.675rem] mt-3 md:text-lg">Рейс: {flightInfoData?.data.flight.segments[index].fare_code}</p>
-                                                  <p className="font-mono text-[0.675rem] md:text-lg">Самолет: {flightInfoData?.data.flight.segments[index].provider.supplier.title}</p>
-                                                  {flightInfoData?.data.flight.segments[index].aircraft.title && <p className="font-mono text-[0.675rem] md:text-lg">Самолет: {flightInfoData?.data.flight.segments[index].aircraft.title}</p>}
-                                                </div>
-
-                                                <div>
-                                                  {flightInfoData?.data.flight.segments[index].dep.terminal && <p className="font-mono text-[0.675rem] md:text-lg mt-5">Терминал: {flightInfoData?.data.flight.segments[index].dep.terminal}</p>}
-                                                  {flightInfoData?.data.flight.segments[index].cbaggage.weight && <p className="font-mono text-[0.675rem] md:text-lg">Багаж: {flightInfoData?.data.flight.segments[index].cbaggage.weight} </p>}
-                                                  <p className="font-mono text-[0.675rem] md:text-lg">
-                                                    Класс: {flightInfoData?.data.flight.segments[index].class.name.toUpperCase() === "E" ? "Ekonom" :
-                                                      flightInfoData?.data.flight.segments[index].class.name.toUpperCase() === "B" &&
-                                                      "Biznes"}
-                                                  </p>
+                                                  <div>
+                                                    {flightInfoData?.data.flight
+                                                      .segments[index].dep
+                                                      .terminal && (
+                                                      <p className="font-mono text-[0.675rem] md:text-lg mt-5">
+                                                        Терминал:{" "}
+                                                        {
+                                                          flightInfoData?.data
+                                                            .flight.segments[
+                                                            index
+                                                          ].dep.terminal
+                                                        }
+                                                      </p>
+                                                    )}
+                                                    {flightInfoData?.data.flight
+                                                      .segments[index].cbaggage
+                                                      .weight && (
+                                                      <p className="font-mono text-[0.675rem] md:text-lg">
+                                                        Багаж:{" "}
+                                                        {
+                                                          flightInfoData?.data
+                                                            .flight.segments[
+                                                            index
+                                                          ].cbaggage.weight
+                                                        }{" "}
+                                                      </p>
+                                                    )}
+                                                    <p className="font-mono text-[0.675rem] md:text-lg">
+                                                      Класс:{" "}
+                                                      {flightInfoData?.data.flight.segments[
+                                                        index
+                                                      ].class.name.toUpperCase() ===
+                                                      "E"
+                                                        ? "Ekonom"
+                                                        : flightInfoData?.data.flight.segments[
+                                                            index
+                                                          ].class.name.toUpperCase() ===
+                                                            "B" && "Biznes"}
+                                                    </p>
+                                                  </div>
                                                 </div>
                                               </div>
                                             </div>
-                                          </div>
 
-
-                                          <div className="pr-3">
-                                            {index !== flightInfoData?.data.flight.segments.length - 1 && (
-                                              <span className="w-full h-0.5 block bg-[#ccc]"></span>
-                                            )}
-                                          </div>
-                                        </>
-                                      ))}
+                                            <div className="pr-3">
+                                              {index !==
+                                                flightInfoData?.data.flight
+                                                  .segments.length -
+                                                  1 && (
+                                                <span className="w-full h-0.5 block bg-[#ccc]"></span>
+                                              )}
+                                            </div>
+                                          </>
+                                        )
+                                      )}
                                     </Typography>
                                   </AccordionDetails>
                                 </Accordion>
                               </div>
                             </>
-
                           </div>
-                        )
-                          : flightInfoData && (
-                            <h2 style={{ textAlign: "center" }}>Chipta topilmadi</h2>
-                          )}
+                        ) : (
+                          flightInfoData && (
+                            <h2 style={{ textAlign: "center" }}>
+                              Chipta topilmadi
+                            </h2>
+                          )
+                        )}
 
-                        {!flightInfoSuc && <TicketSkeleton loading={!flightInfoSuc} />}
+                        {!flightInfoSuc && (
+                          <TicketSkeleton loading={!flightInfoSuc} />
+                        )}
                       </div>
 
                       <div className="border-[1px] border-[#CCCCCC] rounded-lg my-[1%] p-[32px] flex flex-col w-full">
                         <div>
-                          <h2 className="font-bold text-[24px]">Контактная информация</h2>
+                          <h2 className="font-bold text-[24px]">
+                            Контактная информация
+                          </h2>
                           <p className="font-normal text-[16px] text-[#AEAEAE] font-mono">
-                            На почту мы отправим электронный билет, на телефон мы
-                            позвоним, если будут изменения в рейсе или в случае других
-                            ситуаций
+                            На почту мы отправим электронный билет, на телефон
+                            мы позвоним, если будут изменения в рейсе или в
+                            случае других ситуаций
                           </p>
                         </div>
                         <div className="flex-col md:flex items-center gap-[20px] w-[70%] mt-[2%]">
@@ -682,33 +1065,26 @@ function ShopTicket() {
                             <p>
                               Telefon <span>*</span>
                             </p>
-                            <MuiTelInput
-                              sx={{ width: "100%", }}
+                            <PhoneInput
+                              defaultCountry="ua"
                               value={phoneNum}
-                              onInput={(e) => {
-                                e = Math.max(0, parseInt(e.target.value))
-                                  .toString()
-                                  .slice(0, 12);
-                              }}
-                              onChange={(e) => {
-                                const res = e
-                                setPhoneNum(res);
-                              }}
-                              InputProps={{
-                                style: {
-                                  borderRadius: "10px",
-                                },
-                              }}
+                              required
+                              onChange={(phone) => setPhoneNum(phone)}
+                              className="w-full h-full"
                             />
                           </label>
                         </div>
                       </div>
-                      <div className="border-[1px] border-[#CCCCCC] rounded-lg my-[1%] p-[32px]">
+                      <div className="border-[1px] border-[#CCC] rounded-lg my-[1%] p-[32px]">
                         <div>
-                          <h2 className="text-[24px] font-bold">Введите данные пассажиров</h2>
-                          <h1 className="font-bold text-[20px] my-[1%]">Пассажир 1 (12 лет и старше)</h1>
+                          <h2 className="text-[24px] font-bold">
+                            Введите данные пассажиров
+                          </h2>
+                          <h1 className="font-bold text-[20px] my-[1%]">
+                            Пассажир 1 (12 лет и старше)
+                          </h1>
                         </div>
-                        <div >
+                        <div>
                           <div className="flex gap-[20px] w-[62%]">
                             <label className="w-full" htmlFor="">
                               <p>Гражданство</p>
@@ -756,6 +1132,20 @@ function ShopTicket() {
                                 required
                               />
                             </label>
+                          </div>
+                          <div className="my-[1%] flex items-center  gap-[20px] w-[62%]">
+                            <div className="flex items-center ">
+                              <label className="w-[100%] mr-2" htmlFor="P">
+                                пасспорты
+                              </label>
+                              <input type="radio" name="P" id="P" value={doxType}  onChange={() => setDoxType('P')}/>
+                            </div>
+                            <div className="flex items-center">
+                            <label className="w-[100%] mr-2" htmlFor="A">
+                              ID карты
+                            </label>
+                            <input type="radio" name="P" id="A" value={doxType} onChange={() => setDoxType('A')}/>
+                            </div>
                           </div>
                           <div className="my-[1%] flex items-center  gap-[20px] w-[62%]">
                             <label className="w-[100%]" htmlFor="">
@@ -820,7 +1210,9 @@ function ShopTicket() {
                             </label>
                             <label className="w-full" htmlFor="">
                               Пол
-                              <FormControl sx={{ width: "100%", m: 1 }} size="small"
+                              <FormControl
+                                sx={{ width: "100%", m: 1 }}
+                                size="small"
                                 required
                               >
                                 <InputLabel id="demo-select-small-label">
@@ -838,14 +1230,16 @@ function ShopTicket() {
                                     height: "100%",
                                     marginTop: "2px",
                                     width: "100%",
-                                    ".css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input": {
-                                      border: "none !important",
-                                      padding: "15px 15px !important",
-                                    },
-                                    ".css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
-                                      borderColor: "#e5e7eb",
-                                      marginTop: "1px",
-                                    },
+                                    ".css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input":
+                                      {
+                                        border: "none !important",
+                                        padding: "15px 15px !important",
+                                      },
+                                    ".css-1d3z3hw-MuiOutlinedInput-notchedOutline":
+                                      {
+                                        borderColor: "#e5e7eb",
+                                        marginTop: "1px",
+                                      },
                                   }}
                                 >
                                   <MenuItem value={"M"}>Mужской</MenuItem>
@@ -860,10 +1254,13 @@ function ShopTicket() {
                         <p className="font-bold text-[20px]">
                           Стоимость:
                           <span className="text-[#0064FA] ml-[6px]">
-                            {
-                              ticketPrice && currency(ticketPrice, 'UZS').replace("UZS", "")
-                                .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ") + " UZS"
-                            }
+                            {ticketPrice &&
+                              currency(ticketPrice, "UZS")
+                                .replace("UZS", "")
+                                .replace("soʻm", "")
+                                .replace(/,/g, " ")
+                                .slice(0, -3)
+                                .replace(".", " ") + " UZS"}
                           </span>
                         </p>
                         <button
@@ -872,7 +1269,6 @@ function ShopTicket() {
                         >
                           Продолжить
                         </button>
-
                       </div>
                     </form>
 
@@ -889,22 +1285,36 @@ function ShopTicket() {
                   <TabPanel value={value} index={1}>
                     <form action="">
                       <div>
-                        <h2 className="text-[16px] font-semibold ">Бронирование билета</h2>
+                        <h2 className="text-[16px] font-semibold ">
+                          Бронирование билета
+                        </h2>
                         <div className="flex items-center">
                           <h1 className="font-bold text-[28px]">Ташкент</h1>
-                          <img className="mx-[1%] cursor-pointer" src={arrowSwap} alt="" />
+                          <img
+                            className="mx-[1%] cursor-pointer"
+                            src={arrowSwap}
+                            alt=""
+                          />
                           <h1 className="font-bold text-[28px]">Париж</h1>
                         </div>
-                        <p className="text-[18px] font-normal text-[#222222]">30 декабря,сб—16 января,вт,1 взрослый</p>
+                        <p className="text-[18px] font-normal text-[#222222]">
+                          30 декабря,сб—16 января,вт,1 взрослый
+                        </p>
                       </div>
                       <div className="flex items-center justify-between border rounded-lg p-[32px] my-[2%]">
                         <h1 className="font-[24px]">
                           Детали маршрута
-                          <p className="text-[#AEAEAE] text-[16px] font-normal">Местное время отправления и прибытия</p>
+                          <p className="text-[#AEAEAE] text-[16px] font-normal">
+                            Местное время отправления и прибытия
+                          </p>
                         </h1>
                         <p className="flex items-center text-[16px] font-normal text-[#AEAEAE] cursor-pointer">
                           Развернуть
-                          <img className="ml-[7px] rotate-180" src={arrowUp} alt="" />
+                          <img
+                            className="ml-[7px] rotate-180"
+                            src={arrowUp}
+                            alt=""
+                          />
                         </p>
                       </div>
                       <div className="border rounded-lg my-[1%] p-[32px]">
@@ -912,7 +1322,9 @@ function ShopTicket() {
                           Введите данные для оплаты
                         </h1>
                         <div className="bg-[#F7F7F7] py-[64px]  px-[24px] rounded-lg">
-                          <h1 className="text-[24px] mb-[1%]">Банковская карта</h1>
+                          <h1 className="text-[24px] mb-[1%]">
+                            Банковская карта
+                          </h1>
                           <div>
                             <div style={{ width: "50%", marginRight: "40px" }}>
                               <label htmlFor="">
@@ -933,7 +1345,9 @@ function ShopTicket() {
                                       .replace(/[^\dA-Z]/g, "")
                                       .replace(/(.{4})/g, "$1 ")
                                       .trim();
-                                    res.length > 20 ? e.preventDefault() : setCardNum(res);
+                                    res.length > 20
+                                      ? e.preventDefault()
+                                      : setCardNum(res);
                                   }}
                                 />
                               </label>
@@ -956,12 +1370,19 @@ function ShopTicket() {
                                       .replace(/[^0-9]/g, "")
                                       .replace(/^([2-9])$/g, "0$1")
                                       .replace(/^(1{1})([3-9]{1})$/g, "0$1/$2")
-                                      .replace(/^([0-1]{1}[0-9]{1})([0-9]{1,2}).*/g, "$1/$2");
+                                      .replace(
+                                        /^([0-1]{1}[0-9]{1})([0-9]{1,2}).*/g,
+                                        "$1/$2"
+                                      );
                                     setCardExp(res);
                                   }}
                                 />
                               </label>
-                              <button onClick={(e) => confirmBooking(e)} type="submit" className="bg-[#0057BE] text-[16px] font-normal text-[#FFF] w-[40%] py-[16px] px-[25px]  rounded-lg">
+                              <button
+                                onClick={(e) => confirmBooking(e)}
+                                type="submit"
+                                className="bg-[#0057BE] text-[16px] font-normal text-[#FFF] w-[40%] py-[16px] px-[25px]  rounded-lg"
+                              >
                                 SMS kodni olish
                               </button>
                             </div>
@@ -987,39 +1408,65 @@ function ShopTicket() {
                       <div className="border rounded-lg p-[32px] my-[2%]">
                         <h2 className="text-[24px]">Детали заказа</h2>
                         <div className="flex items-center justify-between mt-[3%]">
-                          <h1 className="text-[20px]">
-                            Данные пассажиров
-                          </h1>
-                          <img className="rotate-[270deg] cursor-pointer" src={arrLeft} alt="" />
+                          <h1 className="text-[20px]">Данные пассажиров</h1>
+                          <img
+                            className="rotate-[270deg] cursor-pointer"
+                            src={arrLeft}
+                            alt=""
+                          />
                         </div>
                         <div className="bg-[#F7F7F7] py-[8px]  px-[16px] rounded-lg mt-[1%]">
                           <h1 className="text-[18px]">Контакты для связи</h1>
-                          <p className="text-[18px] font-normal">{phoneNum}, {gmail}</p>
+                          <p className="text-[18px] font-normal">
+                            {phoneNum}, {gmail}
+                          </p>
                         </div>
                         <div className="mt-[1%]">
-                          <h1 className="text-[20px]">
-                            Asad Asadov
-                          </h1>
+                          <h1 className="text-[20px]">Asad Asadov</h1>
                           {/* <p className="text-[18px] mt-[1%]">Дата рождение: {birthdatePic}</p> */}
-                          <p className="text-[18px]">Данные пасспорта или ID карты: {passportNum}</p>
+                          <p className="text-[18px]">
+                            Данные пасспорта или ID карты: {passportNum}
+                          </p>
                         </div>
-                        <div className="border border-[#CCCCCC] my-[3%]">
-                        </div>
+                        <div className="border border-[#CCCCCC] my-[3%]"></div>
                         <div className="flex justify-between items-center">
-                          <h1 className="flex gap-[5px] text-[20px]"> <img className="rotate-[270deg]" src={airplane} alt="" />Ташкент - Париж</h1>
+                          <h1 className="flex gap-[5px] text-[20px]">
+                            {" "}
+                            <img
+                              className="rotate-[270deg]"
+                              src={airplane}
+                              alt=""
+                            />
+                            Ташкент - Париж
+                          </h1>
                           <h2 className="flex gap-[5px] text-[20px] text-[#0064FA] cursor-pointer">
-                            {
-                              ticketPrice && currency(ticketPrice, 'UZS').replace("UZS", "")
-                                .replace("soʻm", "").replace(/,/g, " ").slice(0, -3).replace('.', " ") + " UZS"
-                            }
-                            <img className="rotate-[270deg]" src={arrLeft} alt="" />
+                            {ticketPrice &&
+                              currency(ticketPrice, "UZS")
+                                .replace("UZS", "")
+                                .replace("soʻm", "")
+                                .replace(/,/g, " ")
+                                .slice(0, -3)
+                                .replace(".", " ") + " UZS"}
+                            <img
+                              className="rotate-[270deg]"
+                              src={arrLeft}
+                              alt=""
+                            />
                           </h2>
                         </div>
-                        <h1 className="text-[20px] mt-[1%]">{name} {lastName}</h1>
+                        <h1 className="text-[20px] mt-[1%]">
+                          {name} {lastName}
+                        </h1>
                         <p className="text-[18px] ">Тариф: Бизнес</p>
-                        <p className="text-[18px] my-[1%] ">Базовый тариф: 25 000 000 UZS</p>
-                        <p className="text-[18px] my-[1%]">Налоги и сборы: 4 000 000 UZS</p>
-                        <p className="text-[18px] ">Сервисный сбор AVIA: 1 900 000 UZS</p>
+                        <p className="text-[18px] my-[1%] ">
+                          Базовый тариф: 25 000 000 UZS
+                        </p>
+                        <p className="text-[18px] my-[1%]">
+                          Налоги и сборы: 4 000 000 UZS
+                        </p>
+                        <p className="text-[18px] ">
+                          Сервисный сбор AVIA: 1 900 000 UZS
+                        </p>
                       </div>
                       <div className="flex items center justify-between border rounded-lg p-[32px]">
                         <p className="font-bold text-[20px]">
@@ -1038,32 +1485,28 @@ function ShopTicket() {
                       </div>
                     </form>
                   </TabPanel>
-                  <TabPanel value={value} index={2}>
-                  </TabPanel>
-
+                  <TabPanel value={value} index={2}></TabPanel>
                 </div>
               </Grid>
             </Grid>
-          </Container >
+          </Container>
           <ToastContainer />
         </>
-      }
+      )}
 
-      {
-        !loggedIn && (
-          <GoogleOAuthProvider clientId={clientId}>
-            <GoogleLogin
-              onSuccess={credentialResponse => {
-                login(credentialResponse)
-              }}
-              onError={() => {
-                console.log('Login Failed');
-              }}
-              useOneTap
-            />
-          </GoogleOAuthProvider>
-        )
-      }
+      {!loggedIn && (
+        <GoogleOAuthProvider clientId={clientId}>
+          <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              login(credentialResponse);
+            }}
+            onError={() => {
+              console.log("Login Failed");
+            }}
+            useOneTap
+          />
+        </GoogleOAuthProvider>
+      )}
       {loader && <Loader />}
     </>
   );

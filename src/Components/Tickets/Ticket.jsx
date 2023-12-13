@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import AirlineSeatReclineNormalIcon from "@mui/icons-material/AirlineSeatReclineNormal";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 // import "./Ticket.css";
 import { Container, Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import "./Ticket.css";
-import { setTicketId, addFilterAirlines, removeFilterAirlines, checkChangeAir, addFilterAirlinesName } from "../../Slice/AllSlice";
+import { setTicketId, addFilterAirlines, removeFilterAirlines, checkChangeAir, setFilterDirect, setFilterDirectChange } from "../../Slice/AllSlice";
 import { useNavigate } from "react-router-dom";
 import TicketSkeleton from "../TicketSkeleton/TicketSkeleton";
 import moment from "moment";
@@ -19,7 +17,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Skeleton from "@mui/material/Skeleton";
 
 const style = {
   position: 'absolute',
@@ -50,10 +48,11 @@ function Ticket(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+  const [skeletonNum, setSkeletonNum] = useState([]);
 
-
-  const toShoppingTicket = (id, price) => {
+  const toShoppingTicket = (id, price, item) => {
     if (id) {
+      console.log(item);
       navigate(`/order/${id}`);
       window.scrollTo(0, 0);
       dispatch(setTicketId(id));
@@ -75,10 +74,21 @@ function Ticket(props) {
   }
 
   useEffect(() => {
+    console.log(TicketData);
     if (TicketData || props.loading) {
       setTicketFilterShow(true)
     }
   }, [TicketData, props.loading])
+
+  useEffect(() => {
+    // 10 ta elementni tuzish
+    const newItems = Array.from({ length: 3 }, (_, index) => ({
+      id: index,
+      content: `Element ${index + 1}`,
+    }));
+
+    setSkeletonNum(newItems);
+  }, []);
 
 
   return (
@@ -92,34 +102,49 @@ function Ticket(props) {
             <Grid item lg={3} className="w-full">
               <div className="checklist">
                 <div className="transfer">
-                  <h3>O'tkazish</h3>
+                  <h3>Пересадки</h3>
 
-                  <div className="checkbox ">
-                    <input type="checkbox" id="wout" />
-                    <label htmlFor="wout">O'tkazishsiz</label>
+                  <div className="checkbox">
+                    <input type="radio" id="1" name="direct" onClick={() => {dispatch(setFilterDirect(0)); dispatch(setFilterDirectChange('Все'))}} defaultChecked/>
+                    <label htmlFor="1">Все</label>
                   </div>
 
                   <div className="checkbox">
-                    <input type="checkbox" id="1" />
-                    <label htmlFor="1">1ta O'tkazish</label>
+                    <input type="radio" id="wout" name="direct" onClick={() => {dispatch(setFilterDirect(1)); dispatch(setFilterDirectChange('Прямой'))}}/>
+                    <label htmlFor="wout">Прямой</label>
                   </div>
 
-                  <div className="checkbox">
-                    <input type="checkbox" id="2" />
-
-                    <label htmlFor="2">2 O'tkazish</label>
-
-                  </div>
 
                 </div>
 
                 <div className="company">
-                  <h3>O'tkazish</h3>
-                  {allAirlinesName && allAirlinesName.map((item, airIndex) =>
+                  <h3>Авиакомпании</h3>
+                  {!allAirlinesName && skeletonNum?.map((item) => 
+                    <Skeleton loading={props.isLoading}>
+                      <div className="checkbox">
+                          <input type="checkbox"/>
+                          <label>Uzbekistan Air</label>
+                        </div>
+                    </Skeleton>
+                  )}
+
+                  {allAirlinesName.length > 0 ? (
+                    allAirlinesName.map((item, airIndex) =>
                     <div className="checkbox" key={airIndex}>
                       <input type="checkbox" id={item.name} value={item.code} onClick={(e) => { filterInputChange(e) }} />
                       <label htmlFor={item.name}>{item.name}</label>
                     </div>
+                  )
+                  ) : (
+                    skeletonNum?.map((item, index) => 
+                      <Skeleton loading={props.isLoading}>
+                        <div className="checkbox">
+                            <input type="checkbox"/>
+                            <label>Uzbekistan Air</label>
+                            <label>{index === 1 && "Flydubai"}</label>
+                          </div>
+                      </Skeleton>
+                    )
                   )}
                 </div>
               </div>
@@ -138,7 +163,13 @@ function Ticket(props) {
                                 <div className="top">
                                   <h2 className="flex w-full justify-between items-center">
                                       <>
+                                      <div className="flex items-center justify-center gap-3">
                                         <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.segments[0].provider.supplier.code}.png`} alt="" />
+                                        {item.segments[1] &&  <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.segments[1].provider.supplier.code}.png`} alt="" /> }
+                                        {item.segments[2] &&  <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.segments[2].provider.supplier.code}.png`} alt="" /> }
+                                        {item.segments[3] &&  <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.segments[3].provider.supplier.code}.png`} alt="" /> }
+                                        {item.segments[4] &&  <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.segments[4].provider.supplier.code}.png`} alt="" /> }
+                                      </div>
                                         <p>
                                         
                                           <span className="hidden w-max sum">
@@ -168,7 +199,7 @@ function Ticket(props) {
                                   <div>
                                     <div className="flex justify-center">
                                       <p className="font-mono text-[0.675rem] md:text-lg">
-                                        {moment.utc().startOf('day').add(item.duration, 'minutes').format('hh ч mm мин')}
+                                        {moment.utc().startOf('year').add({minutes: item.duration}).format('d[день ]HH[ч ]mm[мин]')}
                                       </p>
                                     </div>
                                     <div className="map w-full justify-between">
@@ -186,13 +217,13 @@ function Ticket(props) {
                                       </div>
 
                                       <div className="to">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                          <g clip-path="url(#clip0_865_2363)">
-                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                          <g clip-path="url(#clip0_1413_5731)">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.84152 9.47881C6.57104 9.39093 6.28638 9.56695 6.24415 9.84821L5.73752 13.223C5.66495 13.7064 5.95251 14.1715 6.41742 14.3225L23.6767 19.9304C24.4832 20.1924 25.3494 19.7511 25.6114 18.9446C25.8838 18.1063 25.396 17.2113 24.5439 16.9858L19.2322 15.5804L17.9041 6.20726C17.849 5.81835 17.5772 5.4948 17.2037 5.37342C16.5777 5.17003 15.9244 5.59884 15.862 6.25407L15.1019 14.2384L7.84571 12.2958L7.14239 9.79207C7.10078 9.64392 6.98787 9.52637 6.84152 9.47881ZM25.6776 22.9521H5.14758V24.5313H25.6776V22.9521Z" fill="#AEAEAE"/>
                                           </g>
                                           <defs>
-                                            <clipPath id="clip0_865_2363">
-                                              <rect width="24" height="24" rx="4" fill="white" />
+                                            <clipPath id="clip0_1413_5731">
+                                              <rect width="24" height="24" rx="4" fill="white"/>
                                             </clipPath>
                                           </defs>
                                         </svg>
@@ -232,7 +263,7 @@ function Ticket(props) {
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                               >
-                                <Typography>{isAccordionOpen ? 'Скрыть детали' : 'Дали маршрута'}.</Typography>
+                                <Typography>{isAccordionOpen ? 'Скрыть детали' : 'Детали маршрута'}.</Typography>
                               </AccordionSummary>
                           <AccordionDetails>
                             <Typography>
@@ -287,8 +318,7 @@ function Ticket(props) {
                                                     </p>
 
                                                   </div>
-
-                                                  <p className="font-mono text-[0.675rem] md:text-lg">{moment.utc().startOf('day').add(item.segments[index].dep.data, 'minutes').format('hhч mmмин')}</p>
+                                                  <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[index].duration.flight.hour}ч {item.segments[index].duration.flight.minute}мин </p>
                                                   <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.segments[index].provider.supplier.code}.png`} alt="" />
                                                         
                                                 </div>
@@ -299,7 +329,7 @@ function Ticket(props) {
                                                 <div>
 
                                                   <p className="font-mono text-[0.675rem] mt-3 md:text-lg">Рейс: {item.segments[index].fare_code}</p>
-                                                  <p className="font-mono text-[0.675rem] md:text-lg">Самолет: {item.segments[index].provider.supplier.title}</p>
+                                                  <p className="font-mono text-[0.675rem] md:text-lg">Авиакомпания: {item.segments[index].provider.supplier.title}</p>
                                                   {item.segments[index].aircraft.title && <p className="font-mono text-[0.675rem] md:text-lg">Самолет: {item.segments[index].aircraft.title}</p>} 
                                                 </div>
 
@@ -311,8 +341,14 @@ function Ticket(props) {
                                                                   item.segments[index].class.name.toUpperCase() === "B" &&
                                                                   "Biznes"}
                                                     </p>
+
                                                 </div>
                                               </div>
+                                              {item.segments[index].duration.transfer?.minute >= 0 && (
+                                                    <div className="flex items-center justify-center border-[3px] border-[#0057BE] text-[#0057BE] py-2 px-1 rounded-lg mt-2">
+                                                      {item.segments[index].duration.transfer?.hour}ч {item.segments[index].duration.transfer?.minute}мин пересадка
+                                                    </div>
+                                              )}
                                             </div>
                                     </div>
                                 
@@ -340,7 +376,7 @@ function Ticket(props) {
                       
                           <button
                             className="bgBlue mt-4"
-                            onClick={() => toShoppingTicket(item.id, item.price.UZS.amount)}
+                            onClick={() => toShoppingTicket(item.id, item.price.UZS.amount, item)}
                           >
                             купить
                           </button>
