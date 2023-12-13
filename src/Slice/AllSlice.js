@@ -13,7 +13,9 @@ const initialState = {
   filterAirlines: [],
   changeFilterAir: false,
   allAirlinesName: [],
-  ticketDetail: []
+  ticketDetail: [],
+  filterDirect: 0,
+  filterDirectChange: undefined
 }
 
 
@@ -65,10 +67,16 @@ export const slice = createSlice({
     clearFilterAirlinesName: (state, action) => {
       state.allAirlinesName = []
     },
+    setFilterDirect: (state, action) => {
+      state.filterDirect = action.payload
+    },
+    setFilterDirectChange: (state, action) => {
+      state.filterDirectChange = action.payload
 
+    }
   }
 })
 
-export const { changeTicketData, setTicketAdult, setTicketChild, setTicketBabies, setTicketTarif, setShopTicketCom, setTicketId, addFilterAirlines, removeFilterAirlines, checkChangeAir, addFilterAirlinesName, clearFilterAirlinesName, clearFilterAirlines } = slice.actions
+export const { changeTicketData, setTicketAdult, setTicketChild, setTicketBabies, setTicketTarif, setShopTicketCom, setTicketId, addFilterAirlines, removeFilterAirlines, checkChangeAir, addFilterAirlinesName, clearFilterAirlinesName, clearFilterAirlines, setFilterDirect, setFilterDirectChange } = slice.actions
 
 export default slice.reducer 
