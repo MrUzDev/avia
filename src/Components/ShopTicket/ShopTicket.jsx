@@ -428,13 +428,13 @@ function ShopTicket() {
                         aria-label="basic tabs example"
                       >
                         <Tab iconPosition="start" icon={tabIndex >= 0 ? <CalendarTick /> : <CalendarTick2 />} label={
-                          <span style={tabIndex >= 0 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Бронирование</span>
+                          <span className="hidden md:block" style={tabIndex >= 0 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Бронирование</span>
                         } {...a11yProps(0)} />
                         <Tab iconPosition="start" icon={tabIndex >= 1 ? <Coin2 /> : <Coin />} label={
-                          <span style={tabIndex >= 1 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Оплата</span>
+                          <span className="hidden md:block" style={tabIndex >= 1 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Оплата</span>
                         } {...a11yProps(1)} />
                         <Tab iconPosition="start" icon={tabIndex >= 2 ? <Bilet2 /> : <Bilet />} label={
-                          <span style={tabIndex >= 2 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Получение билета</span>
+                          <span className="hidden md:block" style={tabIndex >= 2 ? { color: "#0063FA" } : { color: "#AEAEAE" }}>Получение билета</span>
                         } {...a11yProps(2)} />
                       </Tabs>
                     </Box>
@@ -471,7 +471,7 @@ function ShopTicket() {
                                       </h2>
                                     </div>
 
-                                    <div className="bottom flex items-end justify-between">
+                                    <div className="bottom flex md:flex-row flex-col  md:items-center md:justify-between">
                                       <div className="dataL">
                                         <h2 className="font-mono text-[0.675rem] md:text-lg">
                                           {flightInfoData?.data.flight.segments[0].dep.time}
@@ -484,13 +484,13 @@ function ShopTicket() {
                                         <p className="font-mono text-[0.675rem] md:text-lg"> {flightInfoData?.data.flight.segments[0].dep.city.title} ({flightInfoData?.data.flight.segments[0].dep.city.code})</p>
 
                                       </div>
-                                      <div>
+                                      <div className="my-[5%]">
                                         <div className="flex justify-center">
                                           <p className="font-mono text-[0.675rem] md:text-lg">
                                             {moment.utc().startOf('day').add(flightInfoData?.data.flight.duration, 'minutes').format('hh ч mm мин')}
                                           </p>
                                         </div>
-                                        <div className="map w-full justify-between">
+                                        <div className="map w-full justify-between ">
                                           <div className="from">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                                               <g clip-path="url(#clip0_865_2363)">
@@ -546,7 +546,6 @@ function ShopTicket() {
                                   </div>
                                 </div>
                                 <Accordion className="flex" style={{ flexDirection: 'column-reverse' }} TransitionProps={{ timeout: 800 }} onChange={() => setIsAccordionOpen(!isAccordionOpen)}>
-
                                   <AccordionSummary
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
@@ -658,7 +657,7 @@ function ShopTicket() {
                         {!flightInfoSuc && <TicketSkeleton loading={!flightInfoSuc} />}
                       </div>
 
-                      <div className="border-[1px] border-[#CCCCCC] rounded-lg my-[1%] p-[32px] flex flex-col">
+                      <div className="border-[1px] border-[#CCCCCC] rounded-lg my-[1%] p-[32px] flex flex-col w-full">
                         <div>
                           <h2 className="font-bold text-[24px]">Контактная информация</h2>
                           <p className="font-normal text-[16px] text-[#AEAEAE] font-mono">
@@ -667,8 +666,8 @@ function ShopTicket() {
                             ситуаций
                           </p>
                         </div>
-                        <div className="flex items-center gap-[20px] w-[70%] mt-[2%]">
-                          <label className="w-full" htmlFor="">
+                        <div className="flex-col md:flex items-center gap-[20px] w-[70%] mt-[2%]">
+                          <label className="w-full " htmlFor="">
                             <p>Электронная почта (E-mail)</p>
                             <input
                               className="border-[1px] rounded-lg p-[12px] h-[48px] w-[100%] mt-[8px]"
@@ -693,7 +692,6 @@ function ShopTicket() {
                               }}
                               onChange={(e) => {
                                 const res = e
-
                                 setPhoneNum(res);
                               }}
                               InputProps={{
@@ -701,7 +699,6 @@ function ShopTicket() {
                                   borderRadius: "10px",
                                 },
                               }}
-
                             />
                           </label>
                         </div>
@@ -715,13 +712,38 @@ function ShopTicket() {
                           <div className="flex gap-[20px] w-[62%]">
                             <label className="w-full" htmlFor="">
                               <p>Гражданство</p>
-                              <input
+                              <FormControl sx={{ width: "100%", m: 1 }} size="small"
                                 required
-                                type="text"
-                                className="border-[1px] rounded-lg p-[12px] h-[48px] w-full mt-[8px]"
-                                value={citizen}
-                                onChange={(e) => setCitizen(e.target.value)}
-                              />
+                              >
+                                <InputLabel id="demo-select-small-label">
+                                  Гражданство
+                                </InputLabel>
+                                <Select
+                                  labelId="demo-select-small-label"
+                                  id="demo-select-small"
+                                  value={citizen}
+                                  label="Age"
+                                  onChange={(e) => setCitizen(e.target.value)}
+                                  sx={{
+                                    borderRadius: "10px",
+                                    padding: "0px !important",
+                                    height: "100%",
+                                    marginTop: "2px",
+                                    width: "100%",
+                                    ".css-jedpe8-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input": {
+                                      border: "none !important",
+                                      padding: "15px 15px !important",
+                                    },
+                                    ".css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
+                                      borderColor: "#e5e7eb",
+                                      marginTop: "1px",
+                                    },
+                                  }}
+                                >
+                                  <MenuItem value={"UZ"}>Uzbekistan</MenuItem>
+                                  <MenuItem value={"RU"}>Rossiya</MenuItem>
+                                </Select>
+                              </FormControl>
                             </label>
                             <label className="w-full" htmlFor="">
                               Отчество
