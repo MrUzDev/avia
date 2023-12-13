@@ -87,7 +87,7 @@ function Navbar() {
           <img className='cursor-pointer' src={menu} alt="" />
         </div>
 
-        <p>{t('welcome_msg')}</p>
+        {/* <p>{t('welcome_msg')}</p> */}
             {/* <label>{t("choose")}</label> */}
             {/* <select value={lang} defaultValue={lang} onChange={(e) => handleChange(e)}>
                 {languages.map((item) => {
