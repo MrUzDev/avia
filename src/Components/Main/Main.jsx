@@ -77,14 +77,15 @@ function Main() {
   const [myAirlinesCodeTo, setMyAirlinesCodeTo] = useState()
 
   const [myAirlinesDate, setMyAirlinesDate] = useState([])
-  const [myAirlinesDateTo, setMyAirlinesDateTo] = useState()
   const [loader, setLoader] = useState(true);
   const [tokenAirlines, setTokenAirlines] = useState()
   const [value, setValue] = React.useState(0);
   const [classModalShow, setClassModalShow] = useState(false)
   const [checkedBiznes, setCheckedBiznes] = useState(false);
   const [ticketLoad, setTicketLoad] = useState(false)
-
+  const [myAirlinesInpErr, setMyAirlinesInpErr] = useState(false)
+  const [myAirlinesToInpErr, setMyAirlinesToInpErr] = useState(false)
+  const [myAirlinesDateInpErr, setMyAirlinesDateInpErr] = useState(false)
 
   const ticketAdults = useSelector((state) => state.loginSlice.ticketAdults);
   const ticketChild = useSelector((state) => state.loginSlice.ticketChild);
@@ -192,51 +193,65 @@ function Main() {
 
   const getRecommendationFnc = (e) => {
     dispatch(changeTicketData(undefined))
-    if (e == 'for_btn') {
+    if (e === 'for_btn') {
       dispatch(clearFilterAirlinesName())
       dispatch(clearFilterAirlines())
     }
-    if (myAirlinesCode && myAirlinesCodeTo && myAirlinesDate.length > 0 && ticketAdults) {
+    if(myAirlinesCode) {
+      setMyAirlinesInpErr(false)
+      if(myAirlinesCodeTo) {
+        setMyAirlinesToInpErr(false)
+        if(myAirlinesDate.length>0) {
+          setMyAirlinesDateInpErr(false)
+      
+            const recomData = {
+              adt: ticketAdults,
+              chd: ticketChild,
+              inf: ticketBabies,
+              ins: 0,
+              src: 0,
+              yth: 0,
+              lang: "en",
+              segments: myAirlinesDate[1] ? [
+                {
+                  from: myAirlinesCode,
+                  to: myAirlinesCodeTo,
+                  date: myAirlinesDate[0].format?.("DD-MM-YYYY")
+                },
+                {
+                  from: myAirlinesCodeTo,
+                  to: myAirlinesCode,
+                  date: myAirlinesDate[1].format?.("DD-MM-YYYY")
+                }
+              ] : [{
+                from: myAirlinesCode,
+                to: myAirlinesCodeTo,
+                date: myAirlinesDate[0].format?.("DD-MM-YYYY")
+              }],
+              filter_airlines: filterAirlines,
+              is_direct_only: filterDirect,
+              gds_white_list: [],
+              gds_black_list: [],
+              class_: ticketTarif,
+              token: filterAirlines.length >= 1 ? tokenAirlines : '',
+              is_baggage: true,
+              price_order: 1,
+              is_charter: false,
+            }
+      
+            setTicketLoad(true)
+      
+            getRecommendation(recomData)
 
-      const recomData = {
-        adt: ticketAdults,
-        chd: ticketChild,
-        inf: ticketBabies,
-        ins: 0,
-        src: 0,
-        yth: 0,
-        lang: "en",
-        segments: myAirlinesDate[1] ? [
-          {
-            from: myAirlinesCode,
-            to: myAirlinesCodeTo,
-            date: myAirlinesDate[0].format?.("DD-MM-YYYY")
-          },
-          {
-            from: myAirlinesCodeTo,
-            to: myAirlinesCode,
-            date: myAirlinesDate[1].format?.("DD-MM-YYYY")
-          }
-        ] : [{
-          from: myAirlinesCode,
-          to: myAirlinesCodeTo,
-          date: myAirlinesDate[0].format?.("DD-MM-YYYY")
-        }],
-        filter_airlines: filterAirlines,
-        is_direct_only: filterDirect,
-        gds_white_list: [],
-        gds_black_list: [],
-        class_: ticketTarif,
-        token: filterAirlines.length >= 1 ? tokenAirlines : '',
-        is_baggage: true,
-        price_order: 1,
-        is_charter: false,
+        } else {
+          setMyAirlinesDateInpErr(true)
+        }
+      }else {
+        setMyAirlinesToInpErr(true)
       }
-
-      setTicketLoad(true)
-
-      getRecommendation(recomData)
-    } else dataError()
+    }else {
+      setMyAirlinesInpErr(true)
+    }
   }
 
   useEffect(() => {
@@ -343,7 +358,8 @@ function Main() {
               <div className='bg-[#0057BE] h-[66px] hidden lg:flex items-center rounded-lg'>
                 <div className="h-full w-full flex items-center border-[2px] border-[#0057BE] rounded-lg">
                   <div className="relative col-4 h-full" style={{ padding: '0' }}>
-                    <input className='h-full w-full rounded-l-lg border border-[#c0bfbf] capitalize outline-none px-[10px]' type="text" placeholder='Откуда' value={myAirlines || ''} onChange={(e) => { setMyAirlines(e.target.value); searchAirportsFnc(e.target.value) }} />
+                    <input className={` ${myAirlinesInpErr && 'placeholder-red-700'} h-full w-full rounded-l-lg border border-[#c0bfbf] capitalize outline-none px-[10px]`} type="text" placeholder='Откуда' value={myAirlines || ''} onChange={(e) => { setMyAirlines(e.target.value); searchAirportsFnc(e.target.value) }} />
+                    {myAirlinesInpErr && <p className="text-red-700 text-[0.8rem]">Этот раздел обязателен</p>}
                     {airlinesDataFrom && (
                       <div className="searchDataList z-10">
                         {airlinesDataFrom.map((item, index) =>
@@ -360,7 +376,8 @@ function Main() {
                     <img src={arrowSwap} className="cursor-pointer w-full" alt="" onClick={() => reverseAirportName()} />
                   </div>
                   <div className="relative col-4 h-full" style={{ padding: '0' }}>
-                    <input className='h-full w-full border border-[#c0bfbf] outline-none px-[10px]' type="text" placeholder='Куда' value={myAirlinesTo || ''} onChange={(e) => { setMyAirlinesTo(e.target.value); searchAirportsToFnc(e.target.value) }} />
+                    <input className={`${myAirlinesToInpErr && 'placeholder-red-700'} ticketToInput h-full w-full border border-[#c0bfbf] outline-none px-[10px]`} type="text" placeholder='Куда' value={myAirlinesTo || ''} onChange={(e) => { setMyAirlinesTo(e.target.value); searchAirportsToFnc(e.target.value) }} />
+                        {myAirlinesToInpErr && <p className="text-red-700 [0.8rem]">Этот раздел обязателен</p>}
                     {airlinesDataTo && (
                       <div className="searchDataList2 z-10">
                         {airlinesDataTo.map((item, index) =>
@@ -387,8 +404,8 @@ function Main() {
                         ref={datePickerRef}
                         style={{ display: 'none' }}
                       />
-                      <input type="text" placeholder="Когда" className='h-full w-full border border-[#c0bfbf] outline-none px-[10px]' value={myAirlinesDate[0] ? myAirlinesDate[0].format?.("DD-MM-YYYY") : ''} onClick={() => datePickerRef.current.openCalendar()} />
-
+                      <input type="text" placeholder="Когда" className={`${myAirlinesDateInpErr && 'placeholder-red-700'} h-full w-full border border-[#c0bfbf] outline-none px-[10px]`} value={myAirlinesDate[0] ? myAirlinesDate[0].format?.("DD-MM-YYYY") : ''} onClick={() => datePickerRef.current.openCalendar()} />
+                      {myAirlinesDateInpErr && <p className="text-red-700 [0.8rem]">Этот раздел обязателен</p>}
                     </label>
                   </div>
                   <input type="text" placeholder="Обратно" className='h-full w-full border border-[#c0bfbf] outline-none px-[10px] col-3' style={{ padding: '0 10px' }} value={myAirlinesDate[1] ? myAirlinesDate[1].format?.("DD-MM-YYYY") : ''} onClick={() => datePickerRef.current.openCalendar()} />

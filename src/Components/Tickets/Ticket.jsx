@@ -74,7 +74,6 @@ function Ticket(props) {
   }
 
   useEffect(() => {
-    console.log(TicketData);
     if (TicketData || props.loading) {
       setTicketFilterShow(true)
     }
@@ -128,6 +127,7 @@ function Ticket(props) {
                     </Skeleton>
                   )}
 
+
                   {allAirlinesName.length > 0 ? (
                     allAirlinesName.map((item, airIndex) =>
                     <div className="checkbox" key={airIndex}>
@@ -161,6 +161,7 @@ function Ticket(props) {
                         <div className="container-box py-2 md:py-5 pb-3 container-box-2" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
                               <div className="left w-full md:pr-5">
                                 <div className="top">
+
                                   <h2 className="flex w-full justify-between items-center">
                                       <>
                                       <div className="flex items-center justify-center gap-3">
@@ -268,7 +269,6 @@ function Ticket(props) {
                           <AccordionDetails>
                             <Typography>
                               {item.segments.map((twoItem, index) => (
-
                                 <>
 
                                     <div className="container-box py-2 md:py-5 pb-3 container-box-2" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
