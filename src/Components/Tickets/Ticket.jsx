@@ -13,11 +13,8 @@ import cirClose from '../../Assets/icons/close-circle.svg'
 import airplane from '../../Assets/icons/airplane.svg'
 import line from '../../Assets/icons/line.svg'
 import Fade from '@mui/material/Fade';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
 import Skeleton from "@mui/material/Skeleton";
+import TicketAccardion from "./TicketAccardion";
 
 const style = {
   position: 'absolute',
@@ -47,8 +44,9 @@ function Ticket(props) {
   const [ticketFilterShow, setTicketFilterShow] = useState(false)
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
   const [skeletonNum, setSkeletonNum] = useState([]);
+  const [accardionOpen, setAccardionOpen] = useState('panel');
+
 
   const toShoppingTicket = (id, price, item) => {
     if (id) {
@@ -74,6 +72,7 @@ function Ticket(props) {
   }
 
   useEffect(() => {
+    console.log(TicketData);
     if (TicketData || props.loading) {
       setTicketFilterShow(true)
     }
@@ -158,6 +157,7 @@ function Ticket(props) {
                   <div onClick={() => setTicketDetail(item)} className="box w-[100%] flex">
                       <> 
                         <div className="w-full md:border-r-4 border-dashed md:border-[#ccc] relative">
+
                         <div className="container-box py-2 md:py-5 pb-3 container-box-2" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
                               <div className="left w-full md:pr-5">
                                 <div className="top">
@@ -240,12 +240,94 @@ function Ticket(props) {
                                     </div>
                                     <div className="namCity flex items-center justify-between mt-3">
                                       <p className="font-mono">{item.segments[0].dep.city.code}</p>
+                                      <p className="font-mono">{item.segments[item.segments_direction[0].length - 1].arr.city.code}</p>
+                                    </div>
+                                  </div>
+                                  <div className="dataR">
+                                    <h2 className="font-mono text-[0.675rem] md:text-lg">
+                                      {item.segments[item.segments_direction[0].length - 1].arr.time}
+                                    </h2>
+                                    <p className="font-mono text-[0.675rem] md:text-lg">
+                                      {moment(item.segments[item.segments_direction[0].length - 1].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                                      {moment(item.segments[item.segments_direction[0].length - 1].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                                    </p>
+                                    <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[item.segments_direction[0].length - 1].arr.city.title} ({item.segments[item.segments_direction[0].length - 1].arr.city.code})</p>
+                                  </div>
+
+                                </div>
+
+                                {accardionOpen === `panel${inx}` && (
+                                  <>
+                                  <TicketAccardion item={item} inx={inx} direction={0}/>  
+
+                                  <span className="block w-full h-1 bg-[#ccc]"></span> 
+                                  </>
+
+                                )}
+                                  
+                                  {item.segments_direction[1] && (
+                                     <div className="bottom flex items-end">
+                                  <div className="dataL">
+                                    <h2 className="font-mono text-[0.675rem] md:text-lg">
+                                      {item.segments[item.segments_direction[1][0]].dep.time}
+                                    </h2>
+                                    
+                                    <p className="font-mono text-[0.675rem] md:text-lg">
+                                      {moment(item.segments[item.segments_direction[1][0]].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
+                                      {moment(item.segments[item.segments_direction[1][0]].arr.date, 'DD.MM.YYYY').format(" dddd").slice(0, 4)}
+                                    </p>
+                                    <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[item.segments_direction[1][0]].dep.city.title} ({item.segments[item.segments_direction[1][0]].dep.city.code})</p>
+                                  
+                                  </div>
+                                  <div>
+                                    <div className="flex justify-center">
+                                      <p className="font-mono text-[0.675rem] md:text-lg">
+                                        {moment.utc().startOf('year').add({minutes: item.duration}).format('d[день ]HH[ч ]mm[мин]')}
+                                      </p>
+                                    </div>
+                                    <div className="map w-full justify-between">
+                                      <div className="from">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                          <g clip-path="url(#clip0_865_2363)">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
+                                          </g>
+                                          <defs>
+                                            <clipPath id="clip0_865_2363">
+                                              <rect width="24" height="24" rx="4" fill="white" />
+                                            </clipPath>
+                                          </defs>
+                                        </svg>
+                                      </div>
+
+                                      <div className="to">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                          <g clip-path="url(#clip0_1413_5731)">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.84152 9.47881C6.57104 9.39093 6.28638 9.56695 6.24415 9.84821L5.73752 13.223C5.66495 13.7064 5.95251 14.1715 6.41742 14.3225L23.6767 19.9304C24.4832 20.1924 25.3494 19.7511 25.6114 18.9446C25.8838 18.1063 25.396 17.2113 24.5439 16.9858L19.2322 15.5804L17.9041 6.20726C17.849 5.81835 17.5772 5.4948 17.2037 5.37342C16.5777 5.17003 15.9244 5.59884 15.862 6.25407L15.1019 14.2384L7.84571 12.2958L7.14239 9.79207C7.10078 9.64392 6.98787 9.52637 6.84152 9.47881ZM25.6776 22.9521H5.14758V24.5313H25.6776V22.9521Z" fill="#AEAEAE"/>
+                                          </g>
+                                          <defs>
+                                            <clipPath id="clip0_1413_5731">
+                                              <rect width="24" height="24" rx="4" fill="white"/>
+                                            </clipPath>
+                                          </defs>
+                                        </svg>
+                                      </div>
+                                    </div>
+
+                                    <div className="line mt-4">
+                                      <div className="relative">
+                                        <span className="absolute block left-0 bottom-0 translate-y-1 rounded-md bg-[#FFC107] w-10 h-2"></span>
+                                        <span className="absolute block right-2/4 bottom-0 translate-y-1 translate-x-4  rounded-md bg-[#EF2323] w-6 h-2"></span>
+                                        <span className="absolute block right-0 bottom-0 translate-y-1 rounded-md bg-[#EF2323] w-10 h-2"></span>
+                                      </div>
+                                    </div>
+                                    <div className="namCity flex items-center justify-between mt-3">
+                                      <p className="font-mono">{item.segments[item.segments_direction[1][0]].dep.city.code}</p>
                                       <p className="font-mono">{item.segments[item.segments.length - 1].arr.city.code}</p>
                                     </div>
                                   </div>
                                   <div className="dataR">
                                     <h2 className="font-mono text-[0.675rem] md:text-lg">
-                                      {item.segments[item.segments.length - 1].arr.time}
+                                      {item.segments[item.segments_direction[1][0]].arr.time}
                                     </h2>
                                     <p className="font-mono text-[0.675rem] md:text-lg">
                                       {moment(item.segments[item.segments.length - 1].arr.date, 'DD.MM.YYYY').format("DD MMMM")},
@@ -255,114 +337,20 @@ function Ticket(props) {
                                   </div>
 
                                 </div>
-                              
+                                  )}
                               </div>
                         </div>
-                            <Accordion className="flex" style={{ flexDirection: 'column-reverse' }} TransitionProps={{ timeout: 800 }} onChange={() => setIsAccordionOpen(!isAccordionOpen)}>
+                                 
+                              {accardionOpen === `panel${inx}` && item.segments_direction[1] && (
+                                  <TicketAccardion item={item} inx={inx} direction={1}/>                            
+                              )}
 
-                              <AccordionSummary
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                              >
-                                <Typography>{isAccordionOpen ? 'Скрыть детали' : 'Детали маршрута'}.</Typography>
-                              </AccordionSummary>
-                          <AccordionDetails>
-                            <Typography>
-                              {item.segments.map((twoItem, index) => (
-                                <>
-
-                                    <div className="container-box py-2 md:py-5 pb-3 container-box-2" key={inx} onClick={() => window.innerWidth < 768 && handleOpen()}>
-                                            <div className="left w-full md:pr-5">
-
-                                              <div className="">
-                                                <div className="flex items-center	justify-between w-full">
-                                                  <div className="from flex">
-                                                    <div>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                          <g clip-path="url(#clip0_865_2363)">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
-                                                          </g>
-                                                          <defs>
-                                                            <clipPath id="clip0_865_2363">
-                                                              <rect width="24" height="24" rx="4" fill="white" />
-                                                            </clipPath>
-                                                          </defs>
-                                                        </svg>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                                          <g clip-path="url(#clip0_865_2363)">
-                                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.29285 15.8155C4.02797 15.919 3.91945 16.2356 4.06513 16.4799L5.81319 19.4108C6.06359 19.8306 6.58081 20.0079 7.0361 19.8299L23.9381 13.223C24.7279 12.9143 25.1179 12.0237 24.8092 11.234C24.4883 10.413 23.5436 10.0302 22.7417 10.3961L17.7432 12.6773L10.773 6.27125C10.4838 6.00546 10.0685 5.9276 9.70266 6.0706C9.08963 6.31023 8.85636 7.05604 9.22358 7.60227L13.6983 14.2584L6.85554 17.3571L4.72413 15.8669C4.59802 15.7787 4.43618 15.7594 4.29285 15.8155ZM25.6776 22.9521H5.14764V24.5313H25.6776V22.9521Z" fill="#AEAEAE" />
-                                                          </g>
-                                                          <defs>
-                                                            <clipPath id="clip0_865_2363">
-                                                              <rect width="24" height="24" rx="4" fill="white" />
-                                                            </clipPath>
-                                                          </defs>
-                                                        </svg>
-                                                    </div>
-                                                  <p>
-                                                    <p className="font-mono text-[0.675rem] md:text-lg ml-3">{item.segments[index].dep.time}</p>
-                                                    <p className="font-mono text-[0.675rem] md:text-lg ml-3">{item.segments[index].arr.time}</p>
-                                                  </p>
-                                                  </div>
-                                                  <div>
-                                                    <p className="font-mono text-[0.675rem] md:text-lg">{item.segments[index].dep.city.title}</p>
-                                                    <p className="font-mono text-[0.675rem] md:text-lg">{item.segments[index].arr.city.title}</p>
-                                                  </div>
-                                                  
-                                                  <div>
-                                                    <p className="font-mono text-[0.675rem] md:text-lg ml-3">
-                                                    {moment(item.segments[index].dep.date, 'DD.MM.YYYY').format("DD MMMM")}
-                                                    </p>
-                                                    <p className="font-mono text-[0.675rem] md:text-lg ml-3">
-                                                    {moment(item.segments[index].arr.date, 'DD.MM.YYYY').format("DD MMMM")}
-                                                    </p>
-
-                                                  </div>
-                                                  <p className="font-mono text-[0.675rem] md:text-lg"> {item.segments[index].duration.flight.hour}ч {item.segments[index].duration.flight.minute}мин </p>
-                                                  <img className="w-10 rounded-full" src={`https://mpics.avs.io/al_square/240/240/${item.segments[index].provider.supplier.code}.png`} alt="" />
-                                                        
-                                                </div>
-
-                                                </div>
-
-                                              <div className="flex justify-between">
-                                                <div>
-
-                                                  <p className="font-mono text-[0.675rem] mt-3 md:text-lg">Рейс: {item.segments[index].fare_code}</p>
-                                                  <p className="font-mono text-[0.675rem] md:text-lg">Авиакомпания: {item.segments[index].provider.supplier.title}</p>
-                                                  {item.segments[index].aircraft.title && <p className="font-mono text-[0.675rem] md:text-lg">Самолет: {item.segments[index].aircraft.title}</p>} 
-                                                </div>
-
-                                                <div>
-                                                  {item.segments[index].dep.terminal && <p className="font-mono text-[0.675rem] md:text-lg mt-5">Терминал: {item.segments[index].dep.terminal}</p>} 
-                                                  {item.segments[index].cbaggage.weight && <p className="font-mono text-[0.675rem] md:text-lg">Багаж: {item.segments[index].cbaggage.weight} </p>} 
-                                                  <p className="font-mono text-[0.675rem] md:text-lg">
-                                                    Класс: {item.segments[index].class.name.toUpperCase() === "E" ? "Ekonom" : 
-                                                                  item.segments[index].class.name.toUpperCase() === "B" &&
-                                                                  "Biznes"}
-                                                    </p>
-
-                                                </div>
-                                              </div>
-                                              {item.segments[index].duration.transfer?.minute >= 0 && (
-                                                    <div className="flex items-center justify-center border-[3px] border-[#0057BE] text-[#0057BE] py-2 px-1 rounded-lg mt-2">
-                                                      {item.segments[index].duration.transfer?.hour}ч {item.segments[index].duration.transfer?.minute}мин пересадка
-                                                    </div>
-                                              )}
-                                            </div>
-                                    </div>
-                                
-                                
-                                  <div className="pr-3">
-                                    {index !== item.segments.length - 1 && (
-                                      <span className="w-full h-0.5 block bg-[#ccc]"></span>
-                                    )}
-                                  </div>
-                                </>
-                              ))}
-                          </Typography>
-                          </AccordionDetails>
-                            </Accordion>
+                                  {accardionOpen === `panel${inx}`? (
+                                    <button onClick={() => setAccardionOpen(`panel`)} className="mb-5">Close</button>
+                                  ): (
+                                    <button onClick={() => setAccardionOpen(`panel${inx}`)} className="mb-5">Open</button>
+                                  )}
+                             
                               <span className="block absolute top-0 h-3 w-5 bg-[#E8E8E8] right-[-0.747rem] rounded-b-lg"></span>
                               <span className="block absolute bottom-0 h-3 w-5 bg-[#E8E8E8] right-[-0.747rem] rounded-t-lg"></span>
                         </div>

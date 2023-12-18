@@ -372,7 +372,7 @@ function Main() {
                     )}
 
                   </div>
-                  <div className='h-full col-1 border border-[#c0bfbf] outline-none bg-white w-[60px] flex items-center justify-center'>
+                  <div className='h-full col-1 border xl:!px-[0.7rem] !px-[0.5rem] border-[#c0bfbf] outline-none bg-white w-[60px] flex items-center justify-center'>
                     <img src={arrowSwap} className="cursor-pointer w-full" alt="" onClick={() => reverseAirportName()} />
                   </div>
                   <div className="relative col-4 h-full" style={{ padding: '0' }}>
