@@ -125,6 +125,8 @@ function ShopTicket() {
   const [birthdatePic, setBirthdatePic] = useState(
     moment().format("DD.MM.YYYY")
   );
+  const [step, setStep] = useState(1)
+
   const [passportNum, setPassportNum] = useState();
   const [passportExp, setPassportExp] = useState(moment().format("DD.MM.YYYY"));
   const [confirmModal, setConfirmModal] = useState(false);
@@ -192,7 +194,6 @@ function ShopTicket() {
   const bookingCreateFnc = (e) => {
     e.preventDefault();
     setLoader(true);
-
     if (
       birthdatePic &&
       passportExp &&
@@ -372,6 +373,7 @@ function ShopTicket() {
       console.log(flightInfoData);
       if (flightInfoData.data.search) {
         setLoader(false);
+
         flightInfoData.data.flight.price &&
           setTicketPrice(flightInfoData.data.flight.price.UZS.amount);
         setFlyData(flightInfoData.data.search);
@@ -412,6 +414,8 @@ function ShopTicket() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    newValue == 1 && setStep(2)
+    newValue == 2 && setStep(3);
   };
 
   const handlePasInputChange = (e) => {
@@ -439,12 +443,11 @@ function ShopTicket() {
             >
               <Grid item lg={12}>
                 <div className="mb-[2%] ">
-                  <div className="flex w-[100%]">
+                  <div className="flex items-center justify-between w-[100%] ">
                     <h2
                       className="flex text-[16px] whitespace-nowrap items-center font-medium text-[#0064FA] cursor-pointer mr-[10%]"
                       onClick={() => navigate("/")}
                     >
-                      {" "}
                       <img src={arrowLeft} alt="" /> Поиск билетов
                     </h2>
                     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -453,59 +456,70 @@ function ShopTicket() {
                         onChange={handleChange}
                         aria-label="basic tabs example"
                       >
-                        <Tab
-                          iconPosition="start"
-                          icon={
-                            tabIndex >= 0 ? <CalendarTick /> : <CalendarTick2 />
-                          }
-                          label={
-                            <span
-                              className="hidden md:block"
-                              style={
-                                tabIndex >= 0
-                                  ? { color: "#0063FA" }
-                                  : { color: "#AEAEAE" }
-                              }
-                            >
-                              Бронирование
-                            </span>
-                          }
-                          {...a11yProps(0)}
-                        />
-                        <Tab
-                          iconPosition="start"
-                          icon={tabIndex >= 1 ? <Coin2 /> : <Coin />}
-                          label={
-                            <span
-                              className="hidden md:block"
-                              style={
-                                tabIndex >= 1
-                                  ? { color: "#0063FA" }
-                                  : { color: "#AEAEAE" }
-                              }
-                            >
-                              Оплата
-                            </span>
-                          }
-                          {...a11yProps(1)}
-                        />
-                        <Tab
-                          iconPosition="start"
-                          icon={tabIndex >= 2 ? <Bilet2 /> : <Bilet />}
-                          label={
-                            <span
-                              className="hidden md:block"
-                              style={
-                                tabIndex >= 2
-                                  ? { color: "#0063FA" }
-                                  : { color: "#AEAEAE" }
-                              }
-                            >
-                              Получение билета
-                            </span>
-                          }
-                          {...a11yProps(2)}
-                        />
+                        {
+                          window.innerWidth > 768 ?
+                            (
+                              <>
+                                <Tab
+                                  iconPosition="start"
+                                  icon={
+                                    tabIndex >= 0 ? <CalendarTick /> : <CalendarTick2 />
+                                  }
+                                  label={
+                                    <span
+                                      className="hidden md:block"
+                                      style={
+                                        tabIndex >= 0
+                                          ? { color: "#0063FA" }
+                                          : { color: "#AEAEAE" }
+                                      }
+                                    >
+                                      Бронирование
+                                    </span>
+                                  }
+                                  {...a11yProps(0)}
+                                />
+                                <Tab
+                                  iconPosition="start"
+                                  icon={tabIndex >= 1 ? <Coin2 /> : <Coin />}
+                                  label={
+                                    <span
+                                      className="hidden md:block"
+                                      style={
+                                        tabIndex >= 1
+                                          ? { color: "#0063FA" }
+                                          : { color: "#AEAEAE" }
+                                      }
+                                    >
+                                      Оплата
+                                    </span>
+                                  }
+                                  {...a11yProps(1)}
+                                />
+                                <Tab
+                                  iconPosition="start"
+                                  icon={tabIndex >= 2 ? <Bilet2 /> : <Bilet />}
+                                  label={
+                                    <span
+                                      className="hidden md:block"
+                                      style={
+                                        tabIndex >= 2
+                                          ? { color: "#0063FA" }
+                                          : { color: "#AEAEAE" }
+                                      }
+                                    >
+                                      Получение билета
+                                    </span>
+                                  }
+                                  {...a11yProps(2)}
+                                />
+                              </>
+                            )
+                            :
+                            (
+                              <p className="font-normal text-[#AEAEAE] text-[13px] mt-[25%]">Шаг {step} из 3</p>
+                            )
+                        }
                       </Tabs>
                     </Box>
                   </div>
@@ -1136,7 +1150,7 @@ function ShopTicket() {
                               />
                             </label>
                           </div>
-                          <div className="my-[3%] flex items-center  gap-[20px] w-[62%]">
+                          <div className="my-[3%] flex items-center  gap-[20px] w-full  md:w-[62%]">
                             <div className="flex items-center">
                               <label className="w-[100%] mr-2" htmlFor="P">
                                 пасспорты
