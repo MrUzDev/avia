@@ -300,7 +300,7 @@ function ShopTicket() {
   const paymentConfirmFnc = (e) => {
     e.preventDefault();
     const paymentConff = {
-      otp: OTP,
+      otp: OTP.replace(/ /g, ''),
       otp_token: otp_token,
       tr_id: tr_id,
     };

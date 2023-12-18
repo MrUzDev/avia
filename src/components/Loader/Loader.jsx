@@ -4,7 +4,6 @@ export default function Loader() {
   return (
     <div className='loader-container'>
          <div class="loader">
-      {/* <div class="wait"> Fly sales</div> */}
         <div className='plane-container'>
             <div class="plane">
             <img src="https://zupimages.net/up/19/34/4820.gif" class="plane-img"/>

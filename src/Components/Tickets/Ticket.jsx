@@ -13,11 +13,8 @@ import cirClose from '../../Assets/icons/close-circle.svg'
 import airplane from '../../Assets/icons/airplane.svg'
 import line from '../../Assets/icons/line.svg'
 import Fade from '@mui/material/Fade';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
 import Skeleton from "@mui/material/Skeleton";
+import TicketAccardion from "./TicketAccardion";
 
 const style = {
   position: 'absolute',
@@ -48,8 +45,9 @@ function Ticket(props) {
   const [ticketFilterShow, setTicketFilterShow] = useState(false)
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isAccordionOpen, setIsAccordionOpen] = useState(false);
   const [skeletonNum, setSkeletonNum] = useState([]);
+  const [accardionOpen, setAccardionOpen] = useState('panel');
+
 
   const toShoppingTicket = (id, price, item) => {
     if (id) {
@@ -130,6 +128,7 @@ function Ticket(props) {
                       </div>
                     </Skeleton>
                   )}
+
 
                   {allAirlinesName.length > 0 ? (
                     allAirlinesName.map((item, airIndex) =>
