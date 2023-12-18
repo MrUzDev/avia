@@ -89,8 +89,6 @@ function Ticket(props) {
     setSkeletonNum(newItems);
   }, []);
 
-  console.log(ticketDetail)
-
 
   return (
     <div className="aviaTicket container mx-auto">

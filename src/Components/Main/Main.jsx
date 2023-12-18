@@ -344,17 +344,17 @@ function Main() {
       <div className='mt-[5%] mb-11 main'>
         <div className="container mx-auto">
           <h1 className='hidden lg:block text-center text-[64px] text-[#0057BE] mb-[2%] font-bold' style={{ fontFamily: 'GilroyBlack' }}> Самый правильный путь к путешествиям</h1>
-          <Box sx={{ width: '100%' }}>
-            <Box>
-              <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                <Tab iconPosition='start' icon={<AirplanemodeActiveIcon />} label="Авиа" {...a11yProps(0)} />
+          {/* <Box sx={{ width: '100%' }}> */}
+            {/* <Box> */}
+              {/* <Tabs value={value} onChange={handleChange} aria-label="basic tabs example"> */}
+                {/* <Tab iconPosition='start' icon={<AirplanemodeActiveIcon />} label="Авиа" {...a11yProps(0)} /> */}
                 {/* <Tab iconPosition='start' icon={<CorporateFareIcon />} label="Отели" {...a11yProps(1)} /> */}
                 {/* <Tab iconPosition='start' icon={<TrainOutlinedIcon />} label="Ж/д" {...a11yProps(2)} /> */}
-              </Tabs>
-            </Box>
+              {/* </Tabs> */}
+            {/* </Box> */}
 
 
-            <CustomTabPanel value={value} index={0} className="mt-5 pb-5">
+            {/* <CustomTabPanel value={value} index={0} className="mt-5 pb-5"> */}
               <div className='bg-[#0057BE] h-[66px] hidden lg:flex items-center rounded-lg'>
                 <div className="h-full w-full flex items-center border-[2px] border-[#0057BE] rounded-lg">
                   <div className="relative col-4 h-full" style={{ padding: '0' }}>
@@ -477,8 +477,6 @@ function Main() {
               </div>
 
 
-
-
               <div className='flex lg:hidden flex-col'>
                 <div className='p-[15px] relative flex flex-col border border-[#c0bfbf] rounded-lg'>
                   <input className='outline-none px-[10px]' type="text" placeholder='Откуда' value={myAirlines || ''} onChange={(e) => { setMyAirlines(e.target.value); searchAirportsFnc(e.target.value) }} />
@@ -588,9 +586,9 @@ function Main() {
 
 
 
-            </CustomTabPanel>
+            {/* </CustomTabPanel> */}
            
-          </Box>
+          {/* </Box> */}
           {!ticketLoad && (
             <div className='bg-[#F7F7F7] w-full lg:w-[856px]  flex relative mx-auto mt-[3%] py-[15px] px-[30px]'>
               <div>
